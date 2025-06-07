@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>하루 기분 기록 - EmotiCare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .routine-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .date-selector {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .date-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .date-nav button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .date-nav button:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+        
+        .current-date {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .time-sections {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .time-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .time-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .time-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .time-icon.morning {
+            background: linear-gradient(135deg, #f9ca24, #f0932b);
+        }
+        
+        .time-icon.afternoon {
+            background: linear-gradient(135deg, #eb4d4b, #6c5ce7);
+        }
+        
+        .time-icon.evening {
+            background: linear-gradient(135deg, #6c5ce7, #2d3436);
+        }
+        
+        .time-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .mood-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .mood-emoji {
+            font-size: 2.5rem;
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            background: #f8f9ff;
+        }
+        
+        .mood-emoji:hover {
+            transform: scale(1.1);
+            background: #e8f0ff;
+        }
+        
+        .mood-emoji.selected {
+            border-color: #667eea;
+            background: #667eea;
+            transform: scale(1.1);
+        }
+        
+        .thought-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        
+        .thought-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .gratitude-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .gratitude-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .gratitude-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .gratitude-items {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .gratitude-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .gratitude-number {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .gratitude-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        
+        .gratitude-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .gratitude-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .gratitude-note {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .gratitude-note::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .save-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            color: #333;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 234, 167, 0.4);
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 234, 167, 0.6);
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .summary-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            text-align: center;
+        }
+        
+        .mood-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+        }
+        
+        .mood-summary-item {
+            text-align: center;
+        }
+        
+        .mood-summary-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mood-summary-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">하루 기분 기록</h1>
+                <p class="page-subtitle">시간대별 기분을 기록하고 감사한 일들을 되새겨보세요</p>
+            </div>
+        </section>
+        
+        <section class="page-content">
+            <div class="routine-container">
+                <div class="date-selector">
+                    <div class="date-nav">
+                        <button onclick="changeDate(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <span class="current-date" id="currentDate"></span>
+                        <button onclick="changeDate(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <div class="time-sections">
+                    <div class="time-section">
+                        <div class="time-header">
+                            <div class="time-icon morning">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div>
+                                <div class="time-title">아침 (6:00 - 12:00)</div>
+                                <div style="color: #666; font-size: 0.9rem;">하루를 시작하는 마음</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mood-selector" data-time="morning">
+                            <div class="mood-emoji" data-mood="very-happy" title="매우 기쁨">😄</div>
+                            <div class="mood-emoji" data-mood="happy" title="기쁨">😊</div>
+                            <div class="mood-emoji" data-mood="neutral" title="보통">😐</div>
+                            <div class="mood-emoji" data-mood="sad" title="슬픔">😔</div>
+                            <div class="mood-emoji" data-mood="very-sad" title="매우 슬픔">😢</div>
+                        </div>
+                        
+                        <textarea 
+                            class="thought-input" 
+                            data-time="morning"
+                            placeholder="아침에 어떤 생각이나 기분이 드셨나요?"
+                        ></textarea>
+                    </div>
+                    
+                    <div class="time-section">
+                        <div class="time-header">
+                            <div class="time-icon afternoon">
+                                <i class="fas fa-cloud-sun"></i>
+                            </div>
+                            <div>
+                                <div class="time-title">점심 (12:00 - 18:00)</div>
+                                <div style="color: #666; font-size: 0.9rem;">하루 중반의 에너지</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mood-selector" data-time="afternoon">
+                            <div class="mood-emoji" data-mood="very-happy" title="매우 기쁨">😄</div>
+                            <div class="mood-emoji" data-mood="happy" title="기쁨">😊</div>
+                            <div class="mood-emoji" data-mood="neutral" title="보통">😐</div>
+                            <div class="mood-emoji" data-mood="sad" title="슬픔">😔</div>
+                            <div class="mood-emoji" data-mood="very-sad" title="매우 슬픔">😢</div>
+                        </div>
+                        
+                        <textarea 
+                            class="thought-input" 
+                            data-time="afternoon"
+                            placeholder="점심 시간 이후 기분은 어떠셨나요?"
+                        ></textarea>
+                    </div>
+                    
+                    <div class="time-section">
+                        <div class="time-header">
+                            <div class="time-icon evening">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <div>
+                                <div class="time-title">저녁 (18:00 - 24:00)</div>
+                                <div style="color: #666; font-size: 0.9rem;">하루를 마무리하는 시간</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mood-selector" data-time="evening">
+                            <div class="mood-emoji" data-mood="very-happy" title="매우 기쁨">😄</div>
+                            <div class="mood-emoji" data-mood="happy" title="기쁨">😊</div>
+                            <div class="mood-emoji" data-mood="neutral" title="보통">😐</div>
+                            <div class="mood-emoji" data-mood="sad" title="슬픔">😔</div>
+                            <div class="mood-emoji" data-mood="very-sad" title="매우 슬픔">😢</div>
+                        </div>
+                        
+                        <textarea 
+                            class="thought-input" 
+                            data-time="evening"
+                            placeholder="하루를 마무리하며 어떤 기분이신가요?"
+                        ></textarea>
+                    </div>
+                </div>
+                
+                <div class="gratitude-section">
+                    <div class="gratitude-header">
+                        <h3><i class="fas fa-heart"></i> 오늘의 감사한 일 3가지</h3>
+                        <p>작은 것이라도 괜찮습니다. 감사한 마음을 표현해보세요.</p>
+                    </div>
+                    
+                    <div class="gratitude-items">
+                        <div class="gratitude-item">
+                            <div class="gratitude-number">1</div>
+                            <input type="text" class="gratitude-input" data-index="0" placeholder="첫 번째 감사한 일">
+                        </div>
+                        <div class="gratitude-item">
+                            <div class="gratitude-number">2</div>
+                            <input type="text" class="gratitude-input" data-index="1" placeholder="두 번째 감사한 일">
+                        </div>
+                        <div class="gratitude-item">
+                            <div class="gratitude-number">3</div>
+                            <input type="text" class="gratitude-input" data-index="2" placeholder="세 번째 감사한 일">
+                        </div>
+                    </div>
+                    
+                    <textarea 
+                        class="gratitude-note" 
+                        placeholder="감사한 마음에 대해 더 자세히 적어보세요..."
+                    ></textarea>
+                </div>
+                
+                <div class="save-section">
+                    <button class="save-btn" onclick="saveMoodData()">
+                        <i class="fas fa-save"></i> 오늘의 기록 저장하기
+                    </button>
+                </div>
+                
+                <div class="summary-card" id="summaryCard" style="display: none;">
+                    <h3 class="summary-title">오늘의 기분 요약</h3>
+                    <div class="mood-summary" id="moodSummary">
+                        <!-- 요약이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="footer-container"></div>
+    
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let currentDate = new Date();
+        let moodData = {};
+        
+        const moodEmojis = {
+            'very-happy': '😄',
+            'happy': '😊',
+            'neutral': '😐',
+            'sad': '😔',
+            'very-sad': '😢'
+        };
+        
+        const moodLabels = {
+            'very-happy': '매우 기쁨',
+            'happy': '기쁨',
+            'neutral': '보통',
+            'sad': '슬픔',
+            'very-sad': '매우 슬픔'
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDateDisplay();
+            loadMoodData();
+            setupMoodSelectors();
+            loadTodayData();
+        });
+        
+        function updateDateDisplay() {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            };
+            document.getElementById('currentDate').textContent = 
+                currentDate.toLocaleDateString('ko-KR', options);
+        }
+        
+        function changeDate(direction) {
+            saveTodayData(); // 현재 데이터 저장
+            currentDate.setDate(currentDate.getDate() + direction);
+            updateDateDisplay();
+            loadTodayData();
+        }
+        
+        function setupMoodSelectors() {
+            document.querySelectorAll('.mood-emoji').forEach(emoji => {
+                emoji.addEventListener('click', function() {
+                    const timeSection = this.closest('.mood-selector');
+                    const time = timeSection.dataset.time;
+                    
+                    // 같은 시간대의 다른 이모지 선택 해제
+                    timeSection.querySelectorAll('.mood-emoji').forEach(e => 
+                        e.classList.remove('selected'));
+                    
+                    // 현재 이모지 선택
+                    this.classList.add('selected');
+                    
+                    // 데이터 저장
+                    saveTodayData();
+                });
+            });
+            
+            // 텍스트 입력 시 자동 저장
+            document.querySelectorAll('.thought-input, .gratitude-input, .gratitude-note').forEach(input => {
+                input.addEventListener('input', () => {
+                    clearTimeout(input.saveTimer);
+                    input.saveTimer = setTimeout(saveTodayData, 1000);
+                });
+            });
+        }
+        
+        function loadMoodData() {
+            const savedData = loadFromLocalStorage('moodRoutineData');
+            if (savedData) {
+                moodData = savedData;
+            }
+        }
+        
+        function saveTodayData() {
+            const dateKey = formatDate(currentDate);
+            const todayData = {
+                date: dateKey,
+                moods: {},
+                thoughts: {},
+                gratitude: [],
+                gratitudeNote: ''
+            };
+            
+            // 기분 데이터 수집
+            ['morning', 'afternoon', 'evening'].forEach(time => {
+                const selectedMood = document.querySelector(`.mood-selector[data-time="${time}"] .mood-emoji.selected`);
+                if (selectedMood) {
+                    todayData.moods[time] = selectedMood.dataset.mood;
+                }
+                
+                const thoughtInput = document.querySelector(`.thought-input[data-time="${time}"]`);
+                if (thoughtInput && thoughtInput.value.trim()) {
+                    todayData.thoughts[time] = thoughtInput.value.trim();
+                }
+            });
+            
+            // 감사 데이터 수집
+            document.querySelectorAll('.gratitude-input').forEach((input, index) => {
+                if (input.value.trim()) {
+                    todayData.gratitude[index] = input.value.trim();
+                }
+            });
+            
+            const gratitudeNote = document.querySelector('.gratitude-note');
+            if (gratitudeNote && gratitudeNote.value.trim()) {
+                todayData.gratitudeNote = gratitudeNote.value.trim();
+            }
+            
+            moodData[dateKey] = todayData;
+            saveToLocalStorage('moodRoutineData', moodData);
+        }
+        
+        function loadTodayData() {
+            const dateKey = formatDate(currentDate);
+            const todayData = moodData[dateKey];
+            
+            // 모든 입력 필드 초기화
+            document.querySelectorAll('.mood-emoji').forEach(emoji => 
+                emoji.classList.remove('selected'));
+            document.querySelectorAll('.thought-input').forEach(input => input.value = '');
+            document.querySelectorAll('.gratitude-input').forEach(input => input.value = '');
+            document.querySelector('.gratitude-note').value = '';
+            
+            if (todayData) {
+                // 기분 데이터 로드
+                Object.entries(todayData.moods || {}).forEach(([time, mood]) => {
+                    const moodEmoji = document.querySelector(
+                        `.mood-selector[data-time="${time}"] .mood-emoji[data-mood="${mood}"]`
+                    );
+                    if (moodEmoji) {
+                        moodEmoji.classList.add('selected');
+                    }
+                });
+                
+                // 생각 데이터 로드
+                Object.entries(todayData.thoughts || {}).forEach(([time, thought]) => {
+                    const thoughtInput = document.querySelector(`.thought-input[data-time="${time}"]`);
+                    if (thoughtInput) {
+                        thoughtInput.value = thought;
+                    }
+                });
+                
+                // 감사 데이터 로드
+                (todayData.gratitude || []).forEach((gratitude, index) => {
+                    const gratitudeInput = document.querySelector(`.gratitude-input[data-index="${index}"]`);
+                    if (gratitudeInput) {
+                        gratitudeInput.value = gratitude;
+                    }
+                });
+                
+                // 감사 노트 로드
+                if (todayData.gratitudeNote) {
+                    document.querySelector('.gratitude-note').value = todayData.gratitudeNote;
+                }
+                
+                // 요약 표시
+                showMoodSummary(todayData);
+            } else {
+                // 요약 숨기기
+                document.getElementById('summaryCard').style.display = 'none';
+            }
+        }
+        
+        function saveMoodData() {
+            saveTodayData();
+            
+            const dateKey = formatDate(currentDate);
+            const todayData = moodData[dateKey];
+            
+            if (!todayData || Object.keys(todayData.moods || {}).length === 0) {
+                showMessage('최소 하나의 시간대 기분을 선택해주세요.', 'error');
+                return;
+            }
+            
+            showMoodSummary(todayData);
+            showMessage('오늘의 기분이 저장되었습니다.', 'success');
+        }
+        
+        function showMoodSummary(data) {
+            const summaryCard = document.getElementById('summaryCard');
+            const moodSummary = document.getElementById('moodSummary');
+            
+            moodSummary.innerHTML = '';
+            
+            ['morning', 'afternoon', 'evening'].forEach(time => {
+                const mood = data.moods[time];
+                if (mood) {
+                    const timeLabels = {
+                        morning: '아침',
+                        afternoon: '점심',
+                        evening: '저녁'
+                    };
+                    
+                    const summaryItem = document.createElement('div');
+                    summaryItem.className = 'mood-summary-item';
+                    summaryItem.innerHTML = `
+                        <div class="mood-summary-emoji">${moodEmojis[mood]}</div>
+                        <div class="mood-summary-label">${timeLabels[time]}<br>${moodLabels[mood]}</div>
+                    `;
+                    moodSummary.appendChild(summaryItem);
+                }
+            });
+            
+            summaryCard.style.display = 'block';
+        }
+        
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+    </script>
+</body>
+</html>

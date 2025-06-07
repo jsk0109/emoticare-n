@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>치유 명언 - EmotiCare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .quotes-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .category-filter {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            background: #f8f9ff;
+            color: #667eea;
+            border: 2px solid #e1e8ed;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover {
+            border-color: #667eea;
+            background: #e8f0ff;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .quotes-grid {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .quote-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 8rem;
+            color: #667eea;
+            opacity: 0.1;
+            font-family: serif;
+        }
+        
+        .quote-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+        }
+        
+        .quote-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .quote-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .quote-author {
+            text-align: right;
+            color: #666;
+            font-style: italic;
+            font-size: 1rem;
+        }
+        
+        .quote-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+        
+        .share-btn, .copy-btn {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .share-btn:hover, .copy-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+        
+        .daily-quote {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        .daily-quote-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .daily-quote-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .daily-quote-author {
+            font-style: italic;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">치유 명언</h1>
+                <p class="page-subtitle">마음을 따뜻하게 해주는 명언들로 하루를 시작해보세요</p>
+            </div>
+        </section>
+        
+        <section class="page-content">
+            <div class="quotes-container">
+                <div class="daily-quote">
+                    <h3 class="daily-quote-title">✨ 오늘의 명언</h3>
+                    <div class="daily-quote-text" id="dailyQuoteText">로딩 중...</div>
+                    <div class="daily-quote-author" id="dailyQuoteAuthor"></div>
+                </div>
+                
+                <div class="search-section">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="명언을 검색해보세요..."
+                        id="searchInput"
+                        oninput="searchQuotes()"
+                    >
+                </div>
+                
+                <div class="category-filter">
+                    <h3 class="filter-title">카테고리별 명언</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-category="all">전체</button>
+                        <button class="filter-btn" data-category="self-love">자기사랑</button>
+                        <button class="filter-btn" data-category="gratitude">감사</button>
+                        <button class="filter-btn" data-category="courage">용기</button>
+                        <button class="filter-btn" data-category="hope">희망</button>
+                        <button class="filter-btn" data-category="growth">성장</button>
+                        <button class="filter-btn" data-category="peace">평안</button>
+                        <button class="filter-btn" data-category="wisdom">지혜</button>
+                    </div>
+                </div>
+                
+                <div class="quotes-grid" id="quotesGrid">
+                    <!-- 명언들이 여기에 표시됩니다 -->
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="footer-container"></div>
+    
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const quotes = [
+            // 자기사랑
+            { text: "자신을 사랑하는 것은 평생에 걸친 로맨스의 시작이다.", author: "오스카 와일드", category: "self-love" },
+            { text: "당신이 자신에게 하는 말이 당신의 현실을 만든다.", author: "루이즈 헤이", category: "self-love" },
+            { text: "완벽하지 않은 자신을 받아들이는 것이 진정한 자기사랑이다.", author: "브레네 브라운", category: "self-love" },
+            { text: "자신을 돌보는 것은 이기적인 것이 아니라 필수적인 것이다.", author: "오드리 로드", category: "self-love" },
+            
+            // 감사
+            { text: "감사는 우리가 가진 것을 충분하게 만든다.", author: "익명", category: "gratitude" },
+            { text: "감사하는 마음은 행복의 열쇠다.", author: "볼테르", category: "gratitude" },
+            { text: "작은 것에 감사할 줄 아는 사람에게 큰 것이 주어진다.", author: "이솝", category: "gratitude" },
+            { text: "감사는 과거를 의미 있게 하고, 오늘에 평화를 가져다주며, 내일에 대한 비전을 만든다.", author: "멜로디 비티", category: "gratitude" },
+            
+            // 용기
+            { text: "용기는 두려움이 없는 것이 아니라, 두려움보다 더 중요한 것이 있다고 판단하는 것이다.", author: "앰브로즈 레드문", category: "courage" },
+            { text: "가장 큰 영광은 넘어지지 않는 것이 아니라, 넘어질 때마다 일어서는 것이다.", author: "넬슨 만델라", category: "courage" },
+            { text: "용기란 저항하고 두려움을 극복하는 것이지, 두려움이 없는 것이 아니다.", author: "마크 트웨인", category: "courage" },
+            { text: "당신이 할 수 있다고 믿든 할 수 없다고 믿든, 당신이 옳다.", author: "헨리 포드", category: "courage" },
+            
+            // 희망
+            { text: "희망은 어둠 속에서 빛나는 별과 같다.", author: "익명", category: "hope" },
+            { text: "절망의 끝에서 희망이 시작된다.", author: "찰스 디킨스", category: "hope" },
+            { text: "희망을 품고 여행하는 것이 목적지에 도착하는 것보다 낫다.", author: "로버트 루이스 스티븐슨", category: "hope" },
+            { text: "어둠은 빛을 몰아낼 수 없다. 오직 빛만이 그것을 할 수 있다.", author: "마틴 루터 킹", category: "hope" },
+            
+            // 성장
+            { text: "성장하는 유일한 방법은 편안한 영역을 벗어나는 것이다.", author: "익명", category: "growth" },
+            { text: "실패는 성공으로 가는 계단이다.", author: "C.S. 루이스", category: "growth" },
+            { text: "변화는 삶의 끝이 아니라 새로운 시작이다.", author: "익명", category: "growth" },
+            { text: "어제의 나보다 오늘의 내가 조금이라도 나아졌다면 그것으로 충분하다.", author: "익명", category: "growth" },
+            
+            // 평안
+            { text: "평화는 외부에서 찾을 수 없다. 오직 내면에서만 찾을 수 있다.", author: "랄프 왈도 에머슨", category: "peace" },
+            { text: "고요한 마음은 폭풍 속에서도 평안을 찾는다.", author: "익명", category: "peace" },
+            { text: "마음의 평화는 모든 이해를 뛰어넘는다.", author: "성경", category: "peace" },
+            { text: "진정한 평안은 문제가 없는 것이 아니라, 문제 속에서도 평안을 유지하는 것이다.", author: "익명", category: "peace" },
+            
+            // 지혜
+            { text: "지혜는 경험의 딸이다.", author: "레오나르도 다 빈치", category: "wisdom" },
+            { text: "아는 것이 힘이 아니라, 아는 것을 실천하는 것이 힘이다.", author: "익명", category: "wisdom" },
+            { text: "현명한 사람은 자신이 모른다는 것을 안다.", author: "소크라테스", category: "wisdom" },
+            { text: "지혜로운 사람은 기회를 만들어내는 사람이다.", author: "프랜시스 베이컨", category: "wisdom" }
+        ];
+        
+        let currentCategory = 'all';
+        let filteredQuotes = [...quotes];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setupCategoryFilters();
+            loadDailyQuote();
+            renderQuotes();
+        });
+        
+        function setupCategoryFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentCategory = this.dataset.category;
+                    filterQuotes();
+                });
+            });
+        }
+        
+        function filterQuotes() {
+            if (currentCategory === 'all') {
+                filteredQuotes = [...quotes];
+            } else {
+                filteredQuotes = quotes.filter(quote => quote.category === currentCategory);
+            }
+            renderQuotes();
+        }
+        
+        function searchQuotes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filterQuotes();
+                return;
+            }
+            
+            const baseQuotes = currentCategory === 'all' ? quotes : quotes.filter(q => q.category === currentCategory);
+            filteredQuotes = baseQuotes.filter(quote => 
+                quote.text.toLowerCase().includes(searchTerm) || 
+                quote.author.toLowerCase().includes(searchTerm)
+            );
+            
+            renderQuotes();
+        }
+        
+        function renderQuotes() {
+            const quotesGrid = document.getElementById('quotesGrid');
+            
+            if (filteredQuotes.length === 0) {
+                quotesGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>검색 결과가 없습니다.<br>다른 키워드로 검색해보세요.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            quotesGrid.innerHTML = filteredQuotes.map((quote, index) => `
+                <div class="quote-card" style="animation-delay: ${index * 0.1}s">
+                    <div class="quote-category">${getCategoryName(quote.category)}</div>
+                    <div class="quote-text">${quote.text}</div>
+                    <div class="quote-author">- ${quote.author}</div>
+                    <div class="quote-actions">
+                        <button class="copy-btn" onclick="copyQuote('${quote.text}', '${quote.author}')">
+                            <i class="fas fa-copy"></i> 복사
+                        </button>
+                        <button class="share-btn" onclick="shareQuote('${quote.text}', '${quote.author}')">
+                            <i class="fas fa-share"></i> 공유
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getCategoryName(category) {
+            const categoryNames = {
+                'self-love': '자기사랑',
+                'gratitude': '감사',
+                'courage': '용기',
+                'hope': '희망',
+                'growth': '성장',
+                'peace': '평안',
+                'wisdom': '지혜'
+            };
+            return categoryNames[category] || category;
+        }
+        
+        function loadDailyQuote() {
+            const today = new Date().toDateString();
+            const savedDaily = loadFromLocalStorage('dailyQuote');
+            
+            if (savedDaily && savedDaily.date === today) {
+                displayDailyQuote(savedDaily.quote);
+            } else {
+                const randomQuote = getRandomItem(quotes);
+                const dailyData = { date: today, quote: randomQuote };
+                saveToLocalStorage('dailyQuote', dailyData);
+                displayDailyQuote(randomQuote);
+            }
+        }
+        
+        function displayDailyQuote(quote) {
+            document.getElementById('dailyQuoteText').textContent = quote.text;
+            document.getElementById('dailyQuoteAuthor').textContent = `- ${quote.author}`;
+        }
+        
+        function copyQuote(text, author) {
+            const quoteText = `"${text}" - ${author}`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(quoteText).then(() => {
+                    showMessage('명언이 클립보드에 복사되었습니다.', 'success');
+                });
+            } else {
+                // 폴백 방법
+                const textArea = document.createElement('textarea');
+                textArea.value = quoteText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showMessage('명언이 클립보드에 복사되었습니다.', 'success');
+            }
+        }
+        
+        function shareQuote(text, author) {
+            const quoteText = `"${text}" - ${author}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'EmotiCare 치유 명언',
+                    text: quoteText,
+                    url: window.location.href
+                });
+            } else {
+                copyQuote(text, author);
+            }
+        }
+    </script>
+</body>
+</html>

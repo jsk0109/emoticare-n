@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>감정 편지 - EmotiCare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .letters-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .write-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+        
+        .guidelines {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+        
+        .guidelines h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .guidelines ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .guidelines li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .guidelines li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+        }
+        
+        .letter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .letter-textarea {
+            min-height: 300px;
+            padding: 1.5rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 15px;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        
+        .letter-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .letter-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .recent-letters {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .letters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .letters-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .letter-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .letter-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .letter-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .letter-preview {
+            color: #333;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+        
+        .char-counter {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .delete-all-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .delete-all-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">감정 편지</h1>
+                <p class="page-subtitle">자신에게 보내는 편지로 마음속 깊은 감정을 표현해보세요</p>
+            </div>
+        </section>
+        
+        <section class="page-content">
+            <div class="letters-container">
+                <div class="write-section">
+                    <div class="guidelines">
+                        <h3><i class="fas fa-lightbulb"></i> 감정 편지 작성 가이드</h3>
+                        <ul>
+                            <li>지금 느끼는 감정을 솔직하게 표현해보세요</li>
+                            <li>자신에게 따뜻한 말을 건네보세요</li>
+                            <li>오늘 하루 수고한 자신을 격려해주세요</li>
+                            <li>미래의 자신에게 응원의 메시지를 남겨보세요</li>
+                            <li>완벽하지 않아도 괜찮습니다. 마음이 가는 대로 써보세요</li>
+                        </ul>
+                    </div>
+                    
+                    <form class="letter-form" onsubmit="saveLetter(event)">
+                        <textarea 
+                            id="letterContent" 
+                            class="letter-textarea" 
+                            placeholder="친애하는 나에게,
+
+오늘 하루는 어떠셨나요? 지금 마음속에 있는 이야기를 들려주세요..."
+                            oninput="updateCharCounter()"
+                        ></textarea>
+                        <div class="char-counter" id="charCounter">0자</div>
+                        
+                        <div class="letter-actions">
+                            <button type="button" class="btn-outline" onclick="clearLetter()">
+                                <i class="fas fa-eraser"></i> 지우기
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> 편지 저장하기
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="recent-letters">
+                    <div class="letters-header">
+                        <h3>최근 작성한 편지</h3>
+                        <button class="delete-all-btn" onclick="deleteAllLetters()">
+                            <i class="fas fa-trash"></i> 모든 편지 삭제
+                        </button>
+                    </div>
+                    
+                    <div class="letters-list" id="lettersList">
+                        <!-- 편지 목록이 여기에 생성됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 편지 상세보기 모달 -->
+    <div id="letterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="letterModalDate">편지 보기</h3>
+                <button class="modal-close" onclick="closeLetterModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="letterModalContent" style="line-height: 1.8; white-space: pre-wrap;"></div>
+                <div class="mt-3">
+                    <button class="btn-outline" onclick="deleteLetter()">
+                        <i class="fas fa-trash"></i> 이 편지 삭제
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer-container"></div>
+    
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let letters = [];
+        let currentLetterId = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLetters();
+            renderLetters();
+        });
+        
+        function updateCharCounter() {
+            const content = document.getElementById('letterContent').value;
+            const counter = document.getElementById('charCounter');
+            counter.textContent = `${content.length}자`;
+            
+            if (content.length > 1000) {
+                counter.style.color = '#ff6b6b';
+            } else {
+                counter.style.color = '#666';
+            }
+        }
+        
+        function saveLetter(event) {
+            event.preventDefault();
+            
+            const content = document.getElementById('letterContent').value.trim();
+            if (!content) {
+                showMessage('편지 내용을 입력해주세요.', 'error');
+                return;
+            }
+            
+            const letter = {
+                id: Date.now().toString(),
+                content: content,
+                date: new Date().toISOString(),
+                preview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
+            };
+            
+            letters.unshift(letter);
+            
+            // 최근 3개만 유지
+            if (letters.length > 3) {
+                letters = letters.slice(0, 3);
+            }
+            
+            saveToLocalStorage('emotionLetters', letters);
+            renderLetters();
+            clearLetter();
+            showMessage('편지가 저장되었습니다.', 'success');
+        }
+        
+        function clearLetter() {
+            document.getElementById('letterContent').value = '';
+            updateCharCounter();
+        }
+        
+        function loadLetters() {
+            const savedLetters = loadFromLocalStorage('emotionLetters');
+            if (savedLetters) {
+                letters = savedLetters;
+            }
+        }
+        
+        function renderLetters() {
+            const lettersList = document.getElementById('lettersList');
+            
+            if (letters.length === 0) {
+                lettersList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-envelope-open"></i>
+                        <p>아직 작성한 편지가 없습니다.<br>첫 번째 편지를 작성해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            lettersList.innerHTML = letters.map(letter => `
+                <div class="letter-card" onclick="openLetterModal('${letter.id}')">
+                    <div class="letter-meta">
+                        <span><i class="fas fa-calendar"></i> ${formatLetterDate(letter.date)}</span>
+                        <span><i class="fas fa-file-alt"></i> ${letter.content.length}자</span>
+                    </div>
+                    <div class="letter-preview">${letter.preview}</div>
+                </div>
+            `).join('');
+        }
+        
+        function formatLetterDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) {
+                return '오늘';
+            } else if (diffDays === 2) {
+                return '어제';
+            } else if (diffDays <= 7) {
+                return `${diffDays - 1}일 전`;
+            } else {
+                return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+            }
+        }
+        
+        function openLetterModal(letterId) {
+            const letter = letters.find(l => l.id === letterId);
+            if (!letter) return;
+            
+            currentLetterId = letterId;
+            document.getElementById('letterModalDate').textContent = 
+                formatLetterDate(letter.date) + '에 작성한 편지';
+            document.getElementById('letterModalContent').textContent = letter.content;
+            document.getElementById('letterModal').style.display = 'block';
+        }
+        
+        function closeLetterModal() {
+            document.getElementById('letterModal').style.display = 'none';
+            currentLetterId = null;
+        }
+        
+        function deleteLetter() {
+            if (!currentLetterId) return;
+            
+            if (confirm('이 편지를 삭제하시겠습니까?')) {
+                letters = letters.filter(letter => letter.id !== currentLetterId);
+                saveToLocalStorage('emotionLetters', letters);
+                renderLetters();
+                closeLetterModal();
+                showMessage('편지가 삭제되었습니다.', 'success');
+            }
+        }
+        
+        function deleteAllLetters() {
+            if (letters.length === 0) {
+                showMessage('삭제할 편지가 없습니다.', 'error');
+                return;
+            }
+            
+            if (confirm('모든 편지를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                letters = [];
+                saveToLocalStorage('emotionLetters', letters);
+                renderLetters();
+                showMessage('모든 편지가 삭제되었습니다.', 'success');
+            }
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('letterModal');
+            if (event.target === modal) {
+                closeLetterModal();
+            }
+        });
+        
+        // 자동 저장 기능 (선택사항)
+        let autoSaveTimer;
+        document.getElementById('letterContent').addEventListener('input', function() {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => {
+                const content = this.value.trim();
+                if (content) {
+                    localStorage.setItem('letterDraft', content);
+                }
+            }, 1000);
+        });
+        
+        // 페이지 로드 시 임시저장된 내용 복원
+        document.addEventListener('DOMContentLoaded', function() {
+            const draft = localStorage.getItem('letterDraft');
+            if (draft) {
+                document.getElementById('letterContent').value = draft;
+                updateCharCounter();
+            }
+        });
+        
+        // 편지 저장 시 임시저장 내용 삭제
+        function saveLetter(event) {
+            event.preventDefault();
+            
+            const content = document.getElementById('letterContent').value.trim();
+            if (!content) {
+                showMessage('편지 내용을 입력해주세요.', 'error');
+                return;
+            }
+            
+            const letter = {
+                id: Date.now().toString(),
+                content: content,
+                date: new Date().toISOString(),
+                preview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
+            };
+            
+            letters.unshift(letter);
+            
+            // 최근 3개만 유지
+            if (letters.length > 3) {
+                letters = letters.slice(0, 3);
+            }
+            
+            saveToLocalStorage('emotionLetters', letters);
+            localStorage.removeItem('letterDraft'); // 임시저장 내용 삭제
+            renderLetters();
+            clearLetter();
+            showMessage('편지가 저장되었습니다.', 'success');
+        }
+    </script>
+</body>
+</html>

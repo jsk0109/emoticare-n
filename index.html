@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmotiCare - 마음치유 힐링 서비스</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">마음을 치유하는 <span class="gradient-text">EmotiCare</span></h1>
+                    <p class="hero-subtitle">당신의 감정을 이해하고, 마음의 평안을 찾아가는 여정을 함께합니다</p>
+                    <div class="hero-buttons">
+                        <button class="btn-primary" id="hero-start-button">시작하기</button>
+                        <a href="pricing.html" class="btn-secondary">가격정책 보기</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="floating-card">
+                        <i class="fas fa-heart" aria-hidden="true"></i>
+                        <span>마음챙김</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Tip Section -->
+        <section class="daily-tip">
+            <div class="container">
+                <div class="tip-card">
+                    <div class="tip-icon">
+                        <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                    </div>
+                    <div class="tip-content">
+                        <h3>오늘의 마음 챙김 팁</h3>
+                        <p id="daily-tip-text">로딩 중...</p>
+                    </div>
+                    <button class="tip-refresh" id="refresh-tip-button" aria-label="새로운 팁 불러오기">
+                        <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <h2 class="section-title">마음치유 서비스</h2>
+                <p class="section-subtitle">다양한 방법으로 당신의 마음을 돌보세요</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card" data-href="color-journal.html" role="button" tabindex="0">
+                        <div class="feature-icon">
+                            <i class="fas fa-palette" aria-hidden="true"></i>
+                        </div>
+                        <h3>색상 감정 일기</h3>
+                        <p>매일의 감정을 색상으로 기록하고 나만의 감정 패턴을 발견해보세요</p>
+                        <div class="feature-arrow">
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" data-href="emotion-letters.html" role="button" tabindex="0">
+                        <div class="feature-icon">
+                            <i class="fas fa-envelope-open-text" aria-hidden="true"></i>
+                        </div>
+                        <h3>감정 편지</h3>
+                        <p>자신에게 보내는 편지로 마음속 깊은 감정을 표현해보세요</p>
+                        <div class="feature-arrow">
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" data-href="mood-routine.html" role="button" tabindex="0">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
+                        </div>
+                        <h3>하루 기분 기록</h3>
+                        <p>아침, 점심, 저녁 시간대별 기분을 기록하고 감사한 일들을 되새겨보세요</p>
+                        <div class="feature-arrow">
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" data-href="healing-cards.html" role="button" tabindex="0">
+                        <div class="feature-icon">
+                            <i class="fas fa-hand-holding-heart" aria-hidden="true"></i>
+                        </div>
+                        <h3>힐링 카드</h3>
+                        <p>매일 새로운 힐링 메시지를 받아보고 마음의 위로를 얻어보세요</p>
+                        <div class="feature-arrow">
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" data-href="quotes.html" role="button" tabindex="0">
+                        <div class="feature-icon">
+                            <i class="fas fa-quote-left" aria-hidden="true"></i>
+                        </div>
+                        <h3>치유 명언</h3>
+                        <p>마음을 따뜻하게 해주는 명언들로 하루를 시작해보세요</p>
+                        <div class="feature-arrow">
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </div>
+                    </div>
+
+                    <div class="feature-card" data-href="reflection-questions.html" role="button" tabindex="0">
+                        <div class="feature-icon">
+                            <i class="fas fa-question-circle" aria-hidden="true"></i>
+                        </div>
+                        <h3>성찰 질문</h3>
+                        <p>깊이 있는 질문들로 자신을 더 잘 이해하는 시간을 가져보세요</p>
+                        <div class="feature-arrow">
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>지금 시작해보세요</h2>
+                    <p>당신의 마음치유 여정을 EmotiCare와 함께 시작하세요</p>
+                    <div class="cta-buttons">
+                        <button class="btn-primary" id="cta-start-free-button">무료로 시작하기</button>
+                        <a href="pricing.html" class="btn-outline">요금제 보기</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="common.js"></script>
+    <script>
+        // 오늘의 마음 챙김 팁
+        const dailyTips = [
+            "깊게 숨을 들이마시고 천천히 내쉬어보세요. 지금 이 순간에 집중해보세요.",
+            "오늘 감사한 일 세 가지를 떠올려보세요.",
+            "잠시 눈을 감고 자신에게 따뜻한 말을 건네보세요.",
+            "스마트폰을 잠시 내려놓고 주변을 둘러보세요.",
+            "좋아하는 음악을 들으며 5분간 휴식을 취해보세요.",
+            "따뜻한 차 한 잔과 함께 여유로운 시간을 가져보세요.",
+            "자연의 소리에 귀 기울여보세요.",
+            "오늘 하루 수고한 자신을 격려해주세요."
+        ];
+
+        function loadDailyTip() {
+            const tipElement = document.getElementById('daily-tip-text');
+            const randomTip = dailyTips[Math.floor(Math.random() * dailyTips.length)];
+            tipElement.style.opacity = '0';
+            setTimeout(() => {
+                tipElement.textContent = randomTip;
+                tipElement.style.opacity = '1';
+            }, 200);
+        }
+
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 페이지 로드 및 이벤트 리스너 설정
+        document.addEventListener('DOMContentLoaded', () => {
+            // 초기 팁 로드
+            loadDailyTip();
+
+            // Hero 섹션 '시작하기' 버튼
+            const heroStartButton = document.getElementById('hero-start-button');
+            if (heroStartButton) {
+                heroStartButton.addEventListener('click', scrollToFeatures);
+            }
+
+            // '오늘의 마음 챙김 팁' 새로고침 버튼
+            const refreshTipButton = document.getElementById('refresh-tip-button');
+            if (refreshTipButton) {
+                refreshTipButton.addEventListener('click', loadDailyTip);
+            }
+
+            // 기능 카드 클릭 시 페이지 이동
+            document.querySelectorAll('.feature-card').forEach(card => {
+                const href = card.dataset.href;
+                if (href) {
+                    card.addEventListener('click', () => { location.href = href; });
+                    // 키보드 접근성: Enter 또는 Space 키로도 이동 가능하도록
+                    card.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            location.href = href;
+                        }
+                    });
+                }
+            });
+
+            // CTA 섹션 '무료로 시작하기' 버튼
+            const ctaStartButton = document.getElementById('cta-start-free-button');
+            if (ctaStartButton) {
+                ctaStartButton.addEventListener('click', () => { location.href = 'color-journal.html'; });
+            }
+        });
+    </script>
+</body>
+</html>

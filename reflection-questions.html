@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성찰 질문 - EmotiCare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .reflection-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .intro-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        .intro-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .categories-grid {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .category-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .category-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            cursor: pointer;
+        }
+        
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .category-icon.self-understanding {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .category-icon.emotions {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        }
+        
+        .category-icon.relationships {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+        
+        .category-icon.growth {
+            background: linear-gradient(135deg, #f9ca24, #f0932b);
+        }
+        
+        .category-icon.stress {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        }
+        
+        .category-icon.mindfulness {
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+        }
+        
+        .category-info {
+            flex: 1;
+        }
+        
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-description {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .category-toggle {
+            color: #667eea;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-toggle.expanded {
+            transform: rotate(180deg);
+        }
+        
+        .questions-list {
+            display: none;
+            padding-top: 1rem;
+        }
+        
+        .questions-list.expanded {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-item {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .question-item:hover {
+            background: #e8f0ff;
+            transform: translateX(5px);
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .reflect-btn, .save-btn {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .reflect-btn:hover, .save-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .random-question {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .random-question-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        
+        .random-question-text {
+            font-size: 1.2rem;
+            color: #667eea;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        
+        .new-question-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .new-question-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .reflection-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .reflection-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .reflection-question {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        
+        .reflection-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 15px;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 1.5rem;
+        }
+        
+        .reflection-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">성찰 질문</h1>
+                <p class="page-subtitle">깊이 있는 질문들로 자신을 더 잘 이해하는 시간을 가져보세요</p>
+            </div>
+        </section>
+        
+        <section class="page-content">
+            <div class="reflection-container">
+                <div class="intro-section">
+                    <h2 class="intro-title">🤔 자기 성찰의 시간</h2>
+                    <p class="intro-text">
+                        성찰은 자신을 더 깊이 이해하고 성장할 수 있는 소중한 시간입니다.<br>
+                        각 질문에 대해 천천히 생각해보고, 솔직한 마음으로 답해보세요.
+                    </p>
+                </div>
+                
+                <div class="random-question">
+                    <h3 class="random-question-title">💡 오늘의 성찰 질문</h3>
+                    <div class="random-question-text" id="randomQuestionText">로딩 중...</div>
+                    <button class="new-question-btn" onclick="loadRandomQuestion()">
+                        <i class="fas fa-sync-alt"></i> 새로운 질문
+                    </button>
+                </div>
+                
+                <div class="categories-grid">
+                    <div class="category-section">
+                        <div class="category-header" onclick="toggleCategory('self-understanding')">
+                            <div class="category-icon self-understanding">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3 class="category-title">자기 이해</h3>
+                                <p class="category-description">나는 누구인가? 내 가치관과 신념은 무엇인가?</p>
+                            </div>
+                            <div class="category-toggle" id="toggle-self-understanding">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="questions-list" id="questions-self-understanding">
+                            <!-- 자기 이해 질문들 -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <div class="category-header" onclick="toggleCategory('emotions')">
+                            <div class="category-icon emotions">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3 class="category-title">감정 다루기</h3>
+                                <p class="category-description">내 감정을 어떻게 이해하고 표현할 것인가?</p>
+                            </div>
+                            <div class="category-toggle" id="toggle-emotions">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="questions-list" id="questions-emotions">
+                            <!-- 감정 다루기 질문들 -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <div class="category-header" onclick="toggleCategory('relationships')">
+                            <div class="category-icon relationships">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3 class="category-title">관계</h3>
+                                <p class="category-description">타인과의 관계에서 나는 어떤 모습인가?</p>
+                            </div>
+                            <div class="category-toggle" id="toggle-relationships">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="questions-list" id="questions-relationships">
+                            <!-- 관계 질문들 -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <div class="category-header" onclick="toggleCategory('growth')">
+                            <div class="category-icon growth">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3 class="category-title">성장</h3>
+                                <p class="category-description">어떻게 더 나은 사람이 될 수 있을까?</p>
+                            </div>
+                            <div class="category-toggle" id="toggle-growth">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="questions-list" id="questions-growth">
+                            <!-- 성장 질문들 -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <div class="category-header" onclick="toggleCategory('stress')">
+                            <div class="category-icon stress">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3 class="category-title">스트레스 관리</h3>
+                                <p class="category-description">스트레스와 어려움을 어떻게 극복할 것인가?</p>
+                            </div>
+                            <div class="category-toggle" id="toggle-stress">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="questions-list" id="questions-stress">
+                            <!-- 스트레스 관리 질문들 -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <div class="category-header" onclick="toggleCategory('mindfulness')">
+                            <div class="category-icon mindfulness">
+                                <i class="fas fa-lotus"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3 class="category-title">마음챙김</h3>
+                                <p class="category-description">현재 순간에 집중하고 평안을 찾는 방법은?</p>
+                            </div>
+                            <div class="category-toggle" id="toggle-mindfulness">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="questions-list" id="questions-mindfulness">
+                            <!-- 마음챙김 질문들 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 성찰 모달 -->
+    <div class="reflection-modal" id="reflectionModal">
+        <div class="reflection-modal-content">
+            <div class="modal-header">
+                <h3>성찰하기</h3>
+                <button class="modal-close" onclick="closeReflectionModal()">&times;</button>
+            </div>
+            <div class="reflection-question" id="modalQuestion"></div>
+            <textarea 
+                class="reflection-textarea" 
+                id="reflectionTextarea"
+                placeholder="이 질문에 대해 자유롭게 생각을 적어보세요..."
+            ></textarea>
+            <div class="modal-actions">
+                <button class="btn-outline" onclick="closeReflectionModal()">닫기</button>
+                <button class="btn-primary" onclick="saveReflection()">저장하기</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer-container"></div>
+    
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const reflectionQuestions = {
+            'self-understanding': [
+                "나는 어떤 사람인가? 나를 가장 잘 표현하는 세 가지 단어는 무엇인가?",
+                "내가 가장 소중하게 여기는 가치는 무엇인가?",
+                "나의 강점과 약점은 무엇인가? 이를 어떻게 활용하고 개선할 수 있을까?",
+                "10년 후 나는 어떤 모습이고 싶은가?",
+                "나를 가장 행복하게 만드는 것은 무엇인가?",
+                "내가 가장 자랑스러워하는 순간은 언제였나?",
+                "나는 어떤 상황에서 가장 스트레스를 받는가?",
+                "내 인생에서 가장 중요한 것은 무엇인가?"
+            ],
+            'emotions': [
+                "지금 내가 느끼는 감정은 무엇인가? 이 감정의 원인은 무엇일까?",
+                "나는 어떤 방식으로 감정을 표현하는가?",
+                "부정적인 감정을 느낄 때 나는 어떻게 대처하는가?",
+                "내가 가장 자주 느끼는 감정은 무엇인가?",
+                "감정을 억누르지 않고 건강하게 표현하는 방법은 무엇일까?",
+                "나를 화나게 만드는 것들은 무엇인가? 그 이유는?",
+                "기쁨을 느낄 때와 슬픔을 느낄 때의 나는 어떻게 다른가?",
+                "감정적으로 힘들 때 나를 위로해주는 것은 무엇인가?"
+            ],
+            'relationships': [
+                "나는 다른 사람들과 어떻게 관계를 맺는가?",
+                "내가 소중하게 여기는 사람들은 누구인가? 그 이유는?",
+                "갈등 상황에서 나는 어떻게 행동하는가?",
+                "나는 다른 사람들에게 어떤 영향을 주고 있을까?",
+                "건강한 관계를 유지하기 위해 내가 할 수 있는 것은 무엇인가?",
+                "나는 언제 다른 사람들과 가장 편안함을 느끼는가?",
+                "내가 받고 싶은 사랑의 방식은 무엇인가?",
+                "다른 사람을 이해하기 위해 내가 노력하는 것은 무엇인가?"
+            ],
+            'growth': [
+                "지난 1년 동안 내가 가장 성장한 부분은 무엇인가?",
+                "내가 극복하고 싶은 습관이나 패턴은 무엇인가?",
+                "새로운 것을 배울 때 나는 어떤 방식을 선호하는가?",
+                "실패에서 배운 가장 소중한 교훈은 무엇인가?",
+                "내가 도전하고 싶은 새로운 것은 무엇인가?",
+                "성장을 위해 내가 포기해야 할 것은 무엇인가?",
+                "나의 멘토나 롤모델은 누구인가? 그들에게서 무엇을 배우고 싶은가?",
+                "편안한 영역을 벗어나기 위해 내가 할 수 있는 작은 행동은 무엇인가?"
+            ],
+            'stress': [
+                "나는 스트레스를 어떻게 인식하고 있는가?",
+                "스트레스를 받을 때 나타나는 신체적, 정신적 신호는 무엇인가?",
+                "나만의 스트레스 해소 방법은 무엇인가?",
+                "스트레스의 근본 원인을 제거하기 위해 무엇을 할 수 있을까?",
+                "압박감을 느낄 때 나는 어떻게 우선순위를 정하는가?",
+                "휴식과 재충전을 위해 나는 무엇을 하는가?",
+                "스트레스 상황에서도 긍정적인 면을 찾을 수 있는가?",
+                "도움이 필요할 때 나는 누구에게 의지하는가?"
+            ],
+            'mindfulness': [
+                "지금 이 순간 나는 무엇을 느끼고 있는가?",
+                "현재에 집중하기 위해 내가 사용하는 방법은 무엇인가?",
+                "마음이 평안할 때는 언제인가?",
+                "일상에서 감사할 수 있는 작은 것들은 무엇인가?",
+                "나는 얼마나 자주 과거나 미래에 대해 걱정하는가?",
+                "명상이나 마음챙김 연습이 나에게 어떤 도움이 되는가?",
+                "자연과 함께 있을 때 나는 어떤 기분이 드는가?",
+                "내면의 평화를 찾기 위해 무엇이 필요한가?"
+            ]
+        };
+        
+        let allQuestions = [];
+        let currentReflectionQuestion = '';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQuestions();
+            loadRandomQuestion();
+        });
+        
+        function initializeQuestions() {
+            // 모든 질문을 하나의 배열로 합치기
+            Object.values(reflectionQuestions).forEach(categoryQuestions => {
+                allQuestions = allQuestions.concat(categoryQuestions);
+            });
+            
+            // 각 카테고리별 질문 렌더링
+            Object.entries(reflectionQuestions).forEach(([category, questions]) => {
+                renderCategoryQuestions(category, questions);
+            });
+        }
+        
+        function renderCategoryQuestions(category, questions) {
+            const container = document.getElementById(`questions-${category}`);
+            container.innerHTML = questions.map((question, index) => `
+                <div class="question-item">
+                    <div class="question-text">${question}</div>
+                    <div class="question-actions">
+                        <button class="reflect-btn" onclick="openReflectionModal('${question}')">
+                            <i class="fas fa-pen"></i> 성찰하기
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function toggleCategory(category) {
+            const questionsList = document.getElementById(`questions-${category}`);
+            const toggle = document.getElementById(`toggle-${category}`);
+            
+            if (questionsList.classList.contains('expanded')) {
+                questionsList.classList.remove('expanded');
+                toggle.classList.remove('expanded');
+            } else {
+                // 다른 카테고리들 닫기
+                document.querySelectorAll('.questions-list').forEach(list => {
+                    list.classList.remove('expanded');
+                });
+                document.querySelectorAll('.category-toggle').forEach(t => {
+                    t.classList.remove('expanded');
+                });
+                
+                // 현재 카테고리 열기
+                questionsList.classList.add('expanded');
+                toggle.classList.add('expanded');
+            }
+        }
+        
+        function loadRandomQuestion() {
+            const randomQuestion = getRandomItem(allQuestions);
+            document.getElementById('randomQuestionText').textContent = randomQuestion;
+        }
+        
+        function openReflectionModal(question) {
+            currentReflectionQuestion = question;
+            document.getElementById('modalQuestion').textContent = question;
+            document.getElementById('reflectionTextarea').value = '';
+            document.getElementById('reflectionModal').style.display = 'block';
+        }
+        
+        function closeReflectionModal() {
+            document.getElementById('reflectionModal').style.display = 'none';
+            currentReflectionQuestion = '';
+        }
+        
+        function saveReflection() {
+            const reflection = document.getElementById('reflectionTextarea').value.trim();
+            
+            if (!reflection) {
+                showMessage('성찰 내용을 입력해주세요.', 'error');
+                return;
+            }
+            
+            const reflectionData = {
+                question: currentReflectionQuestion,
+                reflection: reflection,
+                date: new Date().toISOString()
+            };
+            
+            // 로컬 스토리지에 저장
+            let savedReflections = loadFromLocalStorage('reflections') || [];
+            savedReflections.unshift(reflectionData);
+            
+            // 최근 20개만 유지
+            if (savedReflections.length > 20) {
+                savedReflections = savedReflections.slice(0, 20);
+            }
+            
+            saveToLocalStorage('reflections', savedReflections);
+            
+            closeReflectionModal();
+            showMessage('성찰이 저장되었습니다.', 'success');
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('reflectionModal');
+            if (event.target === modal) {
+                closeReflectionModal();
+            }
+        });
+    </script>
+</body>
+</html>
