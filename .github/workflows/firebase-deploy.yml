@@ -16,9 +16,9 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}' # GitHub Actions에서 제공하는 기본 토큰
-          # firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_YOUR_PROJECT_ID }}' # 서비스 계정 방식 (주석 처리)
-          firebaseToken: '${{ secrets.FIREBASE_TOKEN }}' # Firebase 토큰 방식 사용 (주석 해제)
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_EMOTICARE_N }}' # 서비스 계정 JSON 키 내용
           projectId: emoticare-n # Firebase 프로젝트 ID (콜론 뒤 공백 확인)
           channelId: live # 라이브 채널에 배포
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels # 필요한 경우 채널 기능 활성화
+        # env: # FIREBASE_TOKEN 방식은 이제 사용하지 않습니다.
+          # FIREBASE_TOKEN: '${{ secrets.FIREBASE_TOKEN }}'
+          # FIREBASE_CLI_PREVIEWS: hostingchannels
