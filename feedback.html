@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>피드백 - EmotiCare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .feedback-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .feedback-intro {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        .feedback-intro h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .feedback-intro p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .feedback-form-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #333;
+            text-align: center;
+        }
+        
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .form-label.required::after {
+            content: ' *';
+            color: #ff6b6b;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            padding: 1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .rating-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .rating-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+        
+        .rating-label {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .star-rating {
+            display: flex;
+            gap: 0.3rem;
+        }
+        
+        .star {
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .star:hover,
+        .star.active {
+            color: #f9ca24;
+        }
+        
+        .feature-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            background: #f8f9ff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-item:hover {
+            background: #e8f0ff;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+        
+        .submit-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 184, 148, 0.3);
+            display: none;
+        }
+        
+        .success-message h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .success-message p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .contact-info {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .contact-info h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .contact-method:hover {
+            color: #764ba2;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-checkboxes {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-methods {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">피드백</h1>
+                <p class="page-subtitle">여러분의 소중한 의견으로 EmotiCare가 더 나아집니다</p>
+            </div>
+        </section>
+        
+        <section class="page-content">
+            <div class="feedback-container">
+                <div class="feedback-intro">
+                    <h2>💌 여러분의 목소리를 들려주세요</h2>
+                    <p>
+                        EmotiCare를 이용해주셔서 감사합니다.<br>
+                        더 나은 서비스를 위해 여러분의 솔직한 피드백을 기다리고 있습니다.
+                    </p>
+                </div>
+                
+                <div class="feedback-form-section" id="feedbackFormSection">
+                    <h3 class="form-title">피드백 보내기</h3>
+                    
+                    <form class="feedback-form" id="feedbackForm" onsubmit="submitFeedback(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="userName">이름</label>
+                                <input type="text" id="userName" class="form-input" placeholder="이름을 입력해주세요 (선택사항)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="userEmail">이메일</label>
+                                <input type="email" id="userEmail" class="form-input" placeholder="이메일을 입력해주세요 (선택사항)">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="feedbackType">피드백 유형</label>
+                            <select id="feedbackType" class="form-select" required>
+                                <option value="">선택해주세요</option>
+                                <option value="bug">버그 신고</option>
+                                <option value="feature">기능 제안</option>
+                                <option value="improvement">개선 사항</option>
+                                <option value="compliment">칭찬</option>
+                                <option value="complaint">불만사항</option>
+                                <option value="question">문의사항</option>
+                                <option value="other">기타</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">서비스 만족도</label>
+                            <div class="rating-group">
+                                <div class="rating-item">
+                                    <span class="rating-label">전체적인 만족도</span>
+                                    <div class="star-rating" data-rating="overall">
+                                        <span class="star" data-value="1">★</span>
+                                        <span class="star" data-value="2">★</span>
+                                        <span class="star" data-value="3">★</span>
+                                        <span class="star" data-value="4">★</span>
+                                        <span class="star" data-value="5">★</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="rating-item">
+                                    <span class="rating-label">사용 편의성</span>
+                                    <div class="star-rating" data-rating="usability">
+                                        <span class="star" data-value="1">★</span>
+                                        <span class="star" data-value="2">★</span>
+                                        <span class="star" data-value="3">★</span>
+                                        <span class="star" data-value="4">★</span>
+                                        <span class="star" data-value="5">★</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="rating-item">
+                                    <span class="rating-label">콘텐츠 품질</span>
+                                    <div class="star-rating" data-rating="content">
+                                        <span class="star" data-value="1">★</span>
+                                        <span class="star" data-value="2">★</span>
+                                        <span class="star" data-value="3">★</span>
+                                        <span class="star" data-value="4">★</span>
+                                        <span class="star" data-value="5">★</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">가장 유용한 기능 (복수 선택 가능)</label>
+                            <div class="feature-checkboxes">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="useful_features" value="color-journal">
+                                    <span>색상 감정 일기</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="useful_features" value="emotion-letters">
+                                    <span>감정 편지</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="useful_features" value="mood-routine">
+                                    <span>하루 기분 기록</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="useful_features" value="healing-cards">
+                                    <span>힐링 카드</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="useful_features" value="quotes">
+                                    <span>치유 명언</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="useful_features" value="reflection">
+                                    <span>성찰 질문</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label class="form-label required" for="feedbackContent">상세 내용</label>
+                            <textarea 
+                                id="feedbackContent" 
+                                class="form-textarea" 
+                                placeholder="자세한 피드백을 작성해주세요. 버그 신고의 경우 발생 상황을 구체적으로 설명해주시면 도움이 됩니다."
+                                required
+                            ></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="suggestions">개선 제안</label>
+                            <textarea 
+                                id="suggestions" 
+                                class="form-textarea" 
+                                placeholder="서비스 개선을 위한 제안이 있으시면 자유롭게 작성해주세요."
+                                style="min-height: 100px;"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="submit-section">
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                <i class="fas fa-paper-plane"></i> 피드백 보내기
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="success-message" id="successMessage">
+                    <h3>🎉 피드백이 전송되었습니다!</h3>
+                    <p>소중한 의견 감사합니다. 더 나은 서비스로 보답하겠습니다.</p>
+                </div>
+                
+                <div class="contact-info">
+                    <h3>다른 방법으로 연락하기</h3>
+                    <div class="contact-methods">
+                        <a href="mailto:support@emoticare.com" class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <span>support@emoticare.com</span>
+                        </a>
+                        <a href="tel:02-1234-5678" class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <span>02-1234-5678</span>
+                        </a>
+                        <a href="#" class="contact-method">
+                            <i class="fab fa-kakao"></i>
+                            <span>카카오톡 상담</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="footer-container"></div>
+    
+    <script src="common.js"></script>
+    <script>
+        let ratings = {
+            overall: 0,
+            usability: 0,
+            content: 0
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setupStarRatings();
+        });
+        
+        function setupStarRatings() {
+            document.querySelectorAll('.star-rating').forEach(ratingGroup => {
+                const ratingType = ratingGroup.dataset.rating;
+                const stars = ratingGroup.querySelectorAll('.star');
+                
+                stars.forEach((star, index) => {
+                    star.addEventListener('click', function() {
+                        const value = parseInt(this.dataset.value);
+                        ratings[ratingType] = value;
+                        
+                        // 별점 표시 업데이트
+                        stars.forEach((s, i) => {
+                            if (i < value) {
+                                s.classList.add('active');
+                            } else {
+                                s.classList.remove('active');
+                            }
+                        });
+                    });
+                    
+                    star.addEventListener('mouseenter', function() {
+                        const value = parseInt(this.dataset.value);
+                        stars.forEach((s, i) => {
+                            if (i < value) {
+                                s.style.color = '#f9ca24';
+                            } else {
+                                s.style.color = '#ddd';
+                            }
+                        });
+                    });
+                });
+                
+                ratingGroup.addEventListener('mouseleave', function() {
+                    const currentRating = ratings[ratingType];
+                    stars.forEach((s, i) => {
+                        if (i < currentRating) {
+                            s.style.color = '#f9ca24';
+                        } else {
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+            });
+        }
+        
+        async function submitFeedback(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            
+            // 로딩 상태
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 전송 중...';
+            
+            try {
+                // 폼 데이터 수집
+                const formData = {
+                    name: document.getElementById('userName').value,
+                    email: document.getElementById('userEmail').value,
+                    type: document.getElementById('feedbackType').value,
+                    content: document.getElementById('feedbackContent').value,
+                    suggestions: document.getElementById('suggestions').value,
+                    ratings: ratings,
+                    usefulFeatures: Array.from(document.querySelectorAll('input[name="useful_features"]:checked'))
+                        .map(cb => cb.value),
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    url: window.location.href
+                };
+                
+                // 로컬 스토리지에 저장 (백업용)
+                let feedbacks = loadFromLocalStorage('feedbacks') || [];
+                feedbacks.unshift(formData);
+                if (feedbacks.length > 50) {
+                    feedbacks = feedbacks.slice(0, 50);
+                }
+                saveToLocalStorage('feedbacks', feedbacks);
+                
+                // Firebase에 저장 (로그인된 경우)
+                if (currentUser) {
+                    await saveToFirestore('feedbacks', Date.now().toString(), {
+                        ...formData,
+                        userId: currentUser.uid
+                    });
+                }
+                
+                // 실제 서비스에서는 여기서 서버로 전송
+                // await fetch('/api/feedback', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(formData)
+                // });
+                
+                // 성공 처리
+                setTimeout(() => {
+                    document.getElementById('feedbackFormSection').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                    
+                    // 페이지 상단으로 스크롤
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 1000);
+                
+            } catch (error) {
+                console.error('피드백 전송 실패:', error);
+                showMessage('피드백 전송에 실패했습니다. 다시 시도해주세요.', 'error');
+                
+                // 버튼 복원
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+        
+        // 폼 유효성 검사
+        document.getElementById('feedbackContent').addEventListener('input', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const feedbackType = document.getElementById('feedbackType').value;
+            
+            if (this.value.trim() && feedbackType) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        });
+        
+        document.getElementById('feedbackType').addEventListener('change', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const feedbackContent = document.getElementById('feedbackContent').value.trim();
+            
+            if (this.value && feedbackContent) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

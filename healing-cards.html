@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>힐링 카드 - EmotiCare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .cards-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .card-draw-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        .card-draw-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .card-draw-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .draw-button {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            color: #333;
+            border: none;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 234, 167, 0.4);
+            margin-bottom: 1rem;
+        }
+        
+        .draw-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 234, 167, 0.6);
+        }
+        
+        .draw-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .daily-limit {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .healing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.5s ease;
+            border: 3px solid transparent;
+        }
+        
+        .healing-card.show {
+            transform: scale(1);
+            opacity: 1;
+            border-color: #667eea;
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-message {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+        
+        .card-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .save-card-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .save-card-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        .new-card-btn {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .new-card-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .saved-cards-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .saved-cards-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .saved-cards-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .saved-card-item {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .saved-card-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .saved-card-message {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .saved-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .delete-saved-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-saved-btn:hover {
+            background: #ff5252;
+        }
+        
+        .empty-saved {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .empty-saved i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+        
+        .time-based-message {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">힐링 카드</h1>
+                <p class="page-subtitle">매일 새로운 힐링 메시지를 받아보고 마음의 위로를 얻어보세요</p>
+            </div>
+        </section>
+        
+        <section class="page-content">
+            <div class="cards-container">
+                <div class="card-draw-section">
+                    <h2 class="card-draw-title">오늘의 힐링 카드</h2>
+                    <p class="card-draw-subtitle">마음이 필요로 하는 메시지를 받아보세요</p>
+                    
+                    <div class="time-based-message" id="timeMessage">
+                        <!-- 시간대별 메시지가 여기에 표시됩니다 -->
+                    </div>
+                    
+                    <button class="draw-button" id="drawButton" onclick="drawCard()">
+                        <i class="fas fa-magic"></i> 카드 뽑기
+                    </button>
+                    
+                    <div class="daily-limit" id="dailyLimit">
+                        오늘 <span id="drawCount">0</span>/5 카드를 뽑으셨습니다
+                    </div>
+                </div>
+                
+                <div class="healing-card" id="healingCard">
+                    <!-- 뽑은 카드가 여기에 표시됩니다 -->
+                </div>
+                
+                <div class="saved-cards-section">
+                    <div class="saved-cards-header">
+                        <h3>내가 저장한 힐링 메시지</h3>
+                        <button class="btn-outline" onclick="clearAllSavedCards()">
+                            <i class="fas fa-trash"></i> 모두 삭제
+                        </button>
+                    </div>
+                    
+                    <div class="saved-cards-list" id="savedCardsList">
+                        <!-- 저장된 카드들이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="footer-container"></div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let dailyDrawCount = 0;
+        let savedCards = [];
+        let currentCard = null;
+        
+        const healingMessages = {
+            morning: [
+                { message: "새로운 하루가 시작됩니다. 오늘도 당신은 충분히 소중한 존재입니다.", category: "자기사랑", icon: "fas fa-heart" },
+                { message: "아침 햇살처럼 따뜻한 마음으로 하루를 시작해보세요.", category: "희망", icon: "fas fa-sun" },
+                { message: "어제의 걱정은 내려놓고, 오늘의 가능성에 집중해보세요.", category: "현재집중", icon: "fas fa-leaf" },
+                { message: "당신의 존재 자체가 이 세상을 더 아름답게 만듭니다.", category: "자기사랑", icon: "fas fa-star" },
+                { message: "작은 걸음이라도 괜찮습니다. 천천히 나아가세요.", category: "격려", icon: "fas fa-seedling" }
+            ],
+            afternoon: [
+                { message: "지금까지 잘 해오고 있습니다. 자신을 믿어보세요.", category: "격려", icon: "fas fa-thumbs-up" },
+                { message: "완벽하지 않아도 괜찮습니다. 당신은 이미 충분합니다.", category: "자기수용", icon: "fas fa-heart" },
+                { message: "잠시 멈춰서 깊게 숨을 쉬어보세요. 지금 이 순간을 느껴보세요.", category: "마음챙김", icon: "fas fa-wind" },
+                { message: "힘들 때는 쉬어가도 됩니다. 그것도 용기입니다.", category: "위로", icon: "fas fa-umbrella" },
+                { message: "당신의 노력을 알고 있습니다. 스스로를 격려해주세요.", category: "격려", icon: "fas fa-medal" }
+            ],
+            evening: [
+                { message: "오늘 하루도 수고하셨습니다. 자신에게 따뜻한 말을 건네보세요.", category: "감사", icon: "fas fa-moon" },
+                { message: "작은 성취라도 축하할 가치가 있습니다.", category: "자기인정", icon: "fas fa-gift" },
+                { message: "내일은 새로운 기회가 기다리고 있습니다.", category: "희망", icon: "fas fa-sunrise" },
+                { message: "오늘의 경험들이 당신을 더 성장시켰습니다.", category: "성장", icon: "fas fa-tree" },
+                { message: "평안한 밤 되시길 바랍니다. 당신은 사랑받을 자격이 있습니다.", category: "자기사랑", icon: "fas fa-heart" }
+            ],
+            general: [
+                { message: "당신의 감정은 모두 소중하고 의미가 있습니다.", category: "감정수용", icon: "fas fa-rainbow" },
+                { message: "힘든 시간도 지나갑니다. 당신은 이겨낼 수 있습니다.", category: "희망", icon: "fas fa-mountain" },
+                { message: "자신에게 친절하세요. 당신은 최선을 다하고 있습니다.", category: "자기사랑", icon: "fas fa-heart" },
+                { message: "모든 것이 완벽할 필요는 없습니다. 지금 이대로도 충분합니다.", category: "자기수용", icon: "fas fa-check-circle" },
+                { message: "당신의 존재만으로도 누군가에게는 큰 의미입니다.", category: "존재가치", icon: "fas fa-star" }
+            ]
+        };
+        
+        const timeBasedMessages = {
+            morning: "🌅 새로운 하루를 시작하는 당신에게 특별한 메시지를 전해드립니다.",
+            afternoon: "☀️ 하루 중반, 에너지를 충전할 수 있는 메시지를 받아보세요.",
+            evening: "🌙 하루를 마무리하며 마음을 편안하게 해줄 메시지입니다.",
+            night: "✨ 깊은 밤, 내일을 위한 희망의 메시지를 전해드립니다."
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDailyData();
+            loadSavedCards();
+            updateTimeMessage();
+            renderSavedCards();
+        });
+        
+        function updateTimeMessage() {
+            const hour = new Date().getHours();
+            let timeKey;
+            
+            if (hour >= 6 && hour < 12) {
+                timeKey = 'morning';
+            } else if (hour >= 12 && hour < 18) {
+                timeKey = 'afternoon';
+            } else if (hour >= 18 && hour < 22) {
+                timeKey = 'evening';
+            } else {
+                timeKey = 'night';
+            }
+            
+            document.getElementById('timeMessage').textContent = timeBasedMessages[timeKey];
+        }
+        
+        function loadDailyData() {
+            const today = getCurrentDate();
+            const dailyData = loadFromLocalStorage('dailyCardData') || {};
+            
+            if (dailyData.date === today) {
+                dailyDrawCount = dailyData.drawCount || 0;
+            } else {
+                dailyDrawCount = 0;
+                saveToLocalStorage('dailyCardData', { date: today, drawCount: 0 });
+            }
+            
+            updateDrawButton();
+        }
+        
+        function updateDrawButton() {
+            const drawButton = document.getElementById('drawButton');
+            const drawCountSpan = document.getElementById('drawCount');
+            
+            drawCountSpan.textContent = dailyDrawCount;
+            
+            if (dailyDrawCount >= 5) {
+                drawButton.disabled = true;
+                drawButton.innerHTML = '<i class="fas fa-clock"></i> 내일 다시 뽑아보세요';
+            } else {
+                drawButton.disabled = false;
+                drawButton.innerHTML = '<i class="fas fa-magic"></i> 카드 뽑기';
+            }
+        }
+        
+        function drawCard() {
+            if (dailyDrawCount >= 5) {
+                showMessage('하루에 최대 5장까지만 뽑을 수 있습니다.', 'error');
+                return;
+            }
+            
+            const hour = new Date().getHours();
+            let messagePool;
+            
+            if (hour >= 6 && hour < 12) {
+                messagePool = healingMessages.morning;
+            } else if (hour >= 12 && hour < 18) {
+                messagePool = healingMessages.afternoon;
+            } else if (hour >= 18 && hour < 24) {
+                messagePool = healingMessages.evening;
+            } else {
+                messagePool = healingMessages.general;
+            }
+            
+            // 일반 메시지도 포함
+            const allMessages = [...messagePool, ...healingMessages.general];
+            currentCard = getRandomItem(allMessages);
+            
+            displayCard(currentCard);
+            
+            // 뽑기 횟수 증가
+            dailyDrawCount++;
+            const today = getCurrentDate();
+            saveToLocalStorage('dailyCardData', { date: today, drawCount: dailyDrawCount });
+            updateDrawButton();
+        }
+        
+        function displayCard(card) {
+            const cardElement = document.getElementById('healingCard');
+            
+            cardElement.innerHTML = `
+                <div class="card-icon">
+                    <i class="${card.icon}"></i>
+                </div>
+                <div class="card-category">${card.category}</div>
+                <div class="card-message">${card.message}</div>
+                <div class="card-actions">
+                    <button class="save-card-btn" onclick="saveCurrentCard()">
+                        <i class="fas fa-bookmark"></i> 저장하기
+                    </button>
+                    <button class="new-card-btn" onclick="drawCard()">
+                        <i class="fas fa-sync-alt"></i> 새 카드 뽑기
+                    </button>
+                </div>
+            `;
+            
+            cardElement.classList.add('show');
+        }
+        
+        async function saveCurrentCard() {
+            if (!currentCard) return;
+            
+            const savedCard = {
+                ...currentCard,
+                id: Date.now().toString(),
+                savedAt: new Date().toISOString()
+            };
+            
+            savedCards.unshift(savedCard);
+            
+            // 로컬 저장
+            saveToLocalStorage('savedHealingCards', savedCards);
+            
+            // Firebase 저장 (로그인된 경우)
+            if (currentUser) {
+                await saveToFirestore('savedCards', savedCard.id, savedCard);
+            }
+            
+            renderSavedCards();
+            showMessage('카드가 저장되었습니다.', 'success');
+        }
+        
+        function loadSavedCards() {
+            const localCards = loadFromLocalStorage('savedHealingCards');
+            if (localCards) {
+                savedCards = localCards;
+            }
+        }
+        
+        function renderSavedCards() {
+            const savedCardsList = document.getElementById('savedCardsList');
+            
+            if (savedCards.length === 0) {
+                savedCardsList.innerHTML = `
+                    <div class="empty-saved">
+                        <i class="fas fa-bookmark"></i>
+                        <p>아직 저장한 카드가 없습니다.<br>마음에 드는 카드를 저장해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            savedCardsList.innerHTML = savedCards.map(card => `
+                <div class="saved-card-item">
+                    <div class="saved-card-message">${card.message}</div>
+                    <div class="saved-card-meta">
+                        <span><i class="${card.icon}"></i> ${card.category}</span>
+                        <span>
+                            ${formatSavedDate(card.savedAt)}
+                            <button class="delete-saved-btn" onclick="deleteSavedCard('${card.id}')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function formatSavedDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) {
+                return '오늘';
+            } else if (diffDays === 2) {
+                return '어제';
+            } else if (diffDays <= 7) {
+                return `${diffDays - 1}일 전`;
+            } else {
+                return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+            }
+        }
+        
+        async function deleteSavedCard(cardId) {
+            savedCards = savedCards.filter(card => card.id !== cardId);
+            saveToLocalStorage('savedHealingCards', savedCards);
+            
+            // Firebase에서도 삭제 (로그인된 경우)
+            if (currentUser) {
+                try {
+                    await db.collection('savedCards').doc(cardId).delete();
+                } catch (error) {
+                    console.error('Firebase 삭제 실패:', error);
+                }
+            }
+            
+            renderSavedCards();
+            showMessage('카드가 삭제되었습니다.', 'success');
+        }
+        
+        function clearAllSavedCards() {
+            if (savedCards.length === 0) {
+                showMessage('삭제할 카드가 없습니다.', 'error');
+                return;
+            }
+            
+            if (confirm('저장된 모든 카드를 삭제하시겠습니까?')) {
+                savedCards = [];
+                saveToLocalStorage('savedHealingCards', savedCards);
+                renderSavedCards();
+                showMessage('모든 카드가 삭제되었습니다.', 'success');
+            }
+        }
+    </script>
+</body>
+</html>
