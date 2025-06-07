@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: FirebaseExtended/action-hosting-deploy@v0.7.1 # 구체적인 최신 버전으로 변경
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}' # GitHub Actions에서 제공하는 기본 토큰
           projectId: emoticare-n # Firebase 프로젝트 ID (콜론 뒤 공백 확인)
