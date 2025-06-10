@@ -14,13 +14,15 @@
             padding: 2rem;
         }
         
-        .date-selector {
+        .calendar-header-routine {
             background: white;
             border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 2rem;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .date-nav {
@@ -45,10 +47,44 @@
             transform: scale(1.1);
         }
         
-        .current-date {
+        .current-date-display {
             font-size: 1.5rem;
             font-weight: 600;
             color: #333;
+        }
+
+        .calendar-routine {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .calendar-day-header-routine {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .calendar-grid-routine .calendar-day {
+            background: white;
+            padding: 0.5rem; 
+            min-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .calendar-grid-routine {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e1e8ed;
+            border-radius: 10px;
+            overflow: hidden;
         }
         
         .time-sections {
@@ -282,6 +318,30 @@
             font-size: 0.9rem;
             color: #666;
         }
+
+        .calendar-day.selected-day {
+            background-color: #e8f0ff !important;
+            border: 2px solid #667eea !important;
+            color: #333 !important;
+        }
+        .calendar-day.has-record {
+            position: relative;
+        }
+        .calendar-day.has-record::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background-color: #764ba2;
+            border-radius: 50%;
+        }
+        .calendar-header-routine .btn-secondary {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -297,11 +357,19 @@
         
         <section class="page-content">
             <div class="routine-container">
-                <div class="date-selector">
+                <div class="calendar-header-routine">
                     <div class="date-nav">
                         <button onclick="changeDate(-1)"><i class="fas fa-chevron-left"></i></button>
-                        <span class="current-date" id="currentDate"></span>
+                        <span class="current-date-display" id="currentDateDisplay"></span>
                         <button onclick="changeDate(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div>
+                        <button class="btn-secondary" onclick="goToToday()">오늘</button>
+                    </div>
+                </div>
+
+                <div class="calendar-routine" id="calendarView">
+                    <div class="calendar-grid-routine" id="calendarGridRoutine">
                     </div>
                 </div>
                 
@@ -421,7 +489,6 @@
                 <div class="summary-card" id="summaryCard" style="display: none;">
                     <h3 class="summary-title">오늘의 기분 요약</h3>
                     <div class="mood-summary" id="moodSummary">
-                        <!-- 요약이 여기에 표시됩니다 -->
                     </div>
                 </div>
             </div>
@@ -430,7 +497,6 @@
     
     <div id="footer-container"></div>
     
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
@@ -456,10 +522,23 @@
         };
         
         document.addEventListener('DOMContentLoaded', function() {
-            updateDateDisplay();
-            loadMoodData();
             setupMoodSelectors();
-            loadTodayData();
+
+            document.addEventListener('authStateReady', async function(e) {
+                if (e.detail.user) {
+                    await loadMoodData();
+                } else {
+                    const localData = loadFromLocalStorage('moodRoutineData');
+                    if (localData) {
+                        moodData = localData;
+                    } else {
+                        moodData = {};
+                    }
+                     showMessage("로그인 후 이용하시면 데이터가 안전하게 보관됩니다.", "info");
+                }
+                renderCalendarRoutine();
+                loadTodayData();
+            });
         });
         
         function updateDateDisplay() {
@@ -469,14 +548,76 @@
                 day: 'numeric',
                 weekday: 'long'
             };
-            document.getElementById('currentDate').textContent = 
+            document.getElementById('currentDateDisplay').textContent = 
                 currentDate.toLocaleDateString('ko-KR', options);
+        }
+
+        function renderCalendarRoutine() {
+            updateDateDisplay();
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const calendarGrid = document.getElementById('calendarGridRoutine');
+            calendarGrid.innerHTML = '';
+            
+            const dayHeaders = ['일', '월', '화', '수', '목', '금', '토'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header-routine'; 
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            const today = new Date();
+
+            for (let i = 0; i < 42; i++) {
+                const cellDate = new Date(startDate);
+                cellDate.setDate(startDate.getDate() + i);
+                
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day'; 
+                
+                if (cellDate.getMonth() !== month) {
+                    dayCell.classList.add('other-month');
+                } else {
+                    dayCell.addEventListener('click', () => {                        
+                        currentDate = new Date(cellDate);
+                        renderCalendarRoutine();
+                        loadTodayData();
+                    });
+                }
+
+                if (cellDate.toDateString() === today.toDateString()) {
+                    dayCell.classList.add('today');
+                }
+                if (cellDate.toDateString() === currentDate.toDateString()) {
+                    dayCell.classList.add('selected-day'); 
+                }
+
+                const dateKey = formatDate(cellDate);
+                const dayData = moodData[dateKey];
+                if (dayData && (Object.keys(dayData.moods || {}).length > 0 || (dayData.gratitude && dayData.gratitude.some(g => g)) || dayData.gratitudeNote)) {
+                    dayCell.classList.add('has-record');
+                }
+
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = cellDate.getDate();
+                dayCell.appendChild(dayNumber);
+                
+                calendarGrid.appendChild(dayCell);
+            }
         }
         
         function changeDate(direction) {
-            saveTodayData(); // 현재 데이터 저장
+            saveTodayData();
             currentDate.setDate(currentDate.getDate() + direction);
-            updateDateDisplay();
+            renderCalendarRoutine();
             loadTodayData();
         }
         
@@ -486,19 +627,14 @@
                     const timeSection = this.closest('.mood-selector');
                     const time = timeSection.dataset.time;
                     
-                    // 같은 시간대의 다른 이모지 선택 해제
                     timeSection.querySelectorAll('.mood-emoji').forEach(e => 
                         e.classList.remove('selected'));
                     
-                    // 현재 이모지 선택
                     this.classList.add('selected');
-                    
-                    // 데이터 저장
                     saveTodayData();
                 });
             });
             
-            // 텍스트 입력 시 자동 저장
             document.querySelectorAll('.thought-input, .gratitude-input, .gratitude-note').forEach(input => {
                 input.addEventListener('input', () => {
                     clearTimeout(input.saveTimer);
@@ -507,10 +643,27 @@
             });
         }
         
-        function loadMoodData() {
+        async function loadMoodData() {
             const savedData = loadFromLocalStorage('moodRoutineData');
-            if (savedData) {
-                moodData = savedData;
+            let localMoodData = savedData ? savedData : {};
+
+            if (currentUser) {
+                try {
+                    const snapshot = await db.collection('moodRoutines')
+                                        .where('userId', '==', currentUser.uid)
+                                        .get();
+                    const firebaseData = {};
+                    snapshot.forEach(doc => {
+                        firebaseData[doc.id] = doc.data();
+                    });
+                    moodData = { ...(localMoodData || {}), ...firebaseData };
+                    saveToLocalStorage('moodRoutineData', moodData);
+                } catch (error) {
+                    console.error("Firebase moodRoutines 로드 실패:", error);
+                    moodData = localMoodData || {}; 
+                }
+            } else {
+                moodData = localMoodData || {};
             }
         }
         
@@ -524,7 +677,6 @@
                 gratitudeNote: ''
             };
             
-            // 기분 데이터 수집
             ['morning', 'afternoon', 'evening'].forEach(time => {
                 const selectedMood = document.querySelector(`.mood-selector[data-time="${time}"] .mood-emoji.selected`);
                 if (selectedMood) {
@@ -537,7 +689,6 @@
                 }
             });
             
-            // 감사 데이터 수집
             document.querySelectorAll('.gratitude-input').forEach((input, index) => {
                 if (input.value.trim()) {
                     todayData.gratitude[index] = input.value.trim();
@@ -551,13 +702,15 @@
             
             moodData[dateKey] = todayData;
             saveToLocalStorage('moodRoutineData', moodData);
+            if (currentUser && (Object.keys(todayData.moods).length > 0 || (Array.isArray(todayData.gratitude) && todayData.gratitude.some(g => g)) || todayData.gratitudeNote)) {
+                 saveToFirestore('moodRoutines', dateKey, todayData);
+            }
         }
         
         function loadTodayData() {
             const dateKey = formatDate(currentDate);
             const todayData = moodData[dateKey];
             
-            // 모든 입력 필드 초기화
             document.querySelectorAll('.mood-emoji').forEach(emoji => 
                 emoji.classList.remove('selected'));
             document.querySelectorAll('.thought-input').forEach(input => input.value = '');
@@ -565,7 +718,6 @@
             document.querySelector('.gratitude-note').value = '';
             
             if (todayData) {
-                // 기분 데이터 로드
                 Object.entries(todayData.moods || {}).forEach(([time, mood]) => {
                     const moodEmoji = document.querySelector(
                         `.mood-selector[data-time="${time}"] .mood-emoji[data-mood="${mood}"]`
@@ -575,7 +727,6 @@
                     }
                 });
                 
-                // 생각 데이터 로드
                 Object.entries(todayData.thoughts || {}).forEach(([time, thought]) => {
                     const thoughtInput = document.querySelector(`.thought-input[data-time="${time}"]`);
                     if (thoughtInput) {
@@ -583,7 +734,6 @@
                     }
                 });
                 
-                // 감사 데이터 로드
                 (todayData.gratitude || []).forEach((gratitude, index) => {
                     const gratitudeInput = document.querySelector(`.gratitude-input[data-index="${index}"]`);
                     if (gratitudeInput) {
@@ -591,20 +741,16 @@
                     }
                 });
                 
-                // 감사 노트 로드
                 if (todayData.gratitudeNote) {
                     document.querySelector('.gratitude-note').value = todayData.gratitudeNote;
                 }
-                
-                // 요약 표시
                 showMoodSummary(todayData);
             } else {
-                // 요약 숨기기
                 document.getElementById('summaryCard').style.display = 'none';
             }
         }
         
-        function saveMoodData() {
+        async function saveMoodData() {
             saveTodayData();
             
             const dateKey = formatDate(currentDate);
@@ -615,8 +761,12 @@
                 return;
             }
             
+            if (currentUser) {
+                await saveToFirestore('moodRoutines', dateKey, todayData);
+            }
             showMoodSummary(todayData);
             showMessage('오늘의 기분이 저장되었습니다.', 'success');
+            renderCalendarRoutine();
         }
         
         function showMoodSummary(data) {
@@ -649,6 +799,13 @@
         
         function formatDate(date) {
             return date.toISOString().split('T')[0];
+        }
+
+        function goToToday() {
+            saveTodayData();
+            currentDate = new Date();
+            renderCalendarRoutine();
+            loadTodayData();
         }
     </script>
 </body>

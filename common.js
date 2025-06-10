@@ -147,6 +147,9 @@ function setupAuth() {
   auth.onAuthStateChanged((user) => {
     currentUser = user
     updateAuthUI(user)
+    // 로그인 상태 변경 시 커스텀 이벤트 발생
+    const event = new CustomEvent('authStateReady', { detail: { user: currentUser } });
+    document.dispatchEvent(event);
   });
 }
 
