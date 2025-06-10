@@ -256,13 +256,21 @@
             padding: 1.5rem;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
+            /* display: none; 기본적으로 숨김 처리 */
         }
 
         .year-pixels-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* 네비게이션 요소를 헤더 중앙에 배치 */
             align-items: center;
+            padding: 0 0.5rem; /* 헤더 패딩 조정 */
             margin-bottom: 1.5rem;
+        }
+
+        .year-pixels-nav { /* 연도 네비게이션 스타일 추가 */
+            display: flex;
+            align-items: center; /* 버튼과 제목을 세로 중앙 정렬 */
+            gap: 0.5rem; /* 버튼과 제목 사이 간격 (기존 버튼 마진으로도 가능) */
         }
 
         .year-pixels-header h2 {
@@ -277,42 +285,47 @@
             padding: 0.5rem;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 0 0.5rem;
+            transition: all 0.3s ease; /* 버튼 좌우 마진은 gap으로 대체하거나 유지 가능 */
+            /* margin: 0 0.5rem; */ /* year-pixels-nav의 gap으로 대체 가능 */
         }
         .year-pixels-nav button:hover {
             background: #764ba2;
         }
 
         .pixels-grid-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 명확하게 4열 그리드 설정 */
+            gap: 1rem; /* 월별 간격 */
+            padding: 1rem; /* 그리드 컨테이너 자체에 패딩 추가 */
         }
 
         .pixel-month-wrapper {
-             margin-bottom: 1rem;
+            background: #f8f9fa; /* 각 월별 배경색 */
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            /* margin-bottom: 1.5rem; */ /* gap 속성으로 대체 */
         }
 
         .pixel-month-label {
-            text-align: left;
+            text-align: center; /* 월 이름 가운데 정렬 */
             font-weight: 600;
             margin-bottom: 0.5rem;
-            font-size: 1em;
+            font-size: 0.9em; /* 월 이름 폰트 크기 조정 */
             color: #333;
         }
         
         .pixels-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            max-width: 300px;
+            gap: 2px; /* 날짜 픽셀 간격 조정 */
+            /* max-width: 300px; 제거 또는 조정 */
         }
         .pixel-day {
             width: 100%;
-            padding-bottom: 100%;
+            padding-bottom: 100%; /* 정사각형 유지를 위해 */
             background-color: #efefef;
-            border-radius: 3px;
+            border-radius: 2px; /* 픽셀 모서리 약간 둥글게 */
             cursor: pointer;
             position: relative;
             transition: transform 0.2s ease;
@@ -320,6 +333,7 @@
         .pixel-day:hover {
             transform: scale(1.1);
             outline: 2px solid #667eea;
+            z-index: 10; /* 호버 시 다른 요소 위로 올라오도록 */
         }
     </style>
 </head>
@@ -362,8 +376,8 @@
                                 <span>슬픔</span>
                             </div>
                             <div class="emotion-item">
-                                <div class="emotion-color" style="background: #c0392b;"></div>
-                                <span>화남</span>
+                                <div class="emotion-color" style="background: #ff0606;"></div>
+                                <span>화남</span> 
                             </div>
                         </div>
                     </div>
@@ -405,7 +419,7 @@
                 </div>
 
                 <div style="text-align: center; margin-top: 2rem;">
-                    <button id="toggleViewButton" class="btn-secondary" onclick="toggleCalendarView()">
+                    <button id="toggleViewButton" class="btn-outline" onclick="toggleCalendarView()">
                         올해의 색깔들 보기
                     </button>
                 </div>
@@ -439,7 +453,7 @@
                             <i class="fas fa-sad-tear"></i>
                             <span>슬픔</span>
                         </button>
-                        <button class="emotion-btn" data-emotion="angry" data-color="#c0392b">
+                        <button class="emotion-btn" data-emotion="angry" data-color="#ff0606">
                             <i class="fas fa-angry"></i>
                             <span>화남</span>
                         </button>
@@ -458,8 +472,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="emotionNote">오늘의 기분에 대해 간단히 적어보세요</label>
-                    <textarea id="emotionNote" placeholder="오늘 하루는 어떠셨나요?"></textarea>
+                    <label for="emotionNote">오늘 하루 일과와 감정을 간단히 기록해보세요</label>
+                    <textarea id="emotionNote" placeholder="오늘 하루는 어땠나요?"></textarea>
                 </div>
                 
                 <div class="form-group modal-action-buttons">
@@ -488,7 +502,7 @@
             calm: { name: '평온', color: '#00a693', icon: 'fas fa-smile' },
             anxious: { name: '불안', color: '#8e44ad', icon: 'fas fa-meh' },
             sad: { name: '슬픔', color: '#2980b9', icon: 'fas fa-sad-tear' },
-            angry: { name: '화남', color: '#c0392b', icon: 'fas fa-angry' }
+            angry: { name: '화남', color: '#ff0606', icon: 'fas fa-angry' }
         };
         
         const prescriptions = {
@@ -542,6 +556,8 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             setupEmotionSelector();
+            applyEmotionIconColors(); // 페이지 로드 시 아이콘 색상 적용
+            setupIntensitySlider(); // 감정 강도 슬라이더 초기화 함수 호출
 
             document.addEventListener('authStateReady', async function(e) {
                 if (e.detail.user) { 
@@ -643,7 +659,17 @@
                 
                 dayCell.addEventListener('click', () => {
                     if (!dayCell.classList.contains('other-month')) {
-                        openEmotionModal(cellDate);
+                        const today = new Date();
+                        // 시간을 제외하고 날짜만 비교하기 위해 자정으로 설정
+                        today.setHours(0, 0, 0, 0);
+                        const clickedDate = new Date(cellDate); // cellDate는 이미 Date 객체일 수 있으나, 확실히 하기 위해
+                        clickedDate.setHours(0, 0, 0, 0);
+
+                        if (clickedDate > today) {
+                            showMessage('미래의 일기는 쓰실 수 없어요 😊', 'info');
+                            return; 
+                        }
+                        openEmotionModal(cellDate); // 과거 또는 오늘 날짜인 경우에만 모달 열기
                     }
                 });
                 calendarGrid.appendChild(dayCell);
@@ -691,6 +717,33 @@
                     this.classList.add('selected');
                 });
             });
+        }
+
+        function applyEmotionIconColors() {
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                const color = btn.dataset.color;
+                const icon = btn.querySelector('i');
+                if (icon && color) icon.style.color = color;
+            });
+        }
+
+        function setupIntensitySlider() {
+            const intensitySlider = document.getElementById('emotionIntensity');
+            if (!intensitySlider) return;
+
+            function updateSliderBackground() {
+                const value = intensitySlider.value;
+                const min = intensitySlider.min;
+                const max = intensitySlider.max;
+                const percentage = ((value - min) / (max - min)) * 100;
+                // 채워진 부분은 #667eea, 안 채워진 부분은 #e1e8ed
+                intensitySlider.style.background = `linear-gradient(to right, #667eea ${percentage}%, #e1e8ed ${percentage}%)`;
+            }
+
+            // 초기 배경 설정
+            updateSliderBackground();
+            // 슬라이더 값 변경 시 배경 업데이트
+            intensitySlider.addEventListener('input', updateSliderBackground);
         }
         
         async function saveEmotion() {
@@ -949,23 +1002,32 @@
         }
 
         function toggleCalendarView() {
-            const monthViewContainer = document.getElementById('monthViewContainer');
+            // const monthViewContainer = document.getElementById('monthViewContainer'); // 월별 달력은 항상 표시되므로 직접 제어 X
             const yearViewElement = document.getElementById('yearInPixelsView');
             const toggleButton = document.getElementById('toggleViewButton');
 
-            if (calendarViewMode === 'month') {
-                monthViewContainer.style.display = 'none';
+            if (!yearViewElement || !toggleButton) {
+                console.error("뷰 전환에 필요한 HTML 요소 중 일부를 찾을 수 없습니다.");
+                showMessage("화면 전환 중 오류가 발생했습니다.", "error");
+                return;
+            }
+
+            // 픽셀 뷰를 열려고 할 때
+            if (yearViewElement.style.display === 'none' || calendarViewMode === 'month') {
+                // 감정 기록이 있는지 확인
+                if (Object.keys(emotionData).length === 0) {
+                    showMessage('색상일기 기록이 없어요. 감정일기를 기록하면 픽셀뷰를 볼 수 있어요', 'info');
+                    return; // 픽셀 뷰를 열지 않고 함수 종료
+                }
+                
                 yearViewElement.style.display = 'block';
                 currentPixelYear = currentDate.getFullYear(); 
                 renderYearInPixels(currentPixelYear);
-                toggleButton.textContent = '월별 달력 보기';
+                toggleButton.textContent = '픽셀 뷰 닫기'; // 버튼 텍스트 변경
                 calendarViewMode = 'year';
-            } else {
+            } else { // 픽셀 뷰를 닫으려고 할 때
                 yearViewElement.style.display = 'none';
-                monthViewContainer.style.display = 'block';
-                renderCalendar(); 
-                updateStats();
-                toggleButton.textContent = '올해의 색깔들 보기';
+                toggleButton.textContent = '년도별 감정보기 픽셀뷰'; // 버튼 텍스트 원래대로
                 calendarViewMode = 'month';
             }
         }
@@ -1040,6 +1102,27 @@
         .emotion-btn span {
             font-weight: 500;
             color: #333;
+        }
+        /* 감정 버튼 아이콘 색상 일치 */
+        .emotion-btn[data-emotion="happy"] i {
+            color: #f39c12 !important;
+        }
+        .emotion-btn[data-emotion="calm"] i {
+            color: #00a693 !important;
+        }
+        .emotion-btn[data-emotion="anxious"] i {
+            color: #8e44ad !important;
+        }
+        .emotion-btn[data-emotion="sad"] i {
+            color: #2980b9 !important;
+        }
+        .emotion-btn[data-emotion="angry"] i {
+            color: #c0392b !important;
+            color: #e74c3c !important; /* 화남 색상 변경 */
+        }
+        .emotion-btn.selected i { /* 선택 시 아이콘 색상도 유지 또는 변경 */
+            /* color: white; */ /* 만약 선택 시 배경색이 아이콘 색과 같아져서 안보인다면 흰색 등으로 변경 */
+            /* 현재 .selected 배경색이 밝아서 아이콘 색상이 잘 보이므로 주석 처리 유지 */
         }
     </style>
 </body>

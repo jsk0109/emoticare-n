@@ -293,41 +293,99 @@
         let currentCard = null;
         
         const healingMessages = {
-            morning: [
-                { message: "새로운 하루가 시작됩니다. 오늘도 당신은 충분히 소중한 존재입니다.", category: "자기사랑", icon: "fas fa-heart" },
-                { message: "아침 햇살처럼 따뜻한 마음으로 하루를 시작해보세요.", category: "희망", icon: "fas fa-sun" },
-                { message: "어제의 걱정은 내려놓고, 오늘의 가능성에 집중해보세요.", category: "현재집중", icon: "fas fa-leaf" },
-                { message: "당신의 존재 자체가 이 세상을 더 아름답게 만듭니다.", category: "자기사랑", icon: "fas fa-star" },
-                { message: "작은 걸음이라도 괜찮습니다. 천천히 나아가세요.", category: "격려", icon: "fas fa-seedling" }
-            ],
-            afternoon: [
-                { message: "지금까지 잘 해오고 있습니다. 자신을 믿어보세요.", category: "격려", icon: "fas fa-thumbs-up" },
-                { message: "완벽하지 않아도 괜찮습니다. 당신은 이미 충분합니다.", category: "자기수용", icon: "fas fa-heart" },
-                { message: "잠시 멈춰서 깊게 숨을 쉬어보세요. 지금 이 순간을 느껴보세요.", category: "마음챙김", icon: "fas fa-wind" },
-                { message: "힘들 때는 쉬어가도 됩니다. 그것도 용기입니다.", category: "위로", icon: "fas fa-umbrella" },
-                { message: "당신의 노력을 알고 있습니다. 스스로를 격려해주세요.", category: "격려", icon: "fas fa-medal" }
-            ],
-            evening: [
-                { message: "오늘 하루도 수고하셨습니다. 자신에게 따뜻한 말을 건네보세요.", category: "감사", icon: "fas fa-moon" },
-                { message: "작은 성취라도 축하할 가치가 있습니다.", category: "자기인정", icon: "fas fa-gift" },
-                { message: "내일은 새로운 기회가 기다리고 있습니다.", category: "희망", icon: "fas fa-sunrise" },
-                { message: "오늘의 경험들이 당신을 더 성장시켰습니다.", category: "성장", icon: "fas fa-tree" },
-                { message: "평안한 밤 되시길 바랍니다. 당신은 사랑받을 자격이 있습니다.", category: "자기사랑", icon: "fas fa-heart" }
-            ],
+            timeSensitive: {
+                earlyMorning: [ // 06:00 - 08:59
+                    { message: "새로운 하루가 밝았어요. 오늘 당신에게 어떤 멋진 일들이 기다리고 있을까요?", category: "기대", icon: "fas fa-sun" },
+                    { message: "창밖의 아침 햇살처럼, 당신의 하루도 맑고 따뜻하게 시작되길 바라요.", category: "축복", icon: "fas fa-cloud-sun" },
+                    { message: "잠시 고요히 숨을 쉬며, 오늘 하루를 위한 긍정적인 에너지를 채워보세요.", category: "평온", icon: "fas fa-wind" },
+                    { message: "아직은 조용한 시간, 당신만의 작은 목표를 세우고 힘차게 출발해봐요!", category: "시작", icon: "fas fa-flag-checkered" },
+                    { message: "\"잘 잤어요?\" 오늘 하루도 당신이 행복하기를 응원할게요.", category: "응원", icon: "fas fa-smile-beam" }
+                ],
+                morning: [ // 09:00 - 11:59
+                    { message: "한창 바쁘게 움직이고 있겠네요. 잠시 커피 한 잔의 여유는 어때요?", category: "여유", icon: "fas fa-coffee" },
+                    { message: "집중하는 당신의 모습이 멋져요. 작은 성취들이 모여 큰 기쁨이 될 거예요.", category: "칭찬", icon: "fas fa-medal" },
+                    { message: "혹시 어려운 일에 부딪혔다면, 잠시 숨을 고르고 천천히 다시 시작해보세요. 당신은 할 수 있어요!", category: "격려", icon: "fas fa-mountain" },
+                    { message: "오전의 활기찬 기운을 받아, 오늘 계획한 일들을 순조롭게 해나가길 바라요.", category: "활력", icon: "fas fa-bolt" },
+                    { message: "주변의 작은 소리에도 귀 기울여보세요. 예상치 못한 즐거움을 발견할지도 몰라요.", category: "발견", icon: "fas fa-search" }
+                ],
+                lunch: [ // 12:00 - 13:59
+                    { message: "맛있는 점심 식사로 에너지 충전! 오후를 위한 든든한 힘이 될 거예요.", category: "충전", icon: "fas fa-utensils" },
+                    { message: "잠시 하던 일을 멈추고, 창밖을 보거나 가벼운 스트레칭으로 몸을 풀어주세요.", category: "휴식", icon: "fas fa-chair" },
+                    { message: "오전 동안 정말 수고 많았어요. 남은 하루도 당신을 응원할게요.", category: "인정", icon: "fas fa-award" },
+                    { message: "좋아하는 음악을 듣거나 짧은 명상으로 마음의 휴식을 가져보는 건 어때요?", category: "평화", icon: "fas fa-headphones-alt" },
+                    { message: "\"점심 맛있게 드셨어요?\" 오후에도 좋은 일만 가득하길!", category: "안부", icon: "fas fa-comment-dots" }
+                ],
+                afternoon: [ // 14:00 - 17:59
+                    { message: "나른한 오후, 따뜻한 차 한 잔으로 잠시 기분 전환을 해보세요.", category: "전환", icon: "fas fa-mug-hot" },
+                    { message: "오늘 하루도 거의 다 지나가네요. 마무리까지 조금만 더 힘내요!", category: "응원", icon: "fas fa-running" },
+                    { message: "혹시 지치는 기분이 든다면, 아주 작은 성과라도 스스로를 칭찬해주세요.", category: "자기격려", icon: "fas fa-star" },
+                    { message: "창문을 열어 신선한 공기를 마시며, 남은 오후를 위한 활력을 되찾아보세요.", category: "환기", icon: "fas fa-leaf" },
+                    { message: "퇴근/하교 시간이 얼마 남지 않았네요! 오늘 하루도 정말 애썼어요.", category: "수고", icon: "fas fa-hourglass-end" }
+                ],
+                evening: [ // 18:00 - 20:59
+                    { message: "편안한 저녁 시간 보내고 있나요? 오늘 하루의 피로를 싹 날려버리세요.", category: "휴식", icon: "fas fa-couch" },
+                    { message: "사랑하는 사람들과 함께 맛있는 저녁을 나누며 행복한 시간을 보내길 바라요.", category: "행복", icon: "fas fa-users" },
+                    { message: "오늘 있었던 좋은 일들을 떠올리며, 감사하는 마음으로 하루를 돌아보세요.", category: "감사", icon: "fas fa-hands-helping" },
+                    { message: "좋아하는 취미 생활이나 편안한 휴식으로 온전히 당신만의 시간을 즐겨보세요.", category: "즐거움", icon: "fas fa-palette" },
+                    { message: "\"오늘 하루 어땠어요?\" 당신의 이야기에 귀 기울일 준비가 되어 있어요.", category: "소통", icon: "fas fa-comments" }
+                ],
+                lateNight: [ // 21:00 - 23:59
+                    { message: "이제 곧 잠자리에 들 시간이네요. 오늘 하루도 정말 고생 많았어요.", category: "마무리", icon: "fas fa-bed" },
+                    { message: "따뜻한 물로 샤워하거나, 잔잔한 음악을 들으며 편안하게 잠들 준비를 해보세요.", category: "준비", icon: "fas fa-music" },
+                    { message: "오늘 있었던 걱정거리는 잠시 내려놓고, 내일의 당신에게 맡겨보는 건 어때요?", category: "내려놓음", icon: "fas fa-moon" },
+                    { message: "포근한 이불 속에서 오늘 하루를 잘 마무리하고, 단잠 주무시길 바라요.", category: "안녕", icon: "fas fa-cloud-moon" },
+                    { message: "\"잘 자요.\" 좋은 꿈 꾸고, 내일 아침에 더 밝은 모습으로 만나요.", category: "꿈", icon: "fas fa-star-of-david" }
+                ],
+                dawn: [ // 00:00 - 05:59
+                    { message: "아직 깨어있다면, 혹은 잠시 잠에서 깼다면, 고요한 새벽의 평화를 느껴보세요.", category: "고요", icon: "fas fa-adjust" },
+                    { message: "혹시 잠 못 이루는 밤이라면, 따뜻한 우유 한 잔이나 가벼운 독서가 도움이 될 수 있어요.", category: "위안", icon: "fas fa-book-reader" },
+                    { message: "깊은 밤, 당신의 마음속 작은 소리에도 귀 기울여보는 시간을 가져보세요.", category: "성찰", icon: "fas fa-lightbulb" },
+                    { message: "세상이 잠든 시간, 당신의 몸과 마음도 충분한 휴식을 취하길 바라요.", category: "회복", icon: "fas fa-heartbeat" },
+                    { message: "곧 새로운 아침이 밝아올 거예요. 편안한 마음으로 다시 잠들어보세요.", category: "희망", icon: "fas fa-dove" }
+                ]
+            },
             general: [
-                { message: "당신의 감정은 모두 소중하고 의미가 있습니다.", category: "감정수용", icon: "fas fa-rainbow" },
-                { message: "힘든 시간도 지나갑니다. 당신은 이겨낼 수 있습니다.", category: "희망", icon: "fas fa-mountain" },
-                { message: "자신에게 친절하세요. 당신은 최선을 다하고 있습니다.", category: "자기사랑", icon: "fas fa-heart" },
-                { message: "모든 것이 완벽할 필요는 없습니다. 지금 이대로도 충분합니다.", category: "자기수용", icon: "fas fa-check-circle" },
-                { message: "당신의 존재만으로도 누군가에게는 큰 의미입니다.", category: "존재가치", icon: "fas fa-star" }
+                { message: "당신의 하루가 작은 기쁨들로 가득 채워지기를 응원합니다.", category: "응원", icon: "fas fa-gift" },
+                { message: "마음의 짐을 잠시 내려놓고, 가볍게 숨 쉬는 연습을 해보세요.", category: "평온", icon: "fas fa-feather-alt" },
+                { message: "당신은 혼자가 아닙니다. 언제나 당신을 지지하는 사람들이 있어요.", category: "지지", icon: "fas fa-users" },
+                { message: "스스로에게 친절한 하루를 선물하세요.", category: "자기애", icon: "fas fa-hand-holding-heart" },
+                { message: "넘어져도 괜찮습니다. 다시 일어설 힘은 당신 안에 있습니다.", category: "용기", icon: "fas fa-fist-raised" },
+                { message: "오늘 당신의 용기 있는 선택을 응원합니다.", category: "선택", icon: "fas fa-map-signs" },
+                { message: "당신의 마음이 따뜻한 위로를 받기를 바랍니다.", category: "위로", icon: "fas fa-hands-helping" },
+                { message: "작은 변화가 큰 행복을 가져다줄 수 있습니다.", category: "변화", icon: "fas fa-seedling" },
+                { message: "당신의 미소는 주변을 환하게 비춥니다.", category: "미소", icon: "fas fa-smile" },
+                { message: "지금 이 순간, 당신은 충분히 아름답습니다.", category: "아름다움", icon: "fas fa-spa" },
+                { message: "힘든 감정은 잠시 머물다 지나갈 구름과 같습니다.", category: "감정", icon: "fas fa-cloud" },
+                { message: "당신의 노력은 결코 헛되지 않을 거예요.", category: "노력", icon: "fas fa-trophy" },
+                { message: "스스로를 믿으세요. 당신은 생각보다 강합니다.", category: "믿음", icon: "fas fa-shield-alt" },
+                { message: "당신의 이야기에 귀 기울여주는 사람이 있다는 것을 잊지 마세요.", category: "경청", icon: "fas fa-assistive-listening-systems" },
+                { message: "오늘은 당신에게 가장 다정한 친구가 되어주세요.", category: "자기돌봄", icon: "fas fa-user-friends" },
+                { message: "당신의 마음 정원에 예쁜 꽃을 피워보세요.", category: "성장", icon: "fas fa-tree" },
+                { message: "괜찮아요, 지금 느끼는 모든 감정은 자연스러운 것입니다.", category: "수용", icon: "fas fa-check-circle" },
+                { message: "당신의 발걸음 하나하나가 소중한 여정입니다.", category: "여정", icon: "fas fa-shoe-prints" },
+                { message: "가끔은 모든 것을 내려놓고 편안하게 쉬는 것도 필요합니다.", category: "휴식", icon: "fas fa-umbrella-beach" },
+                { message: "당신의 따뜻한 마음이 세상을 조금 더 나은 곳으로 만듭니다.", category: "온기", icon: "fas fa-fire" },
+                { message: "어두운 밤하늘에도 별은 빛나고 있습니다. 당신처럼요.", category: "희망", icon: "fas fa-star-and-crescent" },
+                { message: "당신의 꿈을 향해 나아가는 용기를 응원합니다.", category: "꿈", icon: "fas fa-rocket" },
+                { message: "모든 순간이 완벽할 필요는 없습니다. 지금 이대로도 좋습니다.", category: "완벽주의탈피", icon: "fas fa-thumbs-up" },
+                { message: "당신의 존재 자체로 이미 충분한 가치가 있습니다.", category: "존재가치", icon: "fas fa-gem" },
+                { message: "잠시 하늘을 올려다보며, 마음의 여유를 찾아보세요.", category: "여유", icon: "fas fa-binoculars" },
+                { message: "당신은 사랑받기 위해 태어난 소중한 존재입니다.", category: "사랑", icon: "fas fa-heart" },
+                { message: "스스로에게 \"고마워, 사랑해\"라고 말해주세요.", category: "자기긍정", icon: "fas fa-kiss-wink-heart" },
+                { message: "당신의 오늘은 어제보다 더 빛날 수 있습니다.", category: "발전", icon: "fas fa-chart-line" },
+                { message: "복잡한 생각은 잠시 멈추고, 현재에 집중해보세요.", category: "현재집중", icon: "fas fa-dot-circle" },
+                { message: "당신의 작은 날갯짓이 큰 변화를 만들 수 있습니다.", category: "영향력", icon: "fas fa-dove" }
             ]
         };
         
         const timeBasedMessages = {
-            morning: "🌅 새로운 하루를 시작하는 당신에게 특별한 메시지를 전해드립니다.",
-            afternoon: "☀️ 하루 중반, 에너지를 충전할 수 있는 메시지를 받아보세요.",
-            evening: "🌙 하루를 마무리하며 마음을 편안하게 해줄 메시지입니다.",
-            night: "✨ 깊은 밤, 내일을 위한 희망의 메시지를 전해드립니다."
+            earlyMorning: "🌅 이른 아침, 당신의 하루를 여는 특별한 메시지입니다.",
+            morning: "☀️ 활기찬 오전, 당신에게 힘을 주는 메시지를 준비했어요.",
+            lunch: "🥗 점심시간, 잠시 쉬어가며 에너지를 채울 메시지입니다.",
+            afternoon: "☕ 나른한 오후, 당신의 마음에 작은 활력을 더해줄게요.",
+            evening: "🌇 저녁 시간, 하루를 돌아보며 위로를 얻는 메시지입니다.",
+            lateNight: "🌙 늦은 밤, 편안한 마무리를 위한 메시지를 전해드려요.",
+            dawn: "✨ 고요한 새벽, 당신의 마음을 다독여줄 메시지입니다."
         };
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -342,13 +400,19 @@
             let timeKey;
             
             if (hour >= 6 && hour < 12) {
+                timeKey = 'earlyMorning';
+            } else if (hour >= 9 && hour < 12) {
                 timeKey = 'morning';
             } else if (hour >= 12 && hour < 18) {
+                timeKey = 'lunch';
+            } else if (hour >= 14 && hour < 18) {
                 timeKey = 'afternoon';
-            } else if (hour >= 18 && hour < 22) {
+            } else if (hour >= 18 && hour < 21) {
                 timeKey = 'evening';
+            } else if (hour >= 21 && hour < 24) {
+                timeKey = 'lateNight';
             } else {
-                timeKey = 'night';
+                timeKey = 'dawn';
             }
             
             document.getElementById('timeMessage').textContent = timeBasedMessages[timeKey];
@@ -389,22 +453,31 @@
                 return;
             }
             
-            const hour = new Date().getHours();
             let messagePool;
             
-            if (hour >= 6 && hour < 12) {
-                messagePool = healingMessages.morning;
-            } else if (hour >= 12 && hour < 18) {
-                messagePool = healingMessages.afternoon;
-            } else if (hour >= 18 && hour < 24) {
-                messagePool = healingMessages.evening;
+            if (dailyDrawCount === 0) { // 첫 번째 뽑기인 경우 시간대별 메시지
+                const hour = new Date().getHours();
+                if (hour >= 6 && hour < 9) {
+                    messagePool = healingMessages.timeSensitive.earlyMorning;
+                } else if (hour >= 9 && hour < 12) {
+                    messagePool = healingMessages.timeSensitive.morning;
+                } else if (hour >= 12 && hour < 14) {
+                    messagePool = healingMessages.timeSensitive.lunch;
+                } else if (hour >= 14 && hour < 18) {
+                    messagePool = healingMessages.timeSensitive.afternoon;
+                } else if (hour >= 18 && hour < 21) {
+                    messagePool = healingMessages.timeSensitive.evening;
+                } else if (hour >= 21 && hour < 24) {
+                    messagePool = healingMessages.timeSensitive.lateNight;
+                } else {
+                    messagePool = healingMessages.timeSensitive.dawn;
+                }
             } else {
+                // 두 번째 이후 뽑기는 일반 메시지 풀에서 랜덤 선택
                 messagePool = healingMessages.general;
             }
             
-            // 일반 메시지도 포함
-            const allMessages = [...messagePool, ...healingMessages.general];
-            currentCard = getRandomItem(allMessages);
+            currentCard = getRandomItem(messagePool);
             
             displayCard(currentCard);
             

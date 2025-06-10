@@ -370,8 +370,9 @@
                 <div class="intro-section">
                     <h2 class="intro-title">🤔 자기 성찰의 시간</h2>
                     <p class="intro-text">
-                        성찰은 자신을 더 깊이 이해하고 성장할 수 있는 소중한 시간입니다.<br>
-                        각 질문에 대해 천천히 생각해보고, 솔직한 마음으로 답해보세요.
+                        복잡한 일상 속, 나를 위한 특별한 시간을 선물하세요.<br>
+                        성찰은 숨겨진 가능성을 발견하고 삶의 지혜를 얻는 여정입니다.<br><br>
+                        각 질문에 담긴 의미를 곱씹으며, 진정한 당신을 찾아가세요.
                     </p>
                 </div>
                 
@@ -472,7 +473,7 @@
                     <div class="category-section">
                         <div class="category-header" onclick="toggleCategory('mindfulness')">
                             <div class="category-icon mindfulness">
-                                <i class="fas fa-lotus"></i>
+                                <i class="fas fa-spa"></i>
                             </div>
                             <div class="category-info">
                                 <h3 class="category-title">마음챙김</h3>
@@ -484,12 +485,6 @@
                         </div>
                         <div class="questions-list" id="questions-mindfulness">
                         </div>
-                    </div>
-                </div>
-
-                <div class="my-reflections-section" id="myReflectionsSection">
-                    <h3 class="my-reflections-header">나의 성찰 기록</h3>
-                    <div id="savedReflectionsList">
                     </div>
                 </div>
             </div>
@@ -515,24 +510,6 @@
         </div>
     </div>
 
-    <div class="reflection-modal" id="editReflectionModal">
-        <div class="reflection-modal-content">
-            <div class="modal-header">
-                <h3>성찰 수정하기</h3>
-                <button class="modal-close" onclick="closeEditReflectionModal()">&times;</button>
-            </div>
-            <div class="reflection-question" id="editModalQuestion"></div>
-            <textarea 
-                class="reflection-textarea" 
-                id="editReflectionTextarea"
-            ></textarea>
-            <div class="modal-actions">
-                <button class="btn-outline" onclick="closeEditReflectionModal()">취소</button>
-                <button class="btn-primary" onclick="saveEditedReflection()">수정 저장</button>
-            </div>
-        </div>
-    </div>
-    
     <div id="footer-container"></div>
     
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
@@ -744,8 +721,7 @@
                 const button = document.getElementById(`btn-${questionElementId}`);
                 button.innerHTML = '<i class="fas fa-eye"></i> 성찰 보기';
                 button.dataset.mode = 'view'; 
-                button.classList.remove('reflect-btn');
-                button.classList.add('btn-secondary'); 
+                button.classList.add('btn-outline'); // btn-secondary 대신 btn-outline 사용
 
                 showMessage('성찰이 저장되었습니다.', 'success');
                 await loadSavedReflections(); 
@@ -856,8 +832,7 @@
                     
                     const button = document.getElementById(`btn-${questionElementId}`);
                     button.innerHTML = '<i class="fas fa-pen"></i> 성찰하기';
-                    button.dataset.mode = ''; // 'view' 모드 해제
-                    button.classList.remove('btn-secondary');
+                    button.dataset.mode = ''; // 'view' 모드 해제                    
                     button.classList.add('reflect-btn');
 
                     showMessage('성찰 기록이 삭제되었습니다.', 'success');
@@ -879,8 +854,9 @@
             try {
                 const snapshot = await db.collection('reflections')
                                         .where('userId', '==', currentUser.uid)
-                                        .orderBy('date', 'desc')
-                                        .limit(20) 
+                                        // .orderBy('date', 'desc') // 인라인 표시는 순서가 중요하지 않을 수 있음
+                                        // .limit(20) // 모든 질문에 대한 기록을 불러와야 할 수 있으므로 limit 제거 고려
+                                        // 또는 페이지 로드 시 너무 많은 데이터를 가져오지 않도록 페이지네이션이나 다른 전략 고려
                                         .get();
                 
                 const reflections = [];
@@ -898,28 +874,12 @@
 
         function renderSavedReflections(reflections) {
             const listElement = document.getElementById('savedReflectionsList');
-            if (!reflections || reflections.length === 0) {
-                listElement.innerHTML = '<p class="text-center" style="color:#666;">아직 저장된 성찰 기록이 없습니다.</p>';
-                return;
-            }
-
-            listElement.innerHTML = reflections.map(item => `
-                <div class="saved-reflection-item" id="reflection-${item.id}">
-                    <div class="saved-reflection-question">${item.question}</div>
-                    <div class="saved-reflection-text" id="text-saved-${item.id}">${item.reflection}</div>
-                    <div class="saved-reflection-meta">
-                        <span>${new Date(item.date).toLocaleDateString('ko-KR')}</span>
-                        <div class="reflection-item-actions">
-                            <button class="btn-outline btn-sm" onclick="openEditReflectionModal('${item.id}', \`${item.question}\`, document.getElementById('text-saved-${item.id}').textContent)">
-                                <i class="fas fa-edit"></i> 수정
-                            </button>
-                            <button class="btn-danger btn-sm" onclick="deleteReflection('${item.id}')">
-                                <i class="fas fa-trash"></i> 삭제
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            // 페이지 하단 목록 생성 로직 제거
+            // if (!reflections || reflections.length === 0) {
+            //     if(listElement) listElement.innerHTML = '<p class="text-center" style="color:#666;">아직 저장된 성찰 기록이 없습니다.</p>';
+            //     return;
+            // }
+            // if(listElement) listElement.innerHTML = ''; // Clear previous list if any
 
             reflections.forEach(item => {
                 if (item.questionElementId) { 
@@ -928,8 +888,7 @@
                     if (button && contentDiv) {
                         button.innerHTML = '<i class="fas fa-eye"></i> 성찰 보기';
                         button.dataset.mode = 'view';
-                        button.classList.remove('reflect-btn');
-                        button.classList.add('btn-secondary');
+                        button.classList.add('btn-outline'); // btn-secondary 대신 btn-outline 사용
                         contentDiv.innerHTML = `<div class="saved-reflection-text">${item.reflection}</div>
                                                 <button class="btn-outline" style="margin-top:0.5rem;" onclick="editInlineReflection('${item.questionElementId}', '${item.question}', '${item.id}', \`${item.reflection}\`)"><i class="fas fa-edit"></i> 수정</button>
                                                 <button class="btn-danger" style="margin-top:0.5rem; margin-left:0.5rem;" onclick="deleteInlineReflection('${item.questionElementId}', '${item.id}')"><i class="fas fa-trash"></i> 삭제</button>`;
@@ -938,65 +897,16 @@
             });
         }
 
-        function openEditReflectionModal(id, question, reflection) {
-            currentEditingReflectionId = id;
-            document.getElementById('editModalQuestion').textContent = question;
-            document.getElementById('editReflectionTextarea').value = reflection;
-            document.getElementById('editReflectionModal').style.display = 'block';
-        }
-
-        function closeEditReflectionModal() {
-            document.getElementById('editReflectionModal').style.display = 'none';
-            currentEditingReflectionId = null;
-        }
-
-        async function saveEditedReflection() {
-            if (!currentEditingReflectionId || !currentUser) return;
-
-            const newReflectionText = document.getElementById('editReflectionTextarea').value.trim();
-            if (!newReflectionText) {
-                showMessage('수정할 내용을 입력해주세요.', 'error');
-                return;
-            }
-
-            try {
-                await db.collection('reflections').doc(currentEditingReflectionId).update({
-                    reflection: newReflectionText,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
-                });
-                showMessage('성찰 내용이 수정되었습니다.', 'success');
-                closeEditReflectionModal();
-                await loadSavedReflections(); 
-            } catch (error) {
-                console.error("Error updating reflection: ", error);
-                showMessage('성찰 내용 수정에 실패했습니다.', 'error');
-            }
-        }
-
-        async function deleteReflection(reflectionId) {
-            if (!currentUser) return;
-
-            if (confirm('이 성찰 기록을 삭제하시겠습니까?')) {
-                try {
-                    await db.collection('reflections').doc(reflectionId).delete();
-                    showMessage('성찰 기록이 삭제되었습니다.', 'success');
-                    await loadSavedReflections(); 
-                } catch (error) {
-                    console.error("Error deleting reflection: ", error);
-                    showMessage('성찰 기록 삭제에 실패했습니다.', 'error');
-                }
-            }
-        }
-        
         window.addEventListener('click', function(event) {
             const reflectionModal = document.getElementById('reflectionModal');
-            const editReflectionModal = document.getElementById('editReflectionModal');
+            // editReflectionModal 관련 로직 제거
+            // const editReflectionModal = document.getElementById('editReflectionModal');
             if (event.target === reflectionModal) {
                 closeReflectionModal();
             }
-            if (event.target === editReflectionModal) {
-                closeEditReflectionModal();
-            }
+            // if (event.target === editReflectionModal) {
+            //     closeEditReflectionModal();
+            // }
         });
     </script>
 </body>
