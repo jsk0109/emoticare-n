@@ -6,12 +6,13 @@
 
 // Firebase 설정
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY", // 실제 Firebase API 키로 교체하세요.
-  authDomain: "YOUR_AUTH_DOMAIN", // 실제 Firebase Auth 도메인으로 교체하세요.
-  projectId: "YOUR_PROJECT_ID", // 실제 Firebase 프로젝트 ID로 교체하세요.
-  storageBucket: "YOUR_STORAGE_BUCKET", // 실제 Firebase 스토리지 버킷으로 교체하세요.
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // 실제 Firebase 메시징 발신자 ID로 교체하세요.
-  appId: "YOUR_APP_ID", // 실제 Firebase 앱 ID로 교체하세요.
+  apiKey: "AIzaSyAq6EAevOq0re2pJTwmkj4xz7SUtqBq2tA",
+  authDomain: "emoticare-n.firebaseapp.com",
+  projectId: "emoticare-n",
+  storageBucket: "emoticare-n.appspot.com", // .firebasestorage.app 대신 .appspot.com을 사용하는 경우가 일반적입니다. 확인해주세요.
+  messagingSenderId: "699658778766",
+  appId: "1:699658778766:web:c5eaf7c7f1832b3c3671df",
+  measurementId: "G-QPTE3B8E8V" // measurementId도 추가했습니다.
 };
 
 // Firebase 초기화
@@ -230,8 +231,8 @@ function showSignupModal() {
                     <input type="password" id="signupPassword" required>
                 </div>
                 <div class="form-group">
-                    <label for="displayName">이름</label>
-                    <input type="text" id="displayName" required>
+                    <label for="displayName">닉네임</label>
+                    <input type="text" id="displayName" placeholder="사용하실 닉네임을 입력하세요" required>
                 </div>
                 <button type="submit" class="btn-primary">회원가입</button>
                 <p class="mt-2 text-center">
@@ -275,8 +276,26 @@ async function handleLogin(e) {
     closeAllModals();
     showMessage("로그인되었습니다.", "success");
   } catch (error) {
-    showMessage("로그인 실패: " + error.message, "error");
-  } 
+    let errorMessage = "로그인 실패: 알 수 없는 오류가 발생했습니다.";
+    switch (error.code) {
+      case 'auth/invalid-email':
+        errorMessage = "유효하지 않은 이메일 주소입니다.";
+        break;
+      case 'auth/user-disabled':
+        errorMessage = "사용 중지된 계정입니다.";
+        break;
+      case 'auth/user-not-found':
+        errorMessage = "존재하지 않는 사용자입니다.";
+        break;
+      case 'auth/wrong-password':
+        errorMessage = "잘못된 비밀번호입니다.";
+        break;
+      case 'auth/too-many-requests':
+        errorMessage = "너무 많은 요청이 있었습니다. 잠시 후 다시 시도해주세요.";
+        break;
+    }
+    showMessage(errorMessage, "error");
+  }
 }
 
 // 회원가입 처리
@@ -293,10 +312,22 @@ async function handleSignup(e) {
       displayName: displayName,
     });
     closeAllModals();
-    showMessage("회원가입이 완료되었습니다. 로그인해주세요.", "success");
+    showMessage("회원가입이 완료되었습니다. 이제 로그인할 수 있습니다.", "success");
     // 필요시 바로 로그인 처리: updateAuthUI(userCredential.user);
   } catch (error) {
-    showMessage("회원가입 실패: " + error.message, "error");
+    let errorMessage = "회원가입 실패: 알 수 없는 오류가 발생했습니다.";
+    switch (error.code) {
+      case 'auth/email-already-in-use':
+        errorMessage = "이미 사용 중인 이메일 주소입니다.";
+        break;
+      case 'auth/invalid-email':
+        errorMessage = "유효하지 않은 이메일 주소입니다.";
+        break;
+      case 'auth/weak-password':
+        errorMessage = "비밀번호는 6자 이상이어야 합니다.";
+        break;
+    }
+    showMessage(errorMessage, "error");
   }
 }
 
