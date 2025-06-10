@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 마음 정원 - EmotiCare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        .welcome-message {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .quick-links a {
+            display: block;
+            padding: 0.5rem 0;
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .quick-links a:hover {
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">나의 마음 정원</h1>
+                <p class="page-subtitle">오늘 하루, 당신의 마음 상태를 한눈에 살펴보세요.</p>
+            </div>
+        </section>
+
+        <section class="page-content">
+            <div class="dashboard-container">
+                <div class="welcome-message">
+                    <h2 id="dashboardWelcomeText">OOO님, 안녕하세요!</h2>
+                    <p>오늘도 마음챙김 여정을 함께 해주셔서 감사합니다.</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card" id="todayEmotionCard">
+                        <h3 class="dashboard-card-title"><i class="fas fa-palette"></i> 오늘의 감정</h3>
+                        <!-- 감정일기 요약 내용 -->
+                        <p>아직 기록된 감정이 없어요. <a href="color-journal.html">감정일기 쓰러가기</a></p>
+                    </div>
+
+                    <div class="dashboard-card" id="recentActivityCard">
+                        <h3 class="dashboard-card-title"><i class="fas fa-history"></i> 최근 활동</h3>
+                        <ul class="quick-links">
+                            <li><a href="emotion-letters.html">최근 감정 편지 보기</a></li>
+                            <li><a href="reflection-questions.html">최근 성찰 기록 보기</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="dashboard-card" id="recommendedContentCard">
+                        <h3 class="dashboard-card-title"><i class="fas fa-star"></i> 추천 콘텐츠</h3>
+                        <!-- 추천 힐링카드, 명언 등 -->
+                        <p>맞춤 추천 콘텐츠가 준비 중입니다.</p>
+                    </div>
+                    
+                    <div class="dashboard-card" id="quickAccessCard">
+                        <h3 class="dashboard-card-title"><i class="fas fa-rocket"></i> 빠른 시작</h3>
+                        <ul class="quick-links">
+                            <li><a href="mood-routine.html">하루 기분 기록하기</a></li>
+                            <li><a href="healing-cards.html">오늘의 힐링 카드 뽑기</a></li>
+                            <li><a href="quotes.html">치유 명언 보기</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 사용자 이름으로 환영 메시지 업데이트 (로그인 시)
+            if (currentUser && currentUser.displayName) {
+                document.getElementById('dashboardWelcomeText').textContent = `${currentUser.displayName}님, 안녕하세요!`;
+            } else if (currentUser && currentUser.email) {
+                 document.getElementById('dashboardWelcomeText').textContent = `${currentUser.email}님, 안녕하세요!`;
+            }
+
+
+            // 예시: 오늘의 감정 카드 내용 업데이트 (실제로는 데이터 로드 필요)
+            const todayEmotionCard = document.getElementById('todayEmotionCard');
+            // const emotionData = loadFromLocalStorage('emotionData'); // 실제 데이터 로드 로직
+            // if (emotionData && emotionData[formatDate(new Date())]) {
+            //    const todayEmotion = emotionData[formatDate(new Date())];
+            //    todayEmotionCard.innerHTML = `
+            //        <h3 class="dashboard-card-title"><i class="fas fa-palette"></i> 오늘의 감정</h3>
+            //        <p>오늘 당신의 주된 감정은 <span style="color:${emotions[todayEmotion.type]?.color || '#333'}; font-weight:bold;">${emotions[todayEmotion.type]?.name || '기록됨'}</span> 입니다.</p>
+            //        <a href="color-journal.html">자세히 보기</a>
+            //    `;
+            // }
+        });
+    </script>
+</body>
+</html>
