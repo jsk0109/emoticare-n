@@ -79,7 +79,7 @@
         .letter-actions {
             display: flex;
             gap: 1rem;
-            justify-content: flex-end;
+            justify-content: center; /* 가운데 정렬 */
         }
         
         .recent-letters {
@@ -87,6 +87,7 @@
             border-radius: 20px;
             padding: 2.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem; /* 달력과의 간격 추가 */
         }
         
         .letters-header {
@@ -168,6 +169,114 @@
             background: #ff5252;
             transform: translateY(-2px);
         }
+
+        /* 편지 달력 섹션 스타일 (mood-routine.html 스타일 재활용 및 추가) */
+        .letter-calendar-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 3rem;
+        }
+
+        .calendar-header-routine .date-nav { /* mood-routine.html 스타일 재활용 */
+             display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .calendar-header-routine .date-nav button { /* mood-routine.html 스타일 재활용 */
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .calendar-header-routine .date-nav button:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+         .calendar-header-routine .current-date-display { /* mood-routine.html 스타일 재활용 */
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .calendar-routine { /* mood-routine.html 스타일 재활용 */
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0; /* 하단 마진 제거 */
+        }
+        .calendar-day-header-routine { /* mood-routine.html 스타일 재활용 */
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .calendar-grid-routine .calendar-day { /* mood-routine.html 스타일 재활용 */
+            background: white;
+            padding: 0.5rem; 
+            min-height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .calendar-grid-routine { /* mood-routine.html 스타일 재활용 */
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e1e8ed;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .calendar-day.other-month { /* mood-routine.html 스타일 재활용 */
+            color: #ccc;
+            background: #f8f9fa;
+            pointer-events: none;
+        }
+        .calendar-day.today { /* mood-routine.html 스타일 재활용 */
+             background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .calendar-day .day-number { /* mood-routine.html 스타일 재활용 */
+            font-weight: 600;
+            margin-bottom: 0.3rem; 
+            z-index: 2; 
+            position: relative; 
+        }
+        .calendar-day.has-record { /* 편지 기록 있는 날짜 표시 */
+            border: 2px solid #764ba2; /* 테두리 색상 */
+        }
+        .calendar-day.has-record span { /* 편지 아이콘 스타일 */
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 1.2em;
+            z-index: 2;
+        }
+
+        /* 날짜별 편지 보기 모달 스타일 */
+        #lettersForDateModal .modal-content {
+            max-width: 600px; /* 모달 너비 조정 */
+        }
+        #lettersForDateModal .letter-card {
+            cursor: default; /* 모달 내 카드 클릭 비활성화 */
+            margin-bottom: 1rem;
+        }
+        #lettersForDateModal .letter-card .btn-outline {
+            padding: 0.5rem 1rem; /* 버튼 패딩 조정 */
+            font-size: 0.9rem; /* 버튼 폰트 크기 조정 */
+        }
+
     </style>
 </head>
 <body>
@@ -207,9 +316,7 @@
                         <div class="char-counter" id="charCounter">0자</div>
                         
                         <div class="letter-actions">
-                            <button type="button" class="btn-outline" onclick="clearLetter()">
-                                <i class="fas fa-eraser"></i> 지우기
-                            </button>
+                            <!-- 지우기 버튼 삭제 -->
                             <button type="submit" class="btn-primary">
                                 <i class="fas fa-save"></i> 편지 저장하기
                             </button>
@@ -225,8 +332,27 @@
                         </button>
                     </div>
                     
-                    <div class="letters-list" id="lettersList">
-                        <!-- 편지 목록이 여기에 생성됩니다 -->
+                    <div class="letters-list" id="recentLettersList">
+                        <!-- 최근 편지 목록이 여기에 생성됩니다 -->
+                    </div>
+                </div>
+
+                <!-- 편지 달력 섹션 추가 -->
+                <div class="letter-calendar-section">
+                    <div class="letters-header">
+                        <h3>편지 달력</h3>
+                    </div>
+                    <div class="calendar-header-routine" style="margin-bottom: 1rem;">
+                        <div class="date-nav">
+                            <button onclick="changeLetterCalendarMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <span class="current-date-display" id="letterCalendarMonth"></span>
+                            <button onclick="changeLetterCalendarMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="calendar-routine">
+                        <div class="calendar-grid-routine" id="letterCalendarGrid">
+                            <!-- 달력이 여기에 생성됩니다 -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -250,21 +376,66 @@
             </div>
         </div>
     </div>
+
+    <!-- 날짜별 편지 보기 모달 -->
+    <div id="lettersForDateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="lettersForDateModalTitle"></h3>
+                <button class="modal-close" onclick="closeLettersForDateModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="lettersForDateModalBody">
+                <!-- 해당 날짜의 편지 목록이 여기에 로드됩니다 -->
+            </div>
+        </div>
+    </div>
     
     <div id="footer-container"></div>
     
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="common.js"></script>
     <script>
-        let letters = [];
-        let currentLetterId = null;
+        let recentLetters = []; // 최근 3개만 표시
+        let allLettersData = {}; // 모든 편지를 날짜별로 저장: {'YYYY-MM-DD': [letterObj, ...]}
+        let currentLetterId = null; // 상세보기 모달용
+        let currentCalendarDate = new Date(); // 편지 달력용 현재 날짜
         
         document.addEventListener('DOMContentLoaded', function() {
-            loadLetters();
-            renderLetters();
+            // common.js에서 인증 상태 확인 후 authStateReady 이벤트 발생
+            document.addEventListener('authStateReady', async function(e) {
+                if (e.detail.user) {
+                    await loadAllLetters(); // 로그인 시 Firebase에서도 로드
+                } else {
+                    loadAllLetters(); // 비로그인 시 로컬 스토리지에서만 로드
+                    showMessage("로그인 후 이용하시면 편지 데이터가 안전하게 보관됩니다.", "info");
+                }
+                updateRecentLettersList(); // 로드된 데이터로 최근 편지 목록 업데이트
+                renderRecentLetters(); // 최근 편지 목록 렌더링
+                renderLetterCalendar(); // 편지 달력 렌더링
+            });
+
+             // 페이지 로드 시 임시저장된 내용 복원
+            const draft = localStorage.getItem('letterDraft');
+            if (draft) {
+                document.getElementById('letterContent').value = draft;
+                updateCharCounter();
+            }
+             // 자동 저장 기능 (선택사항)
+            let autoSaveTimer;
+            document.getElementById('letterContent').addEventListener('input', function() {
+                clearTimeout(autoSaveTimer);
+                autoSaveTimer = setTimeout(() => {
+                    const content = this.value.trim();
+                    if (content) {
+                        localStorage.setItem('letterDraft', content);
+                        // showMessage('임시 저장되었습니다.', 'info'); // 자동 저장 알림은 너무 자주 뜨면 방해될 수 있음
+                    } else {
+                         localStorage.removeItem('letterDraft');
+                    }
+                }, 2000); // 2초 후 자동 저장
+            });
         });
         
         function updateCharCounter() {
@@ -272,14 +443,14 @@
             const counter = document.getElementById('charCounter');
             counter.textContent = `${content.length}자`;
             
-            if (content.length > 1000) {
+            if (content.length > 1000) { // 예시: 1000자 제한
                 counter.style.color = '#ff6b6b';
             } else {
                 counter.style.color = '#666';
             }
         }
         
-        function saveLetter(event) {
+        async function saveLetter(event) {
             event.preventDefault();
             
             const content = document.getElementById('letterContent').value.trim();
@@ -287,25 +458,44 @@
                 showMessage('편지 내용을 입력해주세요.', 'error');
                 return;
             }
+             if (content.length > 1000) {
+                 showMessage('편지 내용은 1000자를 초과할 수 없습니다.', 'error');
+                 return;
+             }
             
             const letter = {
-                id: Date.now().toString(),
+                id: Date.now().toString(), // 고유 ID 생성
                 content: content,
-                date: new Date().toISOString(),
+                date: new Date().toISOString(), // ISO 문자열로 저장
                 preview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
             };
             
-            letters.unshift(letter);
-            
-            // 최근 3개만 유지
-            if (letters.length > 3) {
-                letters = letters.slice(0, 3);
+            // 모든 편지 데이터에 추가
+            const dateKey = letter.date.split('T')[0]; // 'YYYY-MM-DD' 형식의 날짜 키
+            if (!allLettersData[dateKey]) {
+                allLettersData[dateKey] = [];
             }
+            allLettersData[dateKey].unshift(letter); // 해당 날짜의 맨 앞에 새 편지 추가
+
+            // 로컬 스토리지에 모든 편지 데이터 저장
+            saveToLocalStorage('allEmotionLettersData', allLettersData);
             
-            saveToLocalStorage('emotionLetters', letters);
-            renderLetters();
-            clearLetter();
+            // Firebase에 저장 (로그인된 경우)
+            if (currentUser) {
+                // Firebase에는 개별 편지 문서를 저장하고 날짜 필드를 추가하는 것이 더 유연합니다.
+                // 여기서는 예시로 개별 문서를 저장하는 방식을 사용합니다.
+                await saveToFirestore('emotionLetters', letter.id, {
+                    ...letter,
+                    userId: currentUser.uid // 사용자 ID 추가
+                });
+            }
+
+            updateRecentLettersList(); // 최근 편지 목록 업데이트
+            renderRecentLetters(); // 최근 편지 목록 렌더링
+            clearLetter(); // 작성 폼 초기화
+            renderLetterCalendar(); // 달력도 업데이트 (편지 아이콘 표시)
             showMessage('편지가 저장되었습니다.', 'success');
+            localStorage.removeItem('letterDraft'); // 임시저장 내용 삭제
         }
         
         function clearLetter() {
@@ -313,17 +503,72 @@
             updateCharCounter();
         }
         
-        function loadLetters() {
-            const savedLetters = loadFromLocalStorage('emotionLetters');
-            if (savedLetters) {
-                letters = savedLetters;
+        async function loadAllLetters() {
+            const localData = loadFromLocalStorage('allEmotionLettersData');
+            if (localData) {
+                allLettersData = localData;
+            } else {
+                allLettersData = {}; // 로컬에 없으면 빈 객체로 초기화
+            }
+
+            // 로그인된 경우 Firebase에서 데이터 로드 및 병합
+            if (currentUser) {
+                try {
+                    // Firebase에서 해당 사용자의 모든 편지를 가져옴
+                    const snapshot = await db.collection('emotionLetters')
+                                           .where('userId', '==', currentUser.uid)
+                                           .orderBy('date', 'desc') // 날짜 최신순으로 정렬하여 가져옴
+                                           .get();
+                    
+                    const firebaseData = {};
+                    snapshot.forEach(doc => {
+                        const letter = doc.data();
+                        const dateKey = letter.date.split('T')[0];
+                        if (!firebaseData[dateKey]) {
+                            firebaseData[dateKey] = [];
+                        }
+                        firebaseData[dateKey].push({ id: doc.id, ...letter });
+                    });
+
+                    // 로컬 데이터와 Firebase 데이터를 병합 (Firebase 데이터 우선)
+                    // 날짜별로 병합
+                    Object.keys(firebaseData).forEach(dateKey => {
+                        allLettersData[dateKey] = mergeLetterArrays(allLettersData[dateKey] || [], firebaseData[dateKey]);
+                    });
+                    
+                    // 로컬에만 있고 Firebase에 없는 데이터 처리 (선택사항: 업로드 로직 추가 가능)
+                    // 현재는 Firebase 데이터가 우선하므로 로컬 데이터는 덮어쓰거나 무시됨
+
+                    saveToLocalStorage('allEmotionLettersData', allLettersData); // 병합된 데이터를 다시 로컬에 저장
+
+                } catch (error) {
+                    console.error("Firebase 모든 편지 로드 실패:", error);
+                    // Firebase 로드 실패 시 로컬 데이터만 사용 (allLettersData는 이미 로컬 데이터로 초기화됨)
+                }
             }
         }
+
+        // 모든 편지 데이터에서 최근 3개만 추출하여 recentLetters 배열 업데이트
+        function updateRecentLettersList() {
+            const flatLetters = Object.values(allLettersData).flat(); // 모든 날짜의 편지를 하나의 배열로 합침
+            // 날짜 최신순으로 정렬
+            flatLetters.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // 최근 3개만 선택
+            recentLetters = flatLetters.slice(0, 3);
+        }
+
+        // 두 편지 배열을 병합 (ID 기준으로 중복 제거, arr2 우선)
+        function mergeLetterArrays(arr1, arr2) {
+            const map = new Map(arr1.map(item => [item.id, item]));
+            arr2.forEach(item => map.set(item.id, item));
+            return Array.from(map.values()).sort((a, b) => new Date(b.date) - new Date(a.date)); // 날짜 최신순 정렬
+        }
         
-        function renderLetters() {
-            const lettersList = document.getElementById('lettersList');
+        // 최근 편지 목록만 렌더링
+        function renderRecentLetters() {
+            const lettersList = document.getElementById('recentLettersList'); // ID 변경
             
-            if (letters.length === 0) {
+            if (recentLetters.length === 0) {
                 lettersList.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-envelope-open"></i>
@@ -333,7 +578,7 @@
                 return;
             }
             
-            lettersList.innerHTML = letters.map(letter => `
+            lettersList.innerHTML = recentLetters.map(letter => `
                 <div class="letter-card" onclick="openLetterModal('${letter.id}')">
                     <div class="letter-meta">
                         <span><i class="fas fa-calendar"></i> ${formatLetterDate(letter.date)}</span>
@@ -343,125 +588,248 @@
                 </div>
             `).join('');
         }
+
+        // 편지 달력 렌더링
+        function renderLetterCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            document.getElementById('letterCalendarMonth').textContent = `${year}년 ${month + 1}월`;
+
+            const calendarGrid = document.getElementById('letterCalendarGrid');
+            calendarGrid.innerHTML = '';
+
+            const dayHeaders = ['일', '월', '화', '수', '목', '금', '토'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header-routine'; // mood-routine 스타일 재활용
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            const today = new Date();
+
+            for (let i = 0; i < 42; i++) {
+                const cellDate = new Date(startDate);
+                cellDate.setDate(startDate.getDate() + i);
+                const dateKey = cellDate.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식
+
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day'; // mood-routine 스타일 재활용
+
+                if (cellDate.getMonth() !== month) {
+                    dayCell.classList.add('other-month'); // mood-routine 스타일 재활용
+                } else {
+                    // 해당 날짜에 편지가 있는지 확인
+                    if (allLettersData[dateKey] && allLettersData[dateKey].length > 0) {
+                        dayCell.classList.add('has-record'); // 편지 기록 있는 날짜 클래스 추가
+                        // 편지 아이콘 추가
+                        dayCell.innerHTML += `<span style="position:absolute; bottom:5px; right:5px; font-size:1.2em;">💌</span>`;
+                        // 날짜 클릭 시 해당 날짜 편지 모달 열기
+                        dayCell.addEventListener('click', () => openLettersForDateModal(dateKey));
+                    } else {
+                         // 편지 없는 날짜도 클릭 가능하게 하려면 여기에 이벤트 리스너 추가
+                         // dayCell.addEventListener('click', () => openLettersForDateModal(dateKey)); // 빈 모달 열기
+                    }
+                }
+                 if (cellDate.toDateString() === today.toDateString()) {
+                    dayCell.classList.add('today'); // mood-routine 스타일 재활용
+                }
+
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number'; // mood-routine 스타일 재활용
+                dayNumber.textContent = cellDate.getDate();
+                dayCell.appendChild(dayNumber);
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        // 편지 달력 월 변경
+        function changeLetterCalendarMonth(direction) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+            renderLetterCalendar();
+        }
         
+        // 날짜 문자열 포맷팅 (예: "오늘", "어제", "YYYY년 MM월 DD일")
         function formatLetterDate(dateString) {
             const date = new Date(dateString);
             const now = new Date();
             const diffTime = Math.abs(now - date);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
-            if (diffDays === 1) {
-                return '오늘';
-            } else if (diffDays === 2) {
-                return '어제';
+            if (diffDays === 0 && date.toDateString() === now.toDateString()) {
+                 return '오늘';
+            } else if (diffDays === 1 && new Date(now).setDate(now.getDate() - 1) === date.setDate(date.getDate())) {
+                 return '어제';
             } else if (diffDays <= 7) {
-                return `${diffDays - 1}일 전`;
+                return `${diffDays}일 전`;
             } else {
                 return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
             }
         }
         
+        // 최근 편지 목록에서 편지 클릭 시 상세보기 모달 열기
         function openLetterModal(letterId) {
-            const letter = letters.find(l => l.id === letterId);
+            // 모든 편지 데이터에서 ID로 검색
+            const letter = Object.values(allLettersData).flat().find(l => l.id === letterId);
             if (!letter) return;
             
-            currentLetterId = letterId;
+            currentLetterId = letter.id; // 현재 보고 있는 편지 ID 저장
             document.getElementById('letterModalDate').textContent = 
                 formatLetterDate(letter.date) + '에 작성한 편지';
             document.getElementById('letterModalContent').textContent = letter.content;
             document.getElementById('letterModal').style.display = 'block';
         }
         
+        // 날짜별 편지 보기 모달 열기
+        function openLettersForDateModal(dateKey) {
+            const lettersOnDate = allLettersData[dateKey] || [];
+            const modalTitle = document.getElementById('lettersForDateModalTitle');
+            const modalBody = document.getElementById('lettersForDateModalBody');
+
+            const dateObj = new Date(dateKey + 'T00:00:00'); // Ensure correct date parsing
+            modalTitle.textContent = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일의 편지`;
+
+            if (lettersOnDate.length === 0) {
+                modalBody.innerHTML = '<p>해당 날짜에 작성된 편지가 없습니다.</p>';
+            } else {
+                // 해당 날짜의 편지를 시간 최신순으로 정렬
+                lettersOnDate.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                modalBody.innerHTML = lettersOnDate.map(letter => `
+                    <div class="letter-card" style="cursor:default; margin-bottom:1rem;">
+                        <div class="letter-meta">
+                            <span><i class="fas fa-clock"></i> ${new Date(letter.date).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>
+                            <span><i class="fas fa-file-alt"></i> ${letter.content.length}자</span>
+                        </div>
+                        <div style="white-space: pre-wrap; margin-top:0.5rem;">${letter.content}</div>
+                         <button class="btn-outline btn-sm mt-2" onclick="deleteSpecificLetter('${letter.id}', '${dateKey}')">이 편지 삭제</button>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('lettersForDateModal').style.display = 'block';
+        }
+
+        // 날짜별 편지 보기 모달 닫기
+        function closeLettersForDateModal() {
+            document.getElementById('lettersForDateModal').style.display = 'none';
+        }
+
+        // 편지 상세보기 모달 닫기
         function closeLetterModal() {
             document.getElementById('letterModal').style.display = 'none';
             currentLetterId = null;
         }
         
-        function deleteLetter() {
+        // 편지 상세보기 모달에서 현재 편지 삭제
+        async function deleteLetter() {
             if (!currentLetterId) return;
             
             if (confirm('이 편지를 삭제하시겠습니까?')) {
-                letters = letters.filter(letter => letter.id !== currentLetterId);
-                saveToLocalStorage('emotionLetters', letters);
-                renderLetters();
-                closeLetterModal();
+                // allLettersData에서 삭제
+                let dateKeyToDelete = null;
+                Object.keys(allLettersData).forEach(dateKey => {
+                    const initialLength = allLettersData[dateKey].length;
+                    allLettersData[dateKey] = allLettersData[dateKey].filter(l => l.id !== currentLetterId);
+                    if (allLettersData[dateKey].length < initialLength) {
+                        dateKeyToDelete = dateKey; // 삭제된 편지가 속한 날짜 키
+                    }
+                     if (allLettersData[dateKey].length === 0) {
+                        delete allLettersData[dateKey]; // 해당 날짜에 편지가 없으면 날짜 키 삭제
+                    }
+                });
+
+                saveToLocalStorage('allEmotionLettersData', allLettersData);
+
+                // Firebase에서도 삭제 (로그인된 경우)
+                if (currentUser) {
+                    try {
+                         await db.collection('emotionLetters').doc(currentLetterId).delete(); // 개별 편지 문서 삭제
+                    } catch (error) { console.error('Firebase 삭제 실패:', error); }
+                }
+
+                updateRecentLettersList(); // 최근 편지 목록 업데이트
+                renderRecentLetters(); // 최근 편지 목록 렌더링
+                renderLetterCalendar(); // 달력 업데이트 (아이콘 사라짐)
+                closeLetterModal(); // 상세보기 모달 닫기
+                showMessage('편지가 삭제되었습니다.', 'success');
+            }
+        }
+
+        // 날짜별 편지 보기 모달에서 특정 편지 삭제
+        async function deleteSpecificLetter(letterId, dateKey) {
+             if (confirm('이 편지를 삭제하시겠습니까?')) {
+                if (allLettersData[dateKey]) {
+                    allLettersData[dateKey] = allLettersData[dateKey].filter(l => l.id !== letterId);
+                    if (allLettersData[dateKey].length === 0) {
+                        delete allLettersData[dateKey]; // 해당 날짜에 편지가 없으면 날짜 키 삭제
+                    }
+                }
+                saveToLocalStorage('allEmotionLettersData', allLettersData);
+
+                // Firebase에서도 삭제 (로그인된 경우)
+                if (currentUser) {
+                     try {
+                         await db.collection('emotionLetters').doc(letterId).delete(); // 개별 편지 문서 삭제
+                     } catch (error) { console.error('Firebase 삭제 실패:', error); }
+                }
+
+                updateRecentLettersList(); // 최근 편지 목록 업데이트
+                renderRecentLetters(); // 최근 편지 목록 렌더링
+                renderLetterCalendar(); // 달력 업데이트 (아이콘 사라짐)
+                closeLettersForDateModal(); // 날짜별 편지 모달 닫기
                 showMessage('편지가 삭제되었습니다.', 'success');
             }
         }
         
-        function deleteAllLetters() {
-            if (letters.length === 0) {
-                showMessage('삭제할 편지가 없습니다.', 'error');
+        // 모든 편지 삭제
+        async function deleteAllLetters() {
+            // 모든 편지 수를 합산하여 확인
+            const totalLettersCount = Object.values(allLettersData).flat().length;
+
+            if (totalLettersCount === 0) {
+                showMessage('삭제할 편지가 없습니다.', 'info');
                 return;
             }
             
-            if (confirm('모든 편지를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
-                letters = [];
-                saveToLocalStorage('emotionLetters', letters);
-                renderLetters();
+            if (confirm(`모든 편지 ${totalLettersCount}개를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`)) {
+                recentLetters = []; // 최근 편지 목록 비우기
+                allLettersData = {}; // 모든 편지 데이터 비우기
+                saveToLocalStorage('allEmotionLettersData', allLettersData); // 로컬 스토리지 업데이트
+
+                // Firebase에서도 모든 편지 삭제 (주의: 대량 삭제 시 성능 문제 발생 가능)
+                // 실제 앱에서는 서버 측에서 처리하는 것이 좋음
+                if (currentUser) {
+                    try {
+                        const snapshot = await db.collection('emotionLetters').where('userId', '==', currentUser.uid).get();
+                        const batch = db.batch();
+                        snapshot.docs.forEach(doc => batch.delete(doc.ref));
+                        await batch.commit();
+                    } catch (error) { console.error('Firebase 전체 삭제 실패:', error); }
+                }
+
+                renderRecentLetters(); // 최근 편지 목록 렌더링
+                renderLetterCalendar(); // 달력 업데이트
                 showMessage('모든 편지가 삭제되었습니다.', 'success');
             }
         }
         
         // 모달 외부 클릭 시 닫기
         window.addEventListener('click', function(event) {
-            const modal = document.getElementById('letterModal');
-            if (event.target === modal) {
+            const letterModal = document.getElementById('letterModal');
+            if (event.target === letterModal) {
                 closeLetterModal();
             }
-        });
-        
-        // 자동 저장 기능 (선택사항)
-        let autoSaveTimer;
-        document.getElementById('letterContent').addEventListener('input', function() {
-            clearTimeout(autoSaveTimer);
-            autoSaveTimer = setTimeout(() => {
-                const content = this.value.trim();
-                if (content) {
-                    localStorage.setItem('letterDraft', content);
-                }
-            }, 1000);
-        });
-        
-        // 페이지 로드 시 임시저장된 내용 복원
-        document.addEventListener('DOMContentLoaded', function() {
-            const draft = localStorage.getItem('letterDraft');
-            if (draft) {
-                document.getElementById('letterContent').value = draft;
-                updateCharCounter();
+            const lettersForDateModal = document.getElementById('lettersForDateModal');
+            if (event.target === lettersForDateModal) {
+                closeLettersForDateModal();
             }
         });
         
-        // 편지 저장 시 임시저장 내용 삭제
-        function saveLetter(event) {
-            event.preventDefault();
-            
-            const content = document.getElementById('letterContent').value.trim();
-            if (!content) {
-                showMessage('편지 내용을 입력해주세요.', 'error');
-                return;
-            }
-            
-            const letter = {
-                id: Date.now().toString(),
-                content: content,
-                date: new Date().toISOString(),
-                preview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
-            };
-            
-            letters.unshift(letter);
-            
-            // 최근 3개만 유지
-            if (letters.length > 3) {
-                letters = letters.slice(0, 3);
-            }
-            
-            saveToLocalStorage('emotionLetters', letters);
-            localStorage.removeItem('letterDraft'); // 임시저장 내용 삭제
-            renderLetters();
-            clearLetter();
-            showMessage('편지가 저장되었습니다.', 'success');
-        }
     </script>
 </body>
 </html>

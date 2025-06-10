@@ -359,23 +359,55 @@ function closeAllModals() {
 }
 
 // 메시지 표시
+// 메시지 표시 (중앙 토스트 스타일로 변경)
 function showMessage(message, type = "info") {
-  const messageDiv = document.createElement("div")
-  messageDiv.className = `message ${type}`
-  messageDiv.textContent = message
-  messageDiv.style.position = "fixed"
-  messageDiv.style.top = "20px"
-  messageDiv.style.right = "20px"
-  messageDiv.style.zIndex = "3000"
-  messageDiv.style.maxWidth = "350px"
-  messageDiv.style.padding = "1rem"; // 패딩 추가
+  // 기존 메시지 및 오버레이 제거
+  const existingMessage = document.querySelector('.message');
+  const existingOverlay = document.querySelector('.message-overlay');
+  if (existingMessage) existingMessage.remove();
+  if (existingOverlay) existingOverlay.remove();
 
-  document.body.appendChild(messageDiv)
+  const overlay = document.createElement("div");
+  overlay.className = "message-overlay";
+  
+  const messageDiv = document.createElement("div");
+  messageDiv.className = `message ${type}`;
+  
+  // 아이콘 추가 (선택사항)
+  let iconClass = '';
+  if (type === 'success') iconClass = 'fas fa-check-circle';
+  else if (type === 'error') iconClass = 'fas fa-times-circle';
+  else if (type === 'info') iconClass = 'fas fa-info-circle';
+  
+  if (iconClass) {
+    messageDiv.innerHTML = `<i class="${iconClass}" style="margin-right: 10px; font-size: 1.2em;"></i> ${message}`;
+  } else {
+      messageDiv.textContent = message;
+  }
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(messageDiv);
+
+  // 애니메이션을 위해 잠시 기다린 후 show 클래스 추가
+  requestAnimationFrame(() => {
+      overlay.classList.add('show');
+      messageDiv.classList.add('show');
+  });
+
 
   setTimeout(() => {
-    messageDiv.remove()
-  }, 3000)
+    messageDiv.classList.remove('show');
+    overlay.classList.remove('show');
+    // 애니메이션 완료 후 요소 제거
+    messageDiv.addEventListener('transitionend', () => messageDiv.remove());
+    overlay.addEventListener('transitionend', () => overlay.remove());
+  }, 2500); // 2.5초 후 사라짐 시작
 } 
+
+// ... (common.js 파일의 나머지 함수들은 그대로 유지)
+// 예: showPrivacyPolicy, showTerms, formatDate, getCurrentDate, getRandomItem,
+// saveToLocalStorage, loadFromLocalStorage, saveToFirestore, loadFromFirestore 등
+ 
 
 // 개인정보처리방침 표시
 function showPrivacyPolicy() {
