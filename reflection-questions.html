@@ -158,6 +158,21 @@
             transform: translateX(5px);
         }
         
+        .reflection-content-inline {
+            display: none; 
+            padding: 1rem;
+            background-color: #e8f0ff; 
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+        .reflection-content-inline .modal-actions button,
+        .reflection-content-inline .btn-outline,
+        .reflection-content-inline .btn-danger,
+        .reflection-content-inline .btn-primary {
+            padding: 0.5rem 1rem !important; /* 다른 버튼들과 유사한 패딩, !important로 우선순위 높임 */
+            font-size: 0.9rem !important;   /* 다른 버튼들과 유사한 폰트 크기, !important로 우선순위 높임 */
+        }
+        
         .question-text {
             font-size: 1.1rem;
             color: #333;
@@ -286,6 +301,57 @@
             gap: 1rem;
             justify-content: flex-end;
         }
+
+        .my-reflections-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .my-reflections-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .saved-reflection-item {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #764ba2;
+        }
+
+        .saved-reflection-question {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .saved-reflection-text {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+        }
+
+        .saved-reflection-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .reflection-item-actions button {
+            margin-left: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -332,7 +398,6 @@
                             </div>
                         </div>
                         <div class="questions-list" id="questions-self-understanding">
-                            <!-- 자기 이해 질문들 -->
                         </div>
                     </div>
                     
@@ -350,7 +415,6 @@
                             </div>
                         </div>
                         <div class="questions-list" id="questions-emotions">
-                            <!-- 감정 다루기 질문들 -->
                         </div>
                     </div>
                     
@@ -368,7 +432,6 @@
                             </div>
                         </div>
                         <div class="questions-list" id="questions-relationships">
-                            <!-- 관계 질문들 -->
                         </div>
                     </div>
                     
@@ -386,7 +449,6 @@
                             </div>
                         </div>
                         <div class="questions-list" id="questions-growth">
-                            <!-- 성장 질문들 -->
                         </div>
                     </div>
                     
@@ -404,7 +466,6 @@
                             </div>
                         </div>
                         <div class="questions-list" id="questions-stress">
-                            <!-- 스트레스 관리 질문들 -->
                         </div>
                     </div>
                     
@@ -422,15 +483,19 @@
                             </div>
                         </div>
                         <div class="questions-list" id="questions-mindfulness">
-                            <!-- 마음챙김 질문들 -->
                         </div>
+                    </div>
+                </div>
+
+                <div class="my-reflections-section" id="myReflectionsSection">
+                    <h3 class="my-reflections-header">나의 성찰 기록</h3>
+                    <div id="savedReflectionsList">
                     </div>
                 </div>
             </div>
         </section>
     </main>
     
-    <!-- 성찰 모달 -->
     <div class="reflection-modal" id="reflectionModal">
         <div class="reflection-modal-content">
             <div class="modal-header">
@@ -449,10 +514,27 @@
             </div>
         </div>
     </div>
+
+    <div class="reflection-modal" id="editReflectionModal">
+        <div class="reflection-modal-content">
+            <div class="modal-header">
+                <h3>성찰 수정하기</h3>
+                <button class="modal-close" onclick="closeEditReflectionModal()">&times;</button>
+            </div>
+            <div class="reflection-question" id="editModalQuestion"></div>
+            <textarea 
+                class="reflection-textarea" 
+                id="editReflectionTextarea"
+            ></textarea>
+            <div class="modal-actions">
+                <button class="btn-outline" onclick="closeEditReflectionModal()">취소</button>
+                <button class="btn-primary" onclick="saveEditedReflection()">수정 저장</button>
+            </div>
+        </div>
+    </div>
     
     <div id="footer-container"></div>
     
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
@@ -523,19 +605,27 @@
         
         let allQuestions = [];
         let currentReflectionQuestion = '';
+        let currentEditingReflectionId = null; 
         
         document.addEventListener('DOMContentLoaded', function() {
             initializeQuestions();
             loadRandomQuestion();
+
+            document.addEventListener('authStateReady', async function(e) {
+                if (e.detail.user) { 
+                    await loadSavedReflections();
+                } else { 
+                    document.getElementById('savedReflectionsList').innerHTML = 
+                        '<p class="text-center" style="color:#666;">로그인 후 성찰 기록을 확인하고 저장할 수 있습니다.</p>';
+                }
+            });
         });
         
         function initializeQuestions() {
-            // 모든 질문을 하나의 배열로 합치기
             Object.values(reflectionQuestions).forEach(categoryQuestions => {
                 allQuestions = allQuestions.concat(categoryQuestions);
             });
             
-            // 각 카테고리별 질문 렌더링
             Object.entries(reflectionQuestions).forEach(([category, questions]) => {
                 renderCategoryQuestions(category, questions);
             });
@@ -543,16 +633,19 @@
         
         function renderCategoryQuestions(category, questions) {
             const container = document.getElementById(`questions-${category}`);
-            container.innerHTML = questions.map((question, index) => `
-                <div class="question-item">
+            container.innerHTML = questions.map((question, index) => {
+                const questionId = `q-${category}-${index}`; 
+                return `
+                <div class="question-item" id="${questionId}-item">
                     <div class="question-text">${question}</div>
                     <div class="question-actions">
-                        <button class="reflect-btn" onclick="openReflectionModal('${question}')">
+                        <button class="reflect-btn" id="btn-${questionId}" onclick="toggleInlineReflection('${questionId}', '${question}')">
                             <i class="fas fa-pen"></i> 성찰하기
                         </button>
                     </div>
+                    <div class="reflection-content-inline" id="content-${questionId}"></div>
                 </div>
-            `).join('');
+            `}).join('');
         }
         
         function toggleCategory(category) {
@@ -563,7 +656,6 @@
                 questionsList.classList.remove('expanded');
                 toggle.classList.remove('expanded');
             } else {
-                // 다른 카테고리들 닫기
                 document.querySelectorAll('.questions-list').forEach(list => {
                     list.classList.remove('expanded');
                 });
@@ -571,7 +663,6 @@
                     t.classList.remove('expanded');
                 });
                 
-                // 현재 카테고리 열기
                 questionsList.classList.add('expanded');
                 toggle.classList.add('expanded');
             }
@@ -580,6 +671,87 @@
         function loadRandomQuestion() {
             const randomQuestion = getRandomItem(allQuestions);
             document.getElementById('randomQuestionText').textContent = randomQuestion;
+        }
+        
+        function toggleInlineReflection(questionElementId, questionText) {
+            const contentDiv = document.getElementById(`content-${questionElementId}`);
+            const button = document.getElementById(`btn-${questionElementId}`);
+
+            if (contentDiv.style.display === 'block' && button.dataset.mode === 'view') {
+                contentDiv.style.display = 'none';
+                return;
+            }
+            
+            if (button.dataset.mode === 'view') {
+                 contentDiv.style.display = 'block'; 
+            } else {
+                currentReflectionQuestion = questionText; 
+                contentDiv.innerHTML = `
+                    <textarea class="reflection-textarea" id="textarea-${questionElementId}" placeholder="이 질문에 대해 자유롭게 생각을 적어보세요..."></textarea>
+                    <div class="modal-actions" style="margin-top:1rem;">
+                        <button class="btn-outline" onclick="cancelInlineReflection('${questionElementId}')">취소</button>
+                        <button class="btn-primary" onclick="saveInlineReflection('${questionElementId}', '${questionText}')">저장하기</button>
+                    </div>
+                `;
+                contentDiv.style.display = 'block';
+                document.getElementById(`textarea-${questionElementId}`).focus();
+            }
+        }
+
+        function cancelInlineReflection(questionElementId) {
+            const contentDiv = document.getElementById(`content-${questionElementId}`);
+            const button = document.getElementById(`btn-${questionElementId}`);
+            contentDiv.style.display = 'none';
+            contentDiv.innerHTML = ''; 
+            if (button.dataset.mode !== 'view') {
+                 button.innerHTML = '<i class="fas fa-pen"></i> 성찰하기';
+            }
+        }
+
+        async function saveInlineReflection(questionElementId, questionText) {
+            const textarea = document.getElementById(`textarea-${questionElementId}`);
+            const reflectionText = textarea.value.trim();
+
+            if (!reflectionText) {
+                showMessage('성찰 내용을 입력해주세요.', 'error');
+                return;
+            }
+
+            if (!currentUser) {
+                showMessage('로그인이 필요합니다.', 'error');
+                showLoginModal();
+                return;
+            }
+
+            const reflectionDocId = `${currentUser.uid}_${Date.now()}`; 
+            const reflectionData = {
+                id: reflectionDocId,
+                question: questionText,
+                reflection: reflectionText,
+                date: new Date().toISOString(),
+                userId: currentUser.uid,
+                questionElementId: questionElementId 
+            };
+
+            const success = await saveToFirestore('reflections', reflectionDocId, reflectionData);
+
+            if (success) {
+                const contentDiv = document.getElementById(`content-${questionElementId}`);
+                contentDiv.innerHTML = `<div class="saved-reflection-text">${reflectionText}</div>
+                                        <button class="btn-outline" style="margin-top:1rem;" onclick="editInlineReflection('${questionElementId}', '${questionText}', '${reflectionDocId}', \`${reflectionText}\`)"><i class="fas fa-edit"></i> 수정</button>
+                                        <button class="btn-danger" style="margin-top:1rem; margin-left:0.5rem;" onclick="deleteInlineReflection('${questionElementId}', '${reflectionDocId}')"><i class="fas fa-trash"></i> 삭제</button>`;
+                
+                const button = document.getElementById(`btn-${questionElementId}`);
+                button.innerHTML = '<i class="fas fa-eye"></i> 성찰 보기';
+                button.dataset.mode = 'view'; 
+                button.classList.remove('reflect-btn');
+                button.classList.add('btn-secondary'); 
+
+                showMessage('성찰이 저장되었습니다.', 'success');
+                await loadSavedReflections(); 
+            } else {
+                showMessage('성찰 저장에 실패했습니다.', 'error');
+            }
         }
         
         function openReflectionModal(question) {
@@ -594,40 +766,236 @@
             currentReflectionQuestion = '';
         }
         
-        function saveReflection() {
+        async function saveReflection() { 
+            if (!currentUser) {
+                showMessage('로그인이 필요합니다.', 'error');
+                showLoginModal();
+                return;
+            }
+
             const reflection = document.getElementById('reflectionTextarea').value.trim();
             
             if (!reflection) {
                 showMessage('성찰 내용을 입력해주세요.', 'error');
                 return;
             }
-            
+
+            const reflectionDocId = Date.now().toString(); 
             const reflectionData = {
+                id: reflectionDocId, 
                 question: currentReflectionQuestion,
                 reflection: reflection,
-                date: new Date().toISOString()
+                date: new Date().toISOString(),
+                userId: currentUser.uid
             };
             
-            // 로컬 스토리지에 저장
-            let savedReflections = loadFromLocalStorage('reflections') || [];
-            savedReflections.unshift(reflectionData);
-            
-            // 최근 20개만 유지
-            if (savedReflections.length > 20) {
-                savedReflections = savedReflections.slice(0, 20);
+            const success = await saveToFirestore('reflections', reflectionDocId, reflectionData);
+            if (success) {
+                closeReflectionModal();
+                showMessage('성찰이 저장되었습니다.', 'success');
+                await loadSavedReflections(); 
+            } else {
+                showMessage('성찰 저장에 실패했습니다.', 'error');
+            }
+        }
+
+        function editInlineReflection(questionElementId, questionText, reflectionDocId, currentReflectionText) {
+            const contentDiv = document.getElementById(`content-${questionElementId}`);
+            contentDiv.innerHTML = `
+                <textarea class="reflection-textarea" id="textarea-edit-${questionElementId}">${currentReflectionText}</textarea>
+                <div class="modal-actions" style="margin-top:1rem;">
+                    <button class="btn-outline" onclick="cancelEditInlineReflection('${questionElementId}', '${reflectionDocId}', \`${currentReflectionText}\`, '${questionText}')">취소</button>
+                    <button class="btn-danger" onclick="deleteInlineReflection('${questionElementId}', '${reflectionDocId}')"><i class="fas fa-trash"></i> 삭제</button>
+                    <button class="btn-primary" onclick="saveEditedInlineReflection('${questionElementId}', '${reflectionDocId}')">수정 저장</button>
+                </div>
+            `;
+            document.getElementById(`textarea-edit-${questionElementId}`).focus();
+        }
+
+        function cancelEditInlineReflection(questionElementId, reflectionDocId, originalText, questionText) {
+            // questionText 인자 추가 (editInlineReflection 호출 시 필요)
+            const contentDiv = document.getElementById(`content-${questionElementId}`);
+            contentDiv.innerHTML = `<div class="saved-reflection-text">${originalText}</div>
+                                    <button class="btn-outline" style="margin-top:1rem;" onclick="editInlineReflection('${questionElementId}', '${questionText || document.getElementById(questionElementId + '-item').querySelector('.question-text').textContent}', '${reflectionDocId}', \`${originalText}\`)"><i class="fas fa-edit"></i> 수정</button>
+                                    <button class="btn-danger" style="margin-top:1rem; margin-left:0.5rem;" onclick="deleteInlineReflection('${questionElementId}', '${reflectionDocId}')"><i class="fas fa-trash"></i> 삭제</button>`;
+        }
+
+        async function saveEditedInlineReflection(questionElementId, reflectionDocId) {
+            const newReflectionText = document.getElementById(`textarea-edit-${questionElementId}`).value.trim();
+            if (!newReflectionText) {
+                showMessage('수정할 내용을 입력해주세요.', 'error');
+                return;
             }
             
-            saveToLocalStorage('reflections', savedReflections);
-            
-            closeReflectionModal();
-            showMessage('성찰이 저장되었습니다.', 'success');
+            try {
+                await db.collection('reflections').doc(reflectionDocId).update({
+                    reflection: newReflectionText,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showMessage('성찰 내용이 수정되었습니다.', 'success');
+                // 수정 후 보기 모드로 전환 시 questionText를 가져와야 함
+                const questionText = document.getElementById(`${questionElementId}-item`).querySelector('.question-text').textContent;
+                cancelEditInlineReflection(questionElementId, reflectionDocId, newReflectionText, questionText); 
+                await loadSavedReflections(); 
+            } catch (error) {
+                 console.error("Error updating inline reflection: ", error);
+                 showMessage('성찰 내용 수정에 실패했습니다.', 'error');
+            }
+        }
+
+        async function deleteInlineReflection(questionElementId, reflectionDocId) {
+            if (!currentUser) return;
+
+            if (confirm('이 성찰 기록을 삭제하시겠습니까? (이 작업은 되돌릴 수 없습니다)')) {
+                try {
+                    await db.collection('reflections').doc(reflectionDocId).delete();
+                    
+                    const contentDiv = document.getElementById(`content-${questionElementId}`);
+                    contentDiv.style.display = 'none';
+                    contentDiv.innerHTML = '';
+                    
+                    const button = document.getElementById(`btn-${questionElementId}`);
+                    button.innerHTML = '<i class="fas fa-pen"></i> 성찰하기';
+                    button.dataset.mode = ''; // 'view' 모드 해제
+                    button.classList.remove('btn-secondary');
+                    button.classList.add('reflect-btn');
+
+                    showMessage('성찰 기록이 삭제되었습니다.', 'success');
+                    await loadSavedReflections(); // 하단 목록도 업데이트
+                } catch (error) {
+                    console.error("Error deleting inline reflection: ", error);
+                    showMessage('성찰 기록 삭제에 실패했습니다.', 'error');
+                }
+            }
+        }
+
+        async function loadSavedReflections() {
+            if (!currentUser) {
+                document.getElementById('savedReflectionsList').innerHTML = 
+                    '<p class="text-center" style="color:#666;">로그인 후 성찰 기록을 확인하고 저장할 수 있습니다.</p>';
+                return;
+            }
+
+            try {
+                const snapshot = await db.collection('reflections')
+                                        .where('userId', '==', currentUser.uid)
+                                        .orderBy('date', 'desc')
+                                        .limit(20) 
+                                        .get();
+                
+                const reflections = [];
+                snapshot.forEach(doc => {
+                    reflections.push({ id: doc.id, ...doc.data() });
+                });
+                renderSavedReflections(reflections);
+            } catch (error) {
+                console.error("Error loading reflections: ", error);
+                showMessage('성찰 기록을 불러오는 데 실패했습니다.', 'error');
+                document.getElementById('savedReflectionsList').innerHTML = 
+                    '<p class="text-center" style="color:red;">기록을 불러오는 중 오류가 발생했습니다.</p>';
+            }
+        }
+
+        function renderSavedReflections(reflections) {
+            const listElement = document.getElementById('savedReflectionsList');
+            if (!reflections || reflections.length === 0) {
+                listElement.innerHTML = '<p class="text-center" style="color:#666;">아직 저장된 성찰 기록이 없습니다.</p>';
+                return;
+            }
+
+            listElement.innerHTML = reflections.map(item => `
+                <div class="saved-reflection-item" id="reflection-${item.id}">
+                    <div class="saved-reflection-question">${item.question}</div>
+                    <div class="saved-reflection-text" id="text-saved-${item.id}">${item.reflection}</div>
+                    <div class="saved-reflection-meta">
+                        <span>${new Date(item.date).toLocaleDateString('ko-KR')}</span>
+                        <div class="reflection-item-actions">
+                            <button class="btn-outline btn-sm" onclick="openEditReflectionModal('${item.id}', \`${item.question}\`, document.getElementById('text-saved-${item.id}').textContent)">
+                                <i class="fas fa-edit"></i> 수정
+                            </button>
+                            <button class="btn-danger btn-sm" onclick="deleteReflection('${item.id}')">
+                                <i class="fas fa-trash"></i> 삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            reflections.forEach(item => {
+                if (item.questionElementId) { 
+                    const button = document.getElementById(`btn-${item.questionElementId}`);
+                    const contentDiv = document.getElementById(`content-${item.questionElementId}`);
+                    if (button && contentDiv) {
+                        button.innerHTML = '<i class="fas fa-eye"></i> 성찰 보기';
+                        button.dataset.mode = 'view';
+                        button.classList.remove('reflect-btn');
+                        button.classList.add('btn-secondary');
+                        contentDiv.innerHTML = `<div class="saved-reflection-text">${item.reflection}</div>
+                                                <button class="btn-outline" style="margin-top:0.5rem;" onclick="editInlineReflection('${item.questionElementId}', '${item.question}', '${item.id}', \`${item.reflection}\`)"><i class="fas fa-edit"></i> 수정</button>
+                                                <button class="btn-danger" style="margin-top:0.5rem; margin-left:0.5rem;" onclick="deleteInlineReflection('${item.questionElementId}', '${item.id}')"><i class="fas fa-trash"></i> 삭제</button>`;
+                    }
+                }
+            });
+        }
+
+        function openEditReflectionModal(id, question, reflection) {
+            currentEditingReflectionId = id;
+            document.getElementById('editModalQuestion').textContent = question;
+            document.getElementById('editReflectionTextarea').value = reflection;
+            document.getElementById('editReflectionModal').style.display = 'block';
+        }
+
+        function closeEditReflectionModal() {
+            document.getElementById('editReflectionModal').style.display = 'none';
+            currentEditingReflectionId = null;
+        }
+
+        async function saveEditedReflection() {
+            if (!currentEditingReflectionId || !currentUser) return;
+
+            const newReflectionText = document.getElementById('editReflectionTextarea').value.trim();
+            if (!newReflectionText) {
+                showMessage('수정할 내용을 입력해주세요.', 'error');
+                return;
+            }
+
+            try {
+                await db.collection('reflections').doc(currentEditingReflectionId).update({
+                    reflection: newReflectionText,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+                });
+                showMessage('성찰 내용이 수정되었습니다.', 'success');
+                closeEditReflectionModal();
+                await loadSavedReflections(); 
+            } catch (error) {
+                console.error("Error updating reflection: ", error);
+                showMessage('성찰 내용 수정에 실패했습니다.', 'error');
+            }
+        }
+
+        async function deleteReflection(reflectionId) {
+            if (!currentUser) return;
+
+            if (confirm('이 성찰 기록을 삭제하시겠습니까?')) {
+                try {
+                    await db.collection('reflections').doc(reflectionId).delete();
+                    showMessage('성찰 기록이 삭제되었습니다.', 'success');
+                    await loadSavedReflections(); 
+                } catch (error) {
+                    console.error("Error deleting reflection: ", error);
+                    showMessage('성찰 기록 삭제에 실패했습니다.', 'error');
+                }
+            }
         }
         
-        // 모달 외부 클릭 시 닫기
         window.addEventListener('click', function(event) {
-            const modal = document.getElementById('reflectionModal');
-            if (event.target === modal) {
+            const reflectionModal = document.getElementById('reflectionModal');
+            const editReflectionModal = document.getElementById('editReflectionModal');
+            if (event.target === reflectionModal) {
                 closeReflectionModal();
+            }
+            if (event.target === editReflectionModal) {
+                closeEditReflectionModal();
             }
         });
     </script>
