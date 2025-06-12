@@ -11,16 +11,16 @@
         .journal-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem; /* 전체 컨테이너 패딩 축소 */
         }
         
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
             background: white;
-            padding: 1.5rem;
+            padding: 1rem; /* 패딩 축소 */
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
@@ -35,7 +35,7 @@
             background: #667eea;
             color: white;
             border: none;
-            padding: 0.5rem;
+            padding: 0.4rem; /* 버튼 패딩 약간 축소 */
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -47,7 +47,7 @@
         }
         
         .current-month {
-            font-size: 1.5rem;
+            font-size: 1.3rem; /* 폰트 크기 약간 축소 */
             font-weight: 600;
             color: #333;
         }
@@ -55,7 +55,7 @@
         .emotion-legend {
             display: flex;
             gap: 1rem;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* 모바일에서 줄바꿈 유지 */
         }
         
         .emotion-item {
@@ -66,8 +66,8 @@
         }
         
         .emotion-color {
-            width: 20px;
-            height: 20px;
+            width: 18px; /* 크기 약간 축소 */
+            height: 18px;
             border-radius: 50%;
             border: 2px solid white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -76,9 +76,9 @@
         .calendar {
             background: white;
             border-radius: 15px;
-            padding: 1.5rem;
+            padding: 1rem; /* 패딩 축소 */
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
         }
         
         .calendar-grid {
@@ -93,21 +93,21 @@
         .calendar-day-header {
             background: #667eea;
             color: white;
-            padding: 1rem;
+            padding: 0.75rem; /* 패딩 축소 */
             text-align: center;
             font-weight: 600;
         }
         
         .calendar-day {
             background: white;
-            padding: 0.5rem; 
-            min-height: 100px; 
+            padding: 0.4rem; /* 패딩 약간 늘림 */
+            min-height: 90px; /* 최소 높이를 조금 더 확보 */
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; 
+            justify-content: flex-start; /* 요소들을 위에서부터 순서대로 배치 */
         }
         
         .calendar-day:hover {
@@ -131,7 +131,7 @@
         
         .day-number {
             font-weight: 600;
-            margin-bottom: 0.3rem; 
+            margin-bottom: 0.25rem; /* 메모와의 간격 */
             z-index: 2; 
             position: relative; 
         }
@@ -139,13 +139,13 @@
         .stats-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 1.5rem; /* 간격 축소 */
+            margin-bottom: 1.5rem; /* 마진 축소 */
         }
         
         .stats-card {
             background: white;
-            padding: 2rem;
+            padding: 1.5rem; /* .content-block과 동일하게 조정 */
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
@@ -153,7 +153,7 @@
         .stats-title {
             font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* 마진 축소 */
             color: #333;
         }
         
@@ -187,7 +187,7 @@
         .prescription-card {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 2rem;
+            padding: 1.5rem; /* .content-block과 동일하게 조정 */
             border-radius: 15px;
             text-align: center;
         }
@@ -229,12 +229,13 @@
             width: 18px; 
             height: 18px; 
             border-radius: 50%; 
-            position: absolute; 
-            bottom: 5px; 
-            right: 5px; 
+            position: relative; /* 일반 흐름에 포함 */
+            /* bottom, right 속성 제거 */
             border: 2px solid white; 
             box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
-            z-index: 1; 
+            z-index: 1; /* z-index 조정 */
+            align-self: flex-end; /* 오른쪽 정렬 */
+            margin-top: auto; /* 가능한 많은 공간을 차지하며 아래로 밀림 (메모가 있을 때 효과적) */
         }
 
         .emotion-note-preview {
@@ -242,20 +243,22 @@
             color: #555; 
             margin-top: 0.2rem;
             line-height: 1.3;
-            max-height: 2.6em; 
+            max-height: 2.4em; /* 두 줄 정도로 제한 */
             overflow: hidden; 
             text-overflow: ellipsis; 
             word-break: break-all; 
             z-index: 2; 
             position: relative; 
+            margin-bottom: 0.25rem; /* 감정 표시기와의 간격 */
+            min-height: 2.4em; /* 메모가 없어도 두 줄 높이 확보 */
         }
 
         .year-in-pixels-view {
             background: white;
             border-radius: 15px;
-            padding: 1.5rem;
+            padding: 1rem; /* 패딩 축소 */
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
             /* display: none; 기본적으로 숨김 처리 */
         }
 
@@ -264,7 +267,7 @@
             justify-content: center; /* 네비게이션 요소를 헤더 중앙에 배치 */
             align-items: center;
             padding: 0 0.5rem; /* 헤더 패딩 조정 */
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* 마진 축소 */
         }
 
         .year-pixels-nav { /* 연도 네비게이션 스타일 추가 */
@@ -274,7 +277,7 @@
         }
 
         .year-pixels-header h2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem; /* 폰트 크기 약간 축소 */
             color: #333;
             margin: 0;
         }
@@ -282,7 +285,7 @@
             background: #667eea;
             color: white;
             border: none;
-            padding: 0.5rem;
+            padding: 0.4rem; /* 버튼 패딩 약간 축소 */
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease; /* 버튼 좌우 마진은 gap으로 대체하거나 유지 가능 */
@@ -295,14 +298,14 @@
         .pixels-grid-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr); /* 명확하게 4열 그리드 설정 */
-            gap: 1rem; /* 월별 간격 */
-            padding: 1rem; /* 그리드 컨테이너 자체에 패딩 추가 */
+            gap: 0.75rem; /* 월별 간격 축소 */
+            padding: 0.75rem; /* 그리드 컨테이너 패딩 축소 */
         }
 
         .pixel-month-wrapper {
             background: #f8f9fa; /* 각 월별 배경색 */
             border-radius: 10px;
-            padding: 1rem;
+            padding: 0.75rem; /* 패딩 축소 */
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             /* margin-bottom: 1.5rem; */ /* gap 속성으로 대체 */
         }
@@ -335,6 +338,28 @@
             outline: 2px solid #667eea;
             z-index: 10; /* 호버 시 다른 요소 위로 올라오도록 */
         }
+
+        /* 모바일 화면에서 추가 패딩 조정 */
+        @media (max-width: 768px) {
+            .journal-container {
+                padding: 0.75rem;
+            }
+            .calendar-header, .calendar, .year-in-pixels-view {
+                padding: 0.75rem;
+            }
+            .stats-card, .prescription-card {
+                padding: 1rem; /* .content-block 모바일과 동일하게 유지 */
+            }
+            .current-month, .year-pixels-header h2 {
+                font-size: 1.1rem;
+            }
+            .month-nav button, .year-pixels-nav button {
+                padding: 0.3rem;
+            }
+            .calendar-day-header {
+                padding: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -344,9 +369,47 @@
         <section class="page-header">
             <div class="container">
                 <h1 class="page-title">색상 감정 일기</h1>
-                <p class="page-subtitle">매일의 감정을 색상으로 기록하고 나만의 패턴을 발견해보세요</p>
+                <p class="page-subtitle">매일의 감정을 색상으로 기록하고 나만의 감정패턴을 확인하세요</p>
             </div>
         </section>
+
+                </section> <!-- page-header 닫는 태그 -->
+
+        <!-- 사용법 요약 섹션 시작 -->
+        <section class="quick-guide-section">
+            <div class="container">
+                <h2 class="quick-guide-main-title">
+                    🎨 EmotiCare 색상 감정 일기: 내 마음을 색상으로
+                </h2>
+                
+                <div class="quick-guide-grid">
+                    <div class="quick-guide-card">
+                        <h3 class="quick-guide-card-title guide-title-usage">
+                            <i class="fas fa-tasks"></i> 감정일기 3단계:
+                        </h3>
+                        <ol class="quick-guide-list">
+                            <li><strong>마음 기록:</strong> 달력에서 날짜를 고르고, 오늘의 감정(색상), 강도, 짧은 메모를 남겨 저장해요.</li>
+                            <li><strong>패턴 발견 & 조언 얻기:</strong> 월별 통계로 내 감정 흐름을 보고, 맞춤 마음 처방전도 확인해요.</li>
+                            <li><strong>한눈에 보기:</strong> '올해의 색깔들'로 1년치 감정 변화를 아름다운 픽셀 아트로 감상해요. (기록이 있어야 보여요!)</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="quick-guide-card">
+                        <h3 class="quick-guide-card-title guide-title-effects">
+                            <i class="fas fa-bullseye"></i> 기대 효과:
+                        </h3>
+                        <ul class="quick-guide-list">
+                            <li><strong>자기 이해 & 마음 성장:</strong> 내 감정을 꾸준히 기록하면 패턴을 확인하고 스스로 마음의 건강을 효과적으로 관리할 수 있어요.</li>
+                            <li><strong>다채로운 감정 여정 시각화:</strong> 1년의 감정 변화를 색으로 한눈에 보며 나의 성장 과정을 직관적으로 느껴보세요.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 사용법 요약 섹션 끝 -->
+        
+        <section class="page-content">
+
         
         <section class="page-content">
             <div class="journal-container">
@@ -376,7 +439,7 @@
                                 <span>슬픔</span>
                             </div>
                             <div class="emotion-item">
-                                <div class="emotion-color" style="background: #ff0606;"></div>
+                                <div class="emotion-color" style="background: #ee4801;"></div>
                                 <span>화남</span> 
                             </div>
                         </div>
@@ -502,56 +565,56 @@
             calm: { name: '평온', color: '#00a693', icon: 'fas fa-smile' },
             anxious: { name: '불안', color: '#8e44ad', icon: 'fas fa-meh' },
             sad: { name: '슬픔', color: '#2980b9', icon: 'fas fa-sad-tear' },
-            angry: { name: '화남', color: '#ff0606', icon: 'fas fa-angry' }
+            angry: { name: '화남', color: '#ee4801', icon: 'fas fa-angry' }
         };
         
         const prescriptions = {
             happy: [
                 { maxCount: 1, message: "기쁨을 조금 더 느껴보세요! 작은 것에서 행복을 찾는 연습은 어때요?" },
-                { maxCount: 3, message: "기분 좋은 순간들이 있었네요. 이 기쁨을 주변에 나눠보세요." },
-                { maxCount: 5, message: "기쁨을 느끼는 날들이 꽤 있었군요! 긍정적인 마음이 보기 좋아요." },
-                { maxCount: 7, message: "행복한 에너지가 느껴지는 달이에요. 이 기운을 잘 유지해보세요!" },
+                { maxCount: 3, message: "기분 좋은 순간들이 있었네요. 이 기쁨을 주변에 함께 나눠보세요." },
+                { maxCount: 5, message: "기쁨을 느끼는 날들이 꽤 있었군요! 긍정적인 마음을 유지하는 모습 보기 좋아요." },
+                { maxCount: 7, message: "행복한 에너지가 느껴지는 달이에요. 이 긍정 기운을 잘 유지해가세요!" },
                 { maxCount: 9, message: "많은 날들을 기쁘게 보내셨네요! 당신의 밝은 에너지가 주변을 환하게 해요." },
-                { maxCount: 11, message: "정말 행복한 한 달이었군요! 이 기쁨을 충분히 누리세요." },
-                { maxCount: Infinity, message: "매일매일이 기쁨으로 가득 찬 한 달이었군요! 당신은 행복을 만들어가는 사람입니다." }
+                { maxCount: 11, message: "정말 행복한 한 달이었군요! 이 기쁨을 충분히 누리고 유지하세요." },
+                { maxCount: Infinity, message: "매일매일이 기쁨으로 가득 찬 한 달이었네요! 당신은 행복을 만들어가는 사람입니다." }
             ],
             calm: [
-                { maxCount: 1, message: "평온함을 찾아보는 건 어때요? 조용한 명상이나 산책이 도움이 될 수 있어요." },
-                { maxCount: 3, message: "마음이 평온했던 순간들이 있었네요. 그 느낌을 기억해보세요." },
+                { maxCount: 1, message: "평온함을 더 찾아보는 건 어때요? 조용한 명상이나 산책이 도움이 될 수 있어요." },
+                { maxCount: 3, message: "마음이 평온했던 순간들이 있었네요. 그 느낌을 다시 떠올려보세요." },
                 { maxCount: 5, message: "안정적인 마음 상태를 잘 유지하고 있어요. 꾸준한 자기 돌봄 덕분일 거예요." },
                 { maxCount: 7, message: "꽤 평온한 한 달을 보내셨네요. 스트레스 관리를 잘 하고 계신 것 같아요." },
-                { maxCount: 9, message: "매우 평온한 상태를 유지하고 계시는군요. 내면의 안정감이 큰 강점이에요." },
-                { maxCount: 11, message: "대부분의 시간을 평온하게 보내셨네요. 마음의 균형을 잘 잡고 계십니다." },
-                { maxCount: Infinity, message: "이번 달 대부분 평온함을 느끼셨군요! 정말 멋진 마음 상태입니다. 이 평화를 계속 유지하세요." }
+                { maxCount: 9, message: "매우 평온한 상태를 유지하고 계시는군요. 내면의 안정감은 큰 강점이에요." },
+                { maxCount: 11, message: "대부분의 시간을 평온하게 보내셨네요. 마음의 균형을 잘 잡고 있어요." },
+                { maxCount: Infinity, message: "이번 달 대부분 평온함을 느끼셨군요! 정말 멋진 마음 상태입니다. 이 평온함을 계속 유지하세요." }
             ],
             anxious: [
                 { maxCount: 0, message: "이번 달에는 불안감을 거의 느끼지 않으셨네요. 안정적인 한 달이었던 것 같습니다." },
-                { maxCount: 2, message: "가끔 불안감을 느꼈군요. 그럴 땐 심호흡이나 좋아하는 활동으로 주의를 돌려보세요." },
-                { maxCount: 4, message: "불안한 마음이 조금씩 있었네요. 원인을 파악하고 스스로를 다독여주세요." },
-                { maxCount: 6, message: "불안감이 자주 느껴졌다면, 규칙적인 생활과 휴식이 도움이 될 수 있어요." },
+                { maxCount: 2, message: "가끔 불안감을 느끼는군요. 그럴 땐 심호흡이나 좋아하는 활동들로 주의를 돌려보세요." },
+                { maxCount: 4, message: "조금씩 불안한 마음이 있었네요. 원인을 파악하고 스스로를 칭찬해주고 다독여주세요." },
+                { maxCount: 6, message: "불안감이 자주 느껴졌다면, 규칙적인 생활과 명상이나 휴식이 도움이 될 수 있어요." },
                 { maxCount: 8, message: "불안함이 꽤 느껴지는 달이었네요. 마음챙김 연습이나 이완 기법을 시도해보세요." },
                 { maxCount: 11, message: "지속적인 불안은 에너지를 소모시켜요. 전문가의 도움을 고려해보는 것도 좋아요." },
-                { maxCount: Infinity, message: "높은 수준의 불안을 경험하고 계신 것 같습니다. 혼자 힘들어하지 마시고 꼭 전문가와 상담해보세요." }
+                { maxCount: Infinity, message: "높은 수준의 불안을 경험하고 있는 것 같아요. 혼자 힘들어하지 마시고 꼭 전문가와 상담해보세요." }
             ],
             sad: [
-                { maxCount: 0, message: "이번 달에는 슬픔을 거의 느끼지 않으셨네요. 밝고 긍정적인 한 달이었던 것 같습니다." },
+                { maxCount: 0, message: "이번 달에는 슬픔을 거의 느끼지 않으셨네요. 밝고 긍정적인 한 달이었던 것 같아요." },
                 { maxCount: 2, message: "가끔 슬픈 감정이 들었군요. 그 감정을 충분히 느끼고 흘려보내는 것이 중요해요." },
                 { maxCount: 4, message: "슬픔을 느꼈던 날들이 있었네요. 자신을 위로하고 좋아하는 사람들과 시간을 보내세요." },
-                { maxCount: 6, message: "슬픈 감정이 자주 찾아왔다면, 기분 전환을 위한 활동이나 취미를 가져보세요." },
-                { maxCount: 8, message: "마음이 아팠던 날들이 꽤 있었네요. 슬픔을 표현하고 도움을 요청해도 괜찮아요." },
+                { maxCount: 6, message: "슬픈 감정이 자주 찾아왔다면, 기분 전환을 위한 활동이나 취미들을 가져보세요." },
+                { maxCount: 8, message: "마음이 아팠던 날들이 꽤 있었네요. 슬픔을 표현하고 주변에 도움을 요청해도 괜찮아요." },
                 { maxCount: 11, message: "지속적인 슬픔은 우울감으로 이어질 수 있어요. 전문가와 상담하여 마음을 돌보세요." },
                 { maxCount: Infinity, message: "깊은 슬픔을 경험하고 계신 것 같습니다. 혼자 감당하기 어렵다면 반드시 전문가의 도움을 받으세요." }
             ],
             angry: [
                 { maxCount: 0, message: "이번 달에는 화나는 일이 거의 없으셨네요! 평온한 한 달을 보내신 것 같아요." },
                 { maxCount: 2, message: "가끔 화가 났었군요. 그럴 땐 잠시 숨을 고르고 원인을 생각해보세요." },
-                { maxCount: 4, message: "화나는 일이 조금 있었네요. 화를 건강하게 표현하는 방법을 찾아보는 건 어때요?" },
-                { maxCount: 6, message: "화가 자주 느껴졌다면, 스트레스 요인을 점검하고 해소할 방법을 찾아보세요." },
+                { maxCount: 4, message: "화나는 일이 조금 있었네요. 화를 건강하게 표현할 나만의 방법을 찾아보는 건 어떤가요?" },
+                { maxCount: 6, message: "화가 자주 느껴진다면, 스트레스 요인을 점검하고 건전하게 해소할 방법을 찾아보세요." },
                 { maxCount: 8, message: "화가 꽤 쌓인 것 같아요. 운동이나 명상으로 마음을 다스려보는 것을 고려해보세요." },
                 { maxCount: 11, message: "지속적인 화는 마음을 지치게 할 수 있어요. 적극적인 스트레스 관리가 필요해 보여요." },
-                { maxCount: Infinity, message: "매우 높은 빈도로 화를 느끼고 계십니다. 감정 조절에 어려움이 있다면 전문가와 상담하여 도움을 받는 것이 좋습니다." }
+                { maxCount: Infinity, message: "매우 높은 빈도로 화를 느끼고 있어요. 감정 조절에 어려움이 있다면 전문가와 상담하여 도움을 받는 것이 좋아요." }
             ],
-            default: "감정을 꾸준히 기록하고 자신을 더 깊이 이해해보세요. 어떤 감정이든 소중한 당신의 일부입니다."
+            default: "감정을 꾸준히 기록하고 자신을 더 깊이 이해해보세요. 어떤 감정이든 그것들도 소중한 당신의 일부입니다."
         };
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -560,18 +623,28 @@
             setupIntensitySlider(); // 감정 강도 슬라이더 초기화 함수 호출
 
             document.addEventListener('authStateReady', async function(e) {
-                if (e.detail.user) { 
-                    await loadEmotionData();
-                } else { 
-                    const localData = loadFromLocalStorage('emotionData');
-                    if (localData) {
-                        emotionData = localData;
-                    } else {
-                        emotionData = {};
-                    }
-                    showMessage("로그인 후 이용하시면 데이터가 안전하게 보관됩니다.", "info");
+                currentUser = e.detail.user;
+                console.log('[AUTH STATE CHANGE] User:', currentUser ? currentUser.uid : 'Logged out');
+
+                // 1. 핵심 상태 변수 초기화
+                currentDate = new Date(); // 달력 기준 날짜를 현재로 초기화
+                emotionData = {};         // 메모리 내 감정 데이터 초기화
+                console.log('[AUTH STATE CHANGE] Initial emotionData reset:', JSON.parse(JSON.stringify(emotionData)));
+
+                // 2. 사용자 상태에 따른 데이터 로드
+                if (currentUser) { // 사용자가 로그인한 경우
+                    console.log('[AUTH STATE CHANGE] Attempting to load data for user:', currentUser.uid);
+                    await loadEmotionData(); // Firebase에서 새 사용자 데이터 로드
+                    console.log('[AUTH STATE CHANGE] Data loaded for user. emotionData:', JSON.parse(JSON.stringify(emotionData)));
+                } else { // 사용자가 로그아웃한 경우
+                    console.log('[AUTH STATE CHANGE] User logged out. emotionData is already reset to {}.');
+                    // 로컬 스토리지는 common.js의 logout()에서 삭제되므로, 여기서는 emotionData가 {} 상태임을 신뢰합니다.
+                    // 만약 비로그인 시 로컬 데이터를 보여주고 싶다면, 여기서 loadFromLocalStorage를 호출할 수 있으나,
+                    // 현재 "로그아웃하면 모든게 초기화되야 하는거 아니야??" 질문에 맞춰, 메모리 초기화 상태를 유지합니다.
                 }
 
+                // 3. UI 다시 그리기 (초기화되었거나 새로 로드된 데이터를 기반으로)
+                console.log('[AUTH STATE CHANGE] Preparing to re-render UI. Current view mode:', calendarViewMode);
                 if (calendarViewMode === 'month') {
                     document.getElementById('monthViewContainer').style.display = 'block';
                     document.getElementById('yearInPixelsView').style.display = 'none';
@@ -580,9 +653,10 @@
                 } else {
                     document.getElementById('monthViewContainer').style.display = 'none';
                     document.getElementById('yearInPixelsView').style.display = 'block';
-                    currentPixelYear = currentDate.getFullYear();
+                    currentPixelYear = currentDate.getFullYear(); // 픽셀 뷰 연도도 현재로 초기화
                     renderYearInPixels(currentPixelYear);
                 }
+                console.log('[AUTH STATE CHANGE] UI re-render attempt complete.');
             });
         });
         
@@ -658,17 +732,30 @@
                 }
                 
                 dayCell.addEventListener('click', () => {
+                    // ★★★ 클릭 이벤트 발생 시 로그 ★★★
+                    console.log('[클릭] 날짜 셀 클릭됨. cellDate:', cellDate.toDateString(), 'other-month:', dayCell.classList.contains('other-month'));
+
+                    if (!currentUser) {
+                        showMessage("로그인 후 이용하시면 데이터가 안전하게 보관됩니다.", "info");
+                        showLoginModal(); // common.js의 로그인 모달 함수 호출
+                        return;
+                    }
+                    
                     if (!dayCell.classList.contains('other-month')) {
                         const today = new Date();
                         // 시간을 제외하고 날짜만 비교하기 위해 자정으로 설정
                         today.setHours(0, 0, 0, 0);
                         const clickedDate = new Date(cellDate); // cellDate는 이미 Date 객체일 수 있으나, 확실히 하기 위해
                         clickedDate.setHours(0, 0, 0, 0);
+                        // ★★★ 날짜 비교 로그 ★★★
+                        console.log('[클릭] 비교: clickedDate:', clickedDate.toISOString(), 'vs today:', today.toISOString());
 
                         if (clickedDate > today) {
                             showMessage('미래의 일기는 쓰실 수 없어요 😊', 'info');
+                            console.log('[클릭] 미래 날짜 클릭 방지됨. Clicked:', clickedDate.toDateString(), 'Today:', today.toDateString());
                             return; 
                         }
+                        console.log('[클릭] 감정 기록 모달 열기 시도. 날짜:', cellDate.toDateString());
                         openEmotionModal(cellDate); // 과거 또는 오늘 날짜인 경우에만 모달 열기
                     }
                 });
@@ -747,6 +834,12 @@
         }
         
         async function saveEmotion() {
+            if (!currentUser) {
+                showMessage("로그인 후 이용하시면 데이터가 안전하게 보관됩니다.", "info");
+                showLoginModal();
+                return;
+            }
+
             if (!selectedDate) return;
             
             const selectedBtn = document.querySelector('.emotion-btn.selected');
@@ -771,9 +864,7 @@
             emotionData[dateKey] = emotionRecord;
             saveToLocalStorage('emotionData', emotionData);
             
-            if (currentUser) {
-                saveToFirestore('emotions', dateKey, emotionRecord);
-            }
+            saveToFirestore(컬렉션_이름_맵.색상일기, dateKey, emotionRecord); // saveToFirestore 내부에서 currentUser 체크함
             
             closeEmotionModal();
             if (calendarViewMode === 'month') {
@@ -915,11 +1006,7 @@
         }
         
         async function loadEmotionData() {
-            const localData = loadFromLocalStorage('emotionData');
-            if (localData) {
-                emotionData = localData;
-            }
-            
+            // emotionData는 authStateReady에서 이미 초기화됨
             if (currentUser) {
                 try {
                     const snapshot = await db.collection('emotions')
@@ -931,11 +1018,15 @@
                         firebaseData[doc.id] = doc.data();
                     });
                     
-                    emotionData = { ...localData, ...firebaseData };
+                    emotionData = firebaseData; // 로컬 데이터와 병합하지 않고 Firebase 데이터만 사용
                     saveToLocalStorage('emotionData', emotionData);
                 } catch (error) {
                     console.error('Firebase 감정 데이터 로드 실패:', error);
+                    emotionData = {}; // 오류 발생 시 빈 데이터로 시작
                 }
+            } else {
+                const localData = loadFromLocalStorage('emotionData');
+                emotionData = localData || {};
             }
         }
 
@@ -1027,7 +1118,7 @@
                 calendarViewMode = 'year';
             } else { // 픽셀 뷰를 닫으려고 할 때
                 yearViewElement.style.display = 'none';
-                toggleButton.textContent = '년도별 감정보기 픽셀뷰'; // 버튼 텍스트 원래대로
+                toggleButton.textContent = '월별 감정지도 픽셀뷰'; // 버튼 텍스트 원래대로
                 calendarViewMode = 'month';
             }
         }
@@ -1066,15 +1157,15 @@
         .emotion-selector {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 0.75rem; /* 간격 축소 */
+            margin-bottom: 1rem; /* 마진 축소 */
         }
         
         .emotion-btn {
             background: white;
             border: 2px solid #e1e8ed;
             border-radius: 15px;
-            padding: 1rem;
+            padding: 0.75rem; /* 패딩 축소 */
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -1095,7 +1186,7 @@
         }
         
         .emotion-btn i {
-            font-size: 2rem;
+            font-size: 1.5rem; /* 아이콘 크기 축소 */
             color: #667eea;
         }
         
@@ -1117,12 +1208,24 @@
             color: #2980b9 !important;
         }
         .emotion-btn[data-emotion="angry"] i {
-            color: #c0392b !important;
-            color: #e74c3c !important; /* 화남 색상 변경 */
+            color: #ee4801 !important; /* 화남 색상 변경 */
         }
         .emotion-btn.selected i { /* 선택 시 아이콘 색상도 유지 또는 변경 */
             /* color: white; */ /* 만약 선택 시 배경색이 아이콘 색과 같아져서 안보인다면 흰색 등으로 변경 */
             /* 현재 .selected 배경색이 밝아서 아이콘 색상이 잘 보이므로 주석 처리 유지 */
+        }
+
+        /* 모바일에서 감정 선택 버튼 추가 조정 */
+        @media (max-width: 768px) {
+            .emotion-selector {
+                gap: 0.5rem;
+            }
+            .emotion-btn {
+                padding: 0.5rem;
+                gap: 0.3rem;
+            }
+            .emotion-btn i { font-size: 1.3rem; }
+            .emotion-btn span { font-size: 0.85rem; }
         }
     </style>
 </body>

@@ -16,7 +16,7 @@
         <section class="hero">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1 class="hero-title">마음을 치유하는 <span class="gradient-text">EmotiCare</span></h1>
+                    <h1 class="hero-title">마음을 치유하는 시간<span class="gradient-text">EmotiCare</span></h1>
                     <p class="hero-subtitle">당신의 감정을 이해하고, 마음의 평안을 찾아가는 여정을 함께합니다</p>
                     <div class="hero-buttons">
                         <button class="btn-primary" id="hero-start-button">시작하기</button>
@@ -57,7 +57,7 @@
                 <p class="section-subtitle">다양한 방법으로 당신의 마음을 돌보세요</p>
                 
                 <div class="features-grid">
-                    <div class="feature-card" data-href="color-journal.html" role="button" tabindex="0">
+                    <a href="color-journal.html" class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-palette" aria-hidden="true"></i>
                         </div>
@@ -66,9 +66,9 @@
                         <div class="feature-arrow">
                             <i class="fas fa-arrow-right" aria-hidden="true"></i>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="feature-card" data-href="emotion-letters.html" role="button" tabindex="0">
+                    <a href="emotion-letters.html" class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-envelope-open-text" aria-hidden="true"></i>
                         </div>
@@ -77,9 +77,9 @@
                         <div class="feature-arrow">
                             <i class="fas fa-arrow-right" aria-hidden="true"></i>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="feature-card" data-href="mood-routine.html" role="button" tabindex="0">
+                    <a href="mood-routine.html" class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-clock" aria-hidden="true"></i>
                         </div>
@@ -88,9 +88,9 @@
                         <div class="feature-arrow">
                             <i class="fas fa-arrow-right" aria-hidden="true"></i>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="feature-card" data-href="healing-cards.html" role="button" tabindex="0">
+                    <a href="healing-cards.html" class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-hand-holding-heart" aria-hidden="true"></i>
                         </div>
@@ -99,9 +99,9 @@
                         <div class="feature-arrow">
                             <i class="fas fa-arrow-right" aria-hidden="true"></i>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="feature-card" data-href="quotes.html" role="button" tabindex="0">
+                    <a href="quotes.html" class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-quote-left" aria-hidden="true"></i>
                         </div>
@@ -110,9 +110,9 @@
                         <div class="feature-arrow">
                             <i class="fas fa-arrow-right" aria-hidden="true"></i>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="feature-card" data-href="reflection-questions.html" role="button" tabindex="0">
+                    <a href="reflection-questions.html" class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-question-circle" aria-hidden="true"></i>
                         </div>
@@ -121,7 +121,7 @@
                         <div class="feature-arrow">
                             <i class="fas fa-arrow-right" aria-hidden="true"></i>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </section>
@@ -134,7 +134,7 @@
                     <p>당신의 마음치유 여정을 EmotiCare와 함께 시작하세요</p>
                     <div class="cta-buttons">
                         <button class="btn-primary" id="cta-start-free-button">무료로 시작하기</button>
-                        <a href="pricing.html" class="btn-outline">요금제 보기</a>
+                        <a href="pricing.html" class="btn-outline">요금제 알아보기</a>
                     </div>
                 </div>
             </div>
@@ -190,20 +190,6 @@
             if (refreshTipButton) {
                 refreshTipButton.addEventListener('click', loadDailyTip);
             }
-
-            // 기능 카드 클릭 시 페이지 이동
-            document.querySelectorAll('.feature-card').forEach(card => {
-                const href = card.dataset.href;
-                if (href) {
-                    card.addEventListener('click', () => { location.href = href; });
-                    // 키보드 접근성: Enter 또는 Space 키로도 이동 가능하도록
-                    card.addEventListener('keydown', (event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                            location.href = href;
-                        }
-                    });
-                }
-            });
 
             // CTA 섹션 '무료로 시작하기' 버튼
             const ctaStartButton = document.getElementById('cta-start-free-button');

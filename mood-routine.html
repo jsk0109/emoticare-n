@@ -8,18 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .routine-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+        /* .routine-container 패딩은 .page-inner-container 로 대체 */
         
         .calendar-header-routine {
-            background: white;
+            /* .calendar-block-header 로 대체되거나 유사 스타일 적용 */
             border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem; /* 패딩 축소 */
+            margin-bottom: 1.5rem; /* 마진 축소 */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -36,7 +31,7 @@
             background: #667eea;
             color: white;
             border: none;
-            padding: 0.8rem;
+            padding: 0.6rem; /* 패딩 축소 */
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -48,56 +43,29 @@
         }
         
         .current-date-display {
-            font-size: 1.5rem;
+            font-size: 1.3rem; /* 폰트 크기 축소 */
             font-weight: 600;
             color: #333;
         }
 
         .calendar-routine {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
+            /* .calendar-block 으로 대체 */
+            margin-bottom: 1.5rem; /* 마진 축소 */
         }
         .calendar-day-header-routine {
-            background: #667eea;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            font-weight: 600;
+            /* .calendar-day-name-common 으로 대체 */
         }
         .calendar-grid-routine .calendar-day {
-            background: white;
-            padding: 0.5rem; 
-            min-height: 80px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
+            /* .calendar-day-cell-common 으로 대체 */
         }
         .calendar-grid-routine {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-            background: #e1e8ed;
-            border-radius: 10px;
-            overflow: hidden;
+            /* .calendar-grid-common 으로 대체 */
         }
         
         .time-sections {
             display: grid;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .time-section {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            gap: 1.5rem; /* 간격 축소 */
+            margin-bottom: 2rem; /* 마진 축소 */
         }
         
         .time-header {
@@ -138,7 +106,7 @@
         
         .mood-selector {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem; /* 간격 축소 */
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
             justify-content: center;
@@ -146,7 +114,7 @@
         
         .mood-emoji {
             font-size: 2.5rem;
-            padding: 0.8rem;
+            padding: 0.6rem; /* 패딩 축소 */
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -167,7 +135,7 @@
         
         .thought-input {
             width: 100%;
-            padding: 1rem;
+            padding: 0.8rem; /* 패딩 축소 */
             border: 2px solid #e1e8ed;
             border-radius: 10px;
             resize: vertical;
@@ -185,14 +153,14 @@
         .gratitude-section {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            border-radius: 20px;
-            padding: 2.5rem;
+            border-radius: 15px; /* .content-block 과 유사하게 */
+            padding: 1.5rem; /* 패딩 축소 */
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
         
         .gratitude-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
         }
         
         .gratitude-header h3 {
@@ -202,8 +170,8 @@
         
         .gratitude-items {
             display: grid;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 0.75rem; /* 간격 축소 */
+            margin-bottom: 1.5rem; /* 마진 축소 */
         }
         
         .gratitude-item {
@@ -226,7 +194,7 @@
         
         .gratitude-input {
             flex: 1;
-            padding: 0.8rem;
+            padding: 0.7rem; /* 패딩 축소 */
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.1);
@@ -246,7 +214,7 @@
         
         .gratitude-note {
             width: 100%;
-            padding: 1rem;
+            padding: 0.8rem; /* 패딩 축소 */
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.1);
@@ -262,14 +230,14 @@
         
         .save-section {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 1.5rem; /* 마진 축소 */
         }
         
         .save-btn {
             background: linear-gradient(135deg, #ffeaa7, #fab1a0);
             color: #333;
             border: none;
-            padding: 1rem 3rem;
+            padding: 0.8rem 2.5rem; /* 패딩 축소 */
             border-radius: 50px;
             font-size: 1.1rem;
             font-weight: 600;
@@ -284,11 +252,8 @@
         }
         
         .summary-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-top: 2rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            /* .content-block 으로 대체 */
+            margin-top: 1.5rem; /* 마진 축소 */
         }
         
         .summary-title {
@@ -342,6 +307,21 @@
             padding: 0.6rem 1.2rem;
             font-size: 0.9rem;
         }
+
+        @media (max-width: 768px) {
+            .calendar-header-routine { padding: 0.8rem; margin-bottom: 1rem; }
+            .date-nav { gap: 1rem; }
+            .date-nav button { padding: 0.5rem; }
+            .current-date-display { font-size: 1.1rem; }
+            .time-section { padding: 1.25rem; } /* .content-block 기본 패딩보다 조금 더 */
+            .time-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+            .time-title { font-size: 1.1rem; }
+            .mood-emoji { font-size: 2rem; padding: 0.5rem; }
+            .thought-input { padding: 0.7rem; min-height: 60px; }
+            .gratitude-section { padding: 1.25rem; }
+            .gratitude-header h3 { font-size: 1.2rem; }
+            .gratitude-input, .gratitude-note { padding: 0.7rem; }
+        }
     </style>
 </head>
 <body>
@@ -356,8 +336,8 @@
         </section>
         
         <section class="page-content">
-            <div class="routine-container">
-                <div class="calendar-header-routine">
+            <div class="page-inner-container routine-container">
+                <div class="content-block calendar-header-routine">
                     <div class="date-nav">
                         <button onclick="changeDate(-1)"><i class="fas fa-chevron-left"></i></button>
                         <span class="current-date-display" id="currentDateDisplay"></span>
@@ -368,13 +348,16 @@
                     </div>
                 </div>
 
-                <div class="calendar-routine" id="calendarView">
-                    <div class="calendar-grid-routine" id="calendarGridRoutine">
+                <div class="calendar-block" id="calendarView">
+                    <div class="calendar-grid-common">
+                        <!-- 요일 헤더 JS로 생성 -->
+                    </div>
+                    <div class="calendar-grid-common" id="calendarGridRoutine">
                     </div>
                 </div>
                 
                 <div class="time-sections">
-                    <div class="time-section">
+                    <div class="content-block time-section">
                         <div class="time-header">
                             <div class="time-icon morning">
                                 <i class="fas fa-sun"></i>
@@ -400,7 +383,7 @@
                         ></textarea>
                     </div>
                     
-                    <div class="time-section">
+                    <div class="content-block time-section">
                         <div class="time-header">
                             <div class="time-icon afternoon">
                                 <i class="fas fa-cloud-sun"></i>
@@ -426,7 +409,7 @@
                         ></textarea>
                     </div>
                     
-                    <div class="time-section">
+                    <div class="content-block time-section">
                         <div class="time-header">
                             <div class="time-icon evening">
                                 <i class="fas fa-moon"></i>
@@ -486,7 +469,7 @@
                     </button>
                 </div>
                 
-                <div class="summary-card" id="summaryCard" style="display: none;">
+                <div class="content-block summary-card" id="summaryCard" style="display: none;">
                     <h3 class="summary-title">오늘의 기분 요약</h3>
                     <div class="mood-summary" id="moodSummary">
                     </div>
@@ -525,8 +508,10 @@
             setupMoodSelectors();
 
             document.addEventListener('authStateReady', async function(e) {
+                currentUser = e.detail.user;
+                moodData = {}; // ★★★ 로그인 상태 변경 시 기분 데이터 초기화
                 if (e.detail.user) {
-                    await loadMoodData();
+                    await loadMoodData(); 
                 } else {
                     const localData = loadFromLocalStorage('moodRoutineData');
                     if (localData) {
@@ -560,13 +545,17 @@
             const calendarGrid = document.getElementById('calendarGridRoutine');
             calendarGrid.innerHTML = '';
             
+            const dayHeaderGrid = calendarGrid.previousElementSibling;
             const dayHeaders = ['일', '월', '화', '수', '목', '금', '토'];
-            dayHeaders.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'calendar-day-header-routine'; 
-                dayHeader.textContent = day;
-                calendarGrid.appendChild(dayHeader);
-            });
+            // 요일 헤더가 비어있을 때만 생성
+            if (dayHeaderGrid.innerHTML.trim() === '') {
+                dayHeaders.forEach(day => {
+                    const dayHeaderCell = document.createElement('div');
+                    dayHeaderCell.className = 'calendar-day-name-common';
+                    dayHeaderCell.textContent = day;
+                    dayHeaderGrid.appendChild(dayHeaderCell);
+                });
+            }
             
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
@@ -580,7 +569,7 @@
                 cellDate.setDate(startDate.getDate() + i);
                 
                 const dayCell = document.createElement('div');
-                dayCell.className = 'calendar-day'; 
+                dayCell.className = 'calendar-day-cell-common calendar-day'; 
                 
                 if (cellDate.getMonth() !== month) {
                     dayCell.classList.add('other-month');
@@ -644,9 +633,7 @@
         }
         
         async function loadMoodData() {
-            const savedData = loadFromLocalStorage('moodRoutineData');
-            let localMoodData = savedData ? savedData : {};
-
+            // moodData는 authStateReady에서 이미 초기화됨
             if (currentUser) {
                 try {
                     const snapshot = await db.collection('moodRoutines')
@@ -656,14 +643,16 @@
                     snapshot.forEach(doc => {
                         firebaseData[doc.id] = doc.data();
                     });
-                    moodData = { ...(localMoodData || {}), ...firebaseData };
+                    moodData = firebaseData; // 로컬 데이터와 병합하지 않고 Firebase 데이터만 사용
                     saveToLocalStorage('moodRoutineData', moodData);
                 } catch (error) {
                     console.error("Firebase moodRoutines 로드 실패:", error);
-                    moodData = localMoodData || {}; 
+                    moodData = {}; // 오류 발생 시 빈 데이터로 시작
                 }
             } else {
-                moodData = localMoodData || {};
+                // 비로그인 시 로컬 스토리지 사용
+                const localData = loadFromLocalStorage('moodRoutineData');
+                moodData = localData || {};
             }
         }
         

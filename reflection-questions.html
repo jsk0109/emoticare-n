@@ -8,18 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .reflection-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+        /* .reflection-container 패딩은 .page-inner-container 로 대체 */
         
         .intro-section {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border-radius: 20px;
-            padding: 2.5rem;
-            margin-bottom: 3rem;
+            padding: 2rem; /* 패딩 축소 */
+            margin-bottom: 2rem; /* 마진 축소 */
             text-align: center;
             box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
         }
@@ -38,14 +34,12 @@
         
         .categories-grid {
             display: grid;
-            gap: 2rem;
+            gap: 1.5rem; /* 간격 축소 */
         }
         
         .category-section {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            /* .content-block 으로 대체 */
+            /* padding: 1.5rem; */ /* content-block 기본 패딩 사용 */
             transition: all 0.3s ease;
         }
         
@@ -58,7 +52,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
             cursor: pointer;
         }
         
@@ -147,7 +141,7 @@
         .question-item {
             background: #f8f9ff;
             border-radius: 15px;
-            padding: 1.5rem;
+            padding: 1rem; /* 패딩 축소 */
             margin-bottom: 1rem;
             border-left: 4px solid #667eea;
             transition: all 0.3s ease;
@@ -177,7 +171,7 @@
             font-size: 1.1rem;
             color: #333;
             line-height: 1.5;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem; /* 마진 축소 */
         }
         
         .question-actions {
@@ -190,7 +184,7 @@
             background: transparent;
             color: #667eea;
             border: 2px solid #667eea;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem; /* 패딩 축소 */
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -203,11 +197,8 @@
         }
         
         .random-question {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            /* .content-block 으로 대체 */
+            margin-bottom: 1.5rem; /* 마진 축소 */
             text-align: center;
         }
         
@@ -221,7 +212,7 @@
         .random-question-text {
             font-size: 1.2rem;
             color: #667eea;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
             line-height: 1.6;
             font-weight: 500;
         }
@@ -230,7 +221,7 @@
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.8rem; /* 패딩 축소 */
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -260,7 +251,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 2.5rem;
+            padding: 2rem; /* 패딩 축소 */
             border-radius: 20px;
             max-width: 600px;
             width: 90%;
@@ -272,7 +263,7 @@
         .reflection-question {
             font-size: 1.2rem;
             color: #333;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* 마진 축소 */
             line-height: 1.6;
             font-weight: 500;
         }
@@ -280,7 +271,7 @@
         .reflection-textarea {
             width: 100%;
             min-height: 200px;
-            padding: 1rem;
+            padding: 0.8rem; /* 패딩 축소 */
             border: 2px solid #e1e8ed;
             border-radius: 15px;
             font-size: 1rem;
@@ -303,17 +294,14 @@
         }
 
         .my-reflections-section {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            margin-top: 3rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            /* .content-block 으로 대체 */
+            margin-top: 2rem; /* 마진 축소 */
         }
 
         .my-reflections-header {
             font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
             color: #333;
             text-align: center;
         }
@@ -321,7 +309,7 @@
         .saved-reflection-item {
             background: #f8f9ff;
             border-radius: 15px;
-            padding: 1.5rem;
+            padding: 1rem; /* 패딩 축소 */
             margin-bottom: 1rem;
             border-left: 4px solid #764ba2;
         }
@@ -352,6 +340,21 @@
             padding: 0.3rem 0.8rem;
             font-size: 0.8rem;
         }
+
+        @media (max-width: 768px) {
+            .intro-section { padding: 1.5rem; margin-bottom: 1.5rem; }
+            .intro-title { font-size: 1.5rem; }
+            .intro-text { font-size: 1rem; }
+            .random-question-title { font-size: 1.2rem; margin-bottom: 1rem; }
+            .random-question-text { font-size: 1.1rem; margin-bottom: 1rem; }
+            .new-question-btn { padding: 0.7rem 1.5rem; }
+            .category-icon { width: 50px; height: 50px; font-size: 1.5rem; }
+            .category-title { font-size: 1.2rem; }
+            .category-description { font-size: 0.9rem; }
+            .question-item { padding: 0.8rem; }
+            .question-text { font-size: 1rem; }
+            .reflection-modal-content { padding: 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -366,7 +369,7 @@
         </section>
         
         <section class="page-content">
-            <div class="reflection-container">
+            <div class="page-inner-container reflection-container">
                 <div class="intro-section">
                     <h2 class="intro-title">🤔 자기 성찰의 시간</h2>
                     <p class="intro-text">
@@ -376,7 +379,7 @@
                     </p>
                 </div>
                 
-                <div class="random-question">
+                <div class="content-block random-question">
                     <h3 class="random-question-title">💡 오늘의 성찰 질문</h3>
                     <div class="random-question-text" id="randomQuestionText">로딩 중...</div>
                     <button class="new-question-btn" onclick="loadRandomQuestion()">
@@ -385,7 +388,7 @@
                 </div>
                 
                 <div class="categories-grid">
-                    <div class="category-section">
+                    <div class="content-block category-section">
                         <div class="category-header" onclick="toggleCategory('self-understanding')">
                             <div class="category-icon self-understanding">
                                 <i class="fas fa-user-circle"></i>
@@ -402,7 +405,7 @@
                         </div>
                     </div>
                     
-                    <div class="category-section">
+                    <div class="content-block category-section">
                         <div class="category-header" onclick="toggleCategory('emotions')">
                             <div class="category-icon emotions">
                                 <i class="fas fa-heart"></i>
@@ -419,7 +422,7 @@
                         </div>
                     </div>
                     
-                    <div class="category-section">
+                    <div class="content-block category-section">
                         <div class="category-header" onclick="toggleCategory('relationships')">
                             <div class="category-icon relationships">
                                 <i class="fas fa-users"></i>
@@ -436,7 +439,7 @@
                         </div>
                     </div>
                     
-                    <div class="category-section">
+                    <div class="content-block category-section">
                         <div class="category-header" onclick="toggleCategory('growth')">
                             <div class="category-icon growth">
                                 <i class="fas fa-seedling"></i>
@@ -453,7 +456,7 @@
                         </div>
                     </div>
                     
-                    <div class="category-section">
+                    <div class="content-block category-section">
                         <div class="category-header" onclick="toggleCategory('stress')">
                             <div class="category-icon stress">
                                 <i class="fas fa-brain"></i>
@@ -470,7 +473,7 @@
                         </div>
                     </div>
                     
-                    <div class="category-section">
+                    <div class="content-block category-section">
                         <div class="category-header" onclick="toggleCategory('mindfulness')">
                             <div class="category-icon mindfulness">
                                 <i class="fas fa-spa"></i>
@@ -849,6 +852,9 @@
                 document.getElementById('savedReflectionsList').innerHTML = 
                     '<p class="text-center" style="color:#666;">로그인 후 성찰 기록을 확인하고 저장할 수 있습니다.</p>';
                 return;
+            } else {
+                 // 비로그인 시 로컬 스토리지에서 로드 (선택적, 현재는 인라인 표시에만 사용)
+                 // renderSavedReflections(loadFromLocalStorage('savedReflections') || []);
             }
 
             try {

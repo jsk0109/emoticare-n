@@ -8,19 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .cards-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+        /* .cards-container 패딩은 .page-inner-container 로 대체 */
         
         .card-draw-section {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border-radius: 20px;
-            padding: 3rem;
+            padding: 2rem; /* 패딩 축소 */
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem; /* 마진 축소 */
             box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
         }
         
@@ -33,14 +29,14 @@
         .card-draw-subtitle {
             font-size: 1.1rem;
             opacity: 0.9;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
         }
         
         .draw-button {
             background: linear-gradient(135deg, #ffeaa7, #fab1a0);
             color: #333;
             border: none;
-            padding: 1.5rem 3rem;
+            padding: 1rem 2.5rem; /* 패딩 축소 */
             border-radius: 50px;
             font-size: 1.2rem;
             font-weight: 600;
@@ -68,8 +64,8 @@
         .healing-card {
             background: white;
             border-radius: 20px;
-            padding: 3rem;
-            margin: 2rem 0;
+            padding: 2rem; /* 특별 강조 카드 패딩 (데스크톱) */
+            margin: 1.5rem 0; 
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
             text-align: center;
             transform: scale(0.9);
@@ -148,17 +144,14 @@
         }
         
         .saved-cards-section {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            /* .content-block 으로 대체 */
         }
         
         .saved-cards-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
         }
         
         .saved-cards-list {
@@ -167,11 +160,12 @@
         }
         
         .saved-card-item {
-            background: #f8f9ff;
-            border-radius: 15px;
-            padding: 1.5rem;
-            border-left: 4px solid #667eea;
-            transition: all 0.3s ease;
+            /* 기존 스타일 제거하고 .item-card 클래스 사용 예정 */
+            /* background: #f8f9ff; */
+            /* border-radius: 15px; */
+            /* padding: 1rem; */
+            /* border-left: 4px solid #667eea; */
+            /* transition: all 0.3s ease; */
         }
         
         .saved-card-item:hover {
@@ -211,7 +205,7 @@
         
         .empty-saved {
             text-align: center;
-            padding: 3rem;
+            padding: 2rem; /* 패딩 축소 */
             color: #666;
         }
         
@@ -229,6 +223,19 @@
             margin-bottom: 1rem;
             font-size: 0.9rem;
         }
+
+        @media (max-width: 768px) {
+            .card-draw-section { padding: 1.5rem; margin-bottom: 1.5rem; }
+            .card-draw-title { font-size: 1.5rem; }
+            .card-draw-subtitle { font-size: 1rem; margin-bottom: 1rem; }
+            .draw-button { padding: 0.8rem 2rem; font-size: 1rem; } 
+            .healing-card { padding: 1.5rem; margin: 1rem 0; } /* 특별 강조 카드 패딩 (모바일) */
+            .card-icon { font-size: 3rem; margin-bottom: 1rem; }
+            .card-message { font-size: 1.1rem; margin-bottom: 1.5rem; }
+            .save-card-btn, .new-card-btn { padding: 0.7rem 1.5rem; font-size: 0.9rem; }
+            .saved-cards-header h3 { font-size: 1.2rem; }
+            .saved-card-item { padding: 0.8rem; }
+        }
     </style>
 </head>
 <body>
@@ -243,7 +250,7 @@
         </section>
         
         <section class="page-content">
-            <div class="cards-container">
+            <div class="page-inner-container cards-container">
                 <div class="card-draw-section">
                     <h2 class="card-draw-title">오늘의 힐링 카드</h2>
                     <p class="card-draw-subtitle">마음이 필요로 하는 메시지를 받아보세요</p>
@@ -265,7 +272,7 @@
                     <!-- 뽑은 카드가 여기에 표시됩니다 -->
                 </div>
                 
-                <div class="saved-cards-section">
+                <div class="content-block saved-cards-section">
                     <div class="saved-cards-header">
                         <h3>내가 저장한 힐링 메시지</h3>
                         <button class="btn-outline" onclick="clearAllSavedCards()">
@@ -289,54 +296,55 @@
     <script src="common.js"></script>
     <script>
         let dailyDrawCount = 0;
-        let savedCards = [];
+        let savedCards = []; // 이 배열은 로그인 상태에 따라 채워집니다.
         let currentCard = null;
-        
+        // currentUser 변수는 common.js 파일의 authStateReady 이벤트를 통해 설정됩니다.
+
         const healingMessages = {
             timeSensitive: {
-                earlyMorning: [ // 06:00 - 08:59
+                earlyMorning: [ 
                     { message: "새로운 하루가 밝았어요. 오늘 당신에게 어떤 멋진 일들이 기다리고 있을까요?", category: "기대", icon: "fas fa-sun" },
                     { message: "창밖의 아침 햇살처럼, 당신의 하루도 맑고 따뜻하게 시작되길 바라요.", category: "축복", icon: "fas fa-cloud-sun" },
                     { message: "잠시 고요히 숨을 쉬며, 오늘 하루를 위한 긍정적인 에너지를 채워보세요.", category: "평온", icon: "fas fa-wind" },
                     { message: "아직은 조용한 시간, 당신만의 작은 목표를 세우고 힘차게 출발해봐요!", category: "시작", icon: "fas fa-flag-checkered" },
                     { message: "\"잘 잤어요?\" 오늘 하루도 당신이 행복하기를 응원할게요.", category: "응원", icon: "fas fa-smile-beam" }
                 ],
-                morning: [ // 09:00 - 11:59
+                morning: [ 
                     { message: "한창 바쁘게 움직이고 있겠네요. 잠시 커피 한 잔의 여유는 어때요?", category: "여유", icon: "fas fa-coffee" },
                     { message: "집중하는 당신의 모습이 멋져요. 작은 성취들이 모여 큰 기쁨이 될 거예요.", category: "칭찬", icon: "fas fa-medal" },
                     { message: "혹시 어려운 일에 부딪혔다면, 잠시 숨을 고르고 천천히 다시 시작해보세요. 당신은 할 수 있어요!", category: "격려", icon: "fas fa-mountain" },
                     { message: "오전의 활기찬 기운을 받아, 오늘 계획한 일들을 순조롭게 해나가길 바라요.", category: "활력", icon: "fas fa-bolt" },
                     { message: "주변의 작은 소리에도 귀 기울여보세요. 예상치 못한 즐거움을 발견할지도 몰라요.", category: "발견", icon: "fas fa-search" }
                 ],
-                lunch: [ // 12:00 - 13:59
+                lunch: [ 
                     { message: "맛있는 점심 식사로 에너지 충전! 오후를 위한 든든한 힘이 될 거예요.", category: "충전", icon: "fas fa-utensils" },
                     { message: "잠시 하던 일을 멈추고, 창밖을 보거나 가벼운 스트레칭으로 몸을 풀어주세요.", category: "휴식", icon: "fas fa-chair" },
                     { message: "오전 동안 정말 수고 많았어요. 남은 하루도 당신을 응원할게요.", category: "인정", icon: "fas fa-award" },
                     { message: "좋아하는 음악을 듣거나 짧은 명상으로 마음의 휴식을 가져보는 건 어때요?", category: "평화", icon: "fas fa-headphones-alt" },
                     { message: "\"점심 맛있게 드셨어요?\" 오후에도 좋은 일만 가득하길!", category: "안부", icon: "fas fa-comment-dots" }
                 ],
-                afternoon: [ // 14:00 - 17:59
+                afternoon: [ 
                     { message: "나른한 오후, 따뜻한 차 한 잔으로 잠시 기분 전환을 해보세요.", category: "전환", icon: "fas fa-mug-hot" },
                     { message: "오늘 하루도 거의 다 지나가네요. 마무리까지 조금만 더 힘내요!", category: "응원", icon: "fas fa-running" },
                     { message: "혹시 지치는 기분이 든다면, 아주 작은 성과라도 스스로를 칭찬해주세요.", category: "자기격려", icon: "fas fa-star" },
                     { message: "창문을 열어 신선한 공기를 마시며, 남은 오후를 위한 활력을 되찾아보세요.", category: "환기", icon: "fas fa-leaf" },
                     { message: "퇴근/하교 시간이 얼마 남지 않았네요! 오늘 하루도 정말 애썼어요.", category: "수고", icon: "fas fa-hourglass-end" }
                 ],
-                evening: [ // 18:00 - 20:59
+                evening: [ 
                     { message: "편안한 저녁 시간 보내고 있나요? 오늘 하루의 피로를 싹 날려버리세요.", category: "휴식", icon: "fas fa-couch" },
                     { message: "사랑하는 사람들과 함께 맛있는 저녁을 나누며 행복한 시간을 보내길 바라요.", category: "행복", icon: "fas fa-users" },
                     { message: "오늘 있었던 좋은 일들을 떠올리며, 감사하는 마음으로 하루를 돌아보세요.", category: "감사", icon: "fas fa-hands-helping" },
                     { message: "좋아하는 취미 생활이나 편안한 휴식으로 온전히 당신만의 시간을 즐겨보세요.", category: "즐거움", icon: "fas fa-palette" },
                     { message: "\"오늘 하루 어땠어요?\" 당신의 이야기에 귀 기울일 준비가 되어 있어요.", category: "소통", icon: "fas fa-comments" }
                 ],
-                lateNight: [ // 21:00 - 23:59
+                lateNight: [ 
                     { message: "이제 곧 잠자리에 들 시간이네요. 오늘 하루도 정말 고생 많았어요.", category: "마무리", icon: "fas fa-bed" },
                     { message: "따뜻한 물로 샤워하거나, 잔잔한 음악을 들으며 편안하게 잠들 준비를 해보세요.", category: "준비", icon: "fas fa-music" },
                     { message: "오늘 있었던 걱정거리는 잠시 내려놓고, 내일의 당신에게 맡겨보는 건 어때요?", category: "내려놓음", icon: "fas fa-moon" },
                     { message: "포근한 이불 속에서 오늘 하루를 잘 마무리하고, 단잠 주무시길 바라요.", category: "안녕", icon: "fas fa-cloud-moon" },
                     { message: "\"잘 자요.\" 좋은 꿈 꾸고, 내일 아침에 더 밝은 모습으로 만나요.", category: "꿈", icon: "fas fa-star-of-david" }
                 ],
-                dawn: [ // 00:00 - 05:59
+                dawn: [ 
                     { message: "아직 깨어있다면, 혹은 잠시 잠에서 깼다면, 고요한 새벽의 평화를 느껴보세요.", category: "고요", icon: "fas fa-adjust" },
                     { message: "혹시 잠 못 이루는 밤이라면, 따뜻한 우유 한 잔이나 가벼운 독서가 도움이 될 수 있어요.", category: "위안", icon: "fas fa-book-reader" },
                     { message: "깊은 밤, 당신의 마음속 작은 소리에도 귀 기울여보는 시간을 가져보세요.", category: "성찰", icon: "fas fa-lightbulb" },
@@ -389,29 +397,34 @@
         };
         
         document.addEventListener('DOMContentLoaded', function() {
-            loadDailyData();
-            loadSavedCards();
-            updateTimeMessage();
-            renderSavedCards();
+            document.addEventListener('authStateReady', async function(e) {
+                currentUser = e.detail.user; // common.js에서 전달된 사용자 정보로 currentUser 업데이트
+                console.log('healing-cards.html: authStateReady event. User:', currentUser ? currentUser.uid : 'No user');
+
+                loadDailyData();
+                await loadSavedCards(); // 사용자 상태 확정 후 카드 로드
+                updateTimeMessage();
+                renderSavedCards(); // 로드된 카드 목록으로 화면 갱신
+            });
         });
         
         function updateTimeMessage() {
             const hour = new Date().getHours();
             let timeKey;
             
-            if (hour >= 6 && hour < 12) {
+            if (hour >= 6 && hour < 9) { // 6:00 - 8:59
                 timeKey = 'earlyMorning';
-            } else if (hour >= 9 && hour < 12) {
+            } else if (hour >= 9 && hour < 12) { // 9:00 - 11:59
                 timeKey = 'morning';
-            } else if (hour >= 12 && hour < 18) {
+            } else if (hour >= 12 && hour < 14) { // 12:00 - 13:59
                 timeKey = 'lunch';
-            } else if (hour >= 14 && hour < 18) {
+            } else if (hour >= 14 && hour < 18) { // 14:00 - 17:59
                 timeKey = 'afternoon';
-            } else if (hour >= 18 && hour < 21) {
+            } else if (hour >= 18 && hour < 21) { // 18:00 - 20:59
                 timeKey = 'evening';
-            } else if (hour >= 21 && hour < 24) {
+            } else if (hour >= 21 && hour < 24) { // 21:00 - 23:59
                 timeKey = 'lateNight';
-            } else {
+            } else { // 00:00 - 05:59
                 timeKey = 'dawn';
             }
             
@@ -419,16 +432,15 @@
         }
         
         function loadDailyData() {
-            const today = getCurrentDate();
-            const dailyData = loadFromLocalStorage('dailyCardData') || {};
+            const today = getCurrentDate(); // common.js의 함수 사용
+            const dailyData = loadFromLocalStorage('dailyCardData') || {}; // common.js의 함수 사용
             
             if (dailyData.date === today) {
                 dailyDrawCount = dailyData.drawCount || 0;
             } else {
                 dailyDrawCount = 0;
-                saveToLocalStorage('dailyCardData', { date: today, drawCount: 0 });
+                saveToLocalStorage('dailyCardData', { date: today, drawCount: 0 }); // common.js의 함수 사용
             }
-            
             updateDrawButton();
         }
         
@@ -454,34 +466,23 @@
             }
             
             let messagePool;
-            
-            if (dailyDrawCount === 0) { // 첫 번째 뽑기인 경우 시간대별 메시지
-                const hour = new Date().getHours();
-                if (hour >= 6 && hour < 9) {
-                    messagePool = healingMessages.timeSensitive.earlyMorning;
-                } else if (hour >= 9 && hour < 12) {
-                    messagePool = healingMessages.timeSensitive.morning;
-                } else if (hour >= 12 && hour < 14) {
-                    messagePool = healingMessages.timeSensitive.lunch;
-                } else if (hour >= 14 && hour < 18) {
-                    messagePool = healingMessages.timeSensitive.afternoon;
-                } else if (hour >= 18 && hour < 21) {
-                    messagePool = healingMessages.timeSensitive.evening;
-                } else if (hour >= 21 && hour < 24) {
-                    messagePool = healingMessages.timeSensitive.lateNight;
-                } else {
-                    messagePool = healingMessages.timeSensitive.dawn;
-                }
+            const hour = new Date().getHours();
+
+            if (dailyDrawCount === 0) { // 첫 번째 뽑기
+                if (hour >= 6 && hour < 9) messagePool = healingMessages.timeSensitive.earlyMorning;
+                else if (hour >= 9 && hour < 12) messagePool = healingMessages.timeSensitive.morning;
+                else if (hour >= 12 && hour < 14) messagePool = healingMessages.timeSensitive.lunch;
+                else if (hour >= 14 && hour < 18) messagePool = healingMessages.timeSensitive.afternoon;
+                else if (hour >= 18 && hour < 21) messagePool = healingMessages.timeSensitive.evening;
+                else if (hour >= 21 && hour < 24) messagePool = healingMessages.timeSensitive.lateNight;
+                else messagePool = healingMessages.timeSensitive.dawn;
             } else {
-                // 두 번째 이후 뽑기는 일반 메시지 풀에서 랜덤 선택
                 messagePool = healingMessages.general;
             }
             
-            currentCard = getRandomItem(messagePool);
-            
+            currentCard = getRandomItem(messagePool); // common.js의 함수 사용
             displayCard(currentCard);
             
-            // 뽑기 횟수 증가
             dailyDrawCount++;
             const today = getCurrentDate();
             saveToLocalStorage('dailyCardData', { date: today, drawCount: dailyDrawCount });
@@ -490,58 +491,93 @@
         
         function displayCard(card) {
             const cardElement = document.getElementById('healingCard');
-            
             cardElement.innerHTML = `
-                <div class="card-icon">
-                    <i class="${card.icon}"></i>
-                </div>
+                <div class="card-icon"><i class="${card.icon}"></i></div>
                 <div class="card-category">${card.category}</div>
                 <div class="card-message">${card.message}</div>
                 <div class="card-actions">
-                    <button class="save-card-btn" onclick="saveCurrentCard()">
-                        <i class="fas fa-bookmark"></i> 저장하기
-                    </button>
-                    <button class="new-card-btn" onclick="drawCard()">
-                        <i class="fas fa-sync-alt"></i> 새 카드 뽑기
-                    </button>
+                    <button class="save-card-btn" onclick="saveCurrentCard()"><i class="fas fa-bookmark"></i> 저장하기</button>
+                    <button class="new-card-btn" onclick="drawCard()"><i class="fas fa-sync-alt"></i> 새 카드 뽑기</button>
                 </div>
             `;
-            
             cardElement.classList.add('show');
         }
         
         async function saveCurrentCard() {
             if (!currentCard) return;
-            
-            const savedCard = {
-                ...currentCard,
-                id: Date.now().toString(),
-                savedAt: new Date().toISOString()
+
+            const cardToSave = {
+                message: currentCard.message,
+                category: currentCard.category,
+                icon: currentCard.icon,
+                savedAt: firebase.firestore.FieldValue.serverTimestamp() // Firebase 서버 시간 사용
             };
-            
-            savedCards.unshift(savedCard);
-            
-            // 로컬 저장
-            saveToLocalStorage('savedHealingCards', savedCards);
-            
-            // Firebase 저장 (로그인된 경우)
+
             if (currentUser) {
-                await saveToFirestore('savedCards', savedCard.id, savedCard);
+                try {
+                    const docRef = await db.collection('savedCards').add({
+                        ...cardToSave,
+                        userId: currentUser.uid
+                    });
+                    // 로컬 배열에도 추가 (Firestore ID와 함께)
+                    const newCardForLocal = { ...currentCard, id: docRef.id, savedAt: new Date().toISOString() }; // 로컬용 savedAt
+                    savedCards.unshift(newCardForLocal);
+                    saveToLocalStorage('savedHealingCards', savedCards); // 로컬 스토리지 업데이트
+                    renderSavedCards();
+                    showMessage('카드가 저장되었습니다.', 'success');
+                } catch (error) {
+                    console.error("Firebase 카드 저장 실패:", error);
+                    showMessage('카드 저장에 실패했습니다. 다시 시도해주세요.', 'error');
+                }
+            } else {
+                // 비로그인 시 로컬에만 저장 (또는 로그인 유도)
+                const newCardForLocal = { ...currentCard, id: Date.now().toString(), savedAt: new Date().toISOString() };
+                savedCards.unshift(newCardForLocal);
+                saveToLocalStorage('savedHealingCards', savedCards);
+                renderSavedCards();
+                showMessage('카드가 로컬에 저장되었습니다. 로그인하면 동기화됩니다.', 'info');
             }
-            
-            renderSavedCards();
-            showMessage('카드가 저장되었습니다.', 'success');
         }
-        
-        function loadSavedCards() {
-            const localCards = loadFromLocalStorage('savedHealingCards');
-            if (localCards) {
-                savedCards = localCards;
+
+        async function loadSavedCards() {
+            console.log('loadSavedCards: currentUser:', currentUser ? currentUser.uid : 'No user');
+            savedCards = []; // ★★★ 데이터 로드 전 항상 메모리 내 배열 초기화
+
+            if (currentUser) {
+                try {
+                    const snapshot = await db.collection('savedCards')
+                                           .where('userId', '==', currentUser.uid)
+                                           .orderBy('savedAt', 'desc')
+                                           .get();
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        savedCards.push({ 
+                            id: doc.id, 
+                            message: data.message,
+                            category: data.category,
+                            icon: data.icon,
+                            savedAt: data.savedAt && data.savedAt.toDate ? data.savedAt.toDate().toISOString() : new Date().toISOString() 
+                        });
+                    });
+                    console.log("loadSavedCards: Fetched", savedCards.length, "cards from Firebase for user", currentUser.uid);
+                    saveToLocalStorage('savedHealingCards', savedCards); // 로컬 스토리지와 동기화
+                } catch (error) {
+                    console.error("Firebase에서 저장된 카드 로드 실패:", error);
+                    // savedCards는 이미 위에서 []로 초기화됨
+                    showMessage("저장된 카드를 불러오는데 실패했습니다.", "error");
+                }
+            } else {
+                // 비로그인: 로컬 스토리지에서 로드 (common.js의 logout에서 삭제되었어야 함)
+                const localData = loadFromLocalStorage('savedHealingCards');
+                savedCards = localData || [];
+                console.log("loadSavedCards: Loaded", savedCards.length, "cards from LocalStorage (no user).");
             }
+            // renderSavedCards(); // authStateReady 리스너에서 호출됨
         }
         
         function renderSavedCards() {
             const savedCardsList = document.getElementById('savedCardsList');
+            console.log('renderSavedCards: Rendering', savedCards.length, 'cards.');
             
             if (savedCards.length === 0) {
                 savedCardsList.innerHTML = `
@@ -554,7 +590,7 @@
             }
             
             savedCardsList.innerHTML = savedCards.map(card => `
-                <div class="saved-card-item">
+                <div class="item-card saved-card-item"> <!-- .item-card 클래스 추가 -->
                     <div class="saved-card-message">${card.message}</div>
                     <div class="saved-card-meta">
                         <span><i class="${card.icon}"></i> ${card.category}</span>
@@ -570,50 +606,86 @@
         }
         
         function formatSavedDate(dateString) {
+            if (!dateString) return '날짜 정보 없음';
             const date = new Date(dateString);
             const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
-            if (diffDays === 1) {
-                return '오늘';
-            } else if (diffDays === 2) {
-                return '어제';
-            } else if (diffDays <= 7) {
-                return `${diffDays - 1}일 전`;
-            } else {
-                return `${date.getMonth() + 1}월 ${date.getDate()}일`;
-            }
+            // 날짜만 비교하기 위해 시간 초기화
+            const todayForCompare = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const savedDateForCompare = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+            const diffTime = todayForCompare.getTime() - savedDateForCompare.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Use Math.floor for accurate day difference
+            
+            if (diffDays === 0) return '오늘';
+            if (diffDays === 1) return '어제';
+            if (diffDays > 1 && diffDays <= 7) return `${diffDays}일 전`;
+            return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
         }
         
         async function deleteSavedCard(cardId) {
-            savedCards = savedCards.filter(card => card.id !== cardId);
-            saveToLocalStorage('savedHealingCards', savedCards);
-            
-            // Firebase에서도 삭제 (로그인된 경우)
-            if (currentUser) {
-                try {
-                    await db.collection('savedCards').doc(cardId).delete();
-                } catch (error) {
-                    console.error('Firebase 삭제 실패:', error);
-                }
-            }
-            
-            renderSavedCards();
-            showMessage('카드가 삭제되었습니다.', 'success');
-        }
-        
-        function clearAllSavedCards() {
-            if (savedCards.length === 0) {
-                showMessage('삭제할 카드가 없습니다.', 'error');
+            if (!cardId) {
+                console.error("deleteSavedCard: cardId is undefined or null.");
                 return;
             }
-            
-            if (confirm('저장된 모든 카드를 삭제하시겠습니까?')) {
-                savedCards = [];
-                saveToLocalStorage('savedHealingCards', savedCards);
-                renderSavedCards();
-                showMessage('모든 카드가 삭제되었습니다.', 'success');
+            if (confirm('이 카드를 삭제하시겠습니까?')) {
+                if (currentUser) {
+                    try {
+                        await db.collection('savedCards').doc(cardId).delete();
+                        showMessage('카드가 삭제되었습니다.', 'success');
+                        // ★★★ 중요: Firebase에서 성공적으로 삭제 후, 데이터를 다시 로드하여 UI 갱신
+                        await loadSavedCards(); 
+                        renderSavedCards();
+                    } catch (error) {
+                        console.error('Firebase 카드 삭제 실패:', error);
+                        showMessage('카드 삭제 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
+                    }
+                } else {
+                    // 비로그인 시 로컬에서만 삭제
+                    savedCards = savedCards.filter(card => card.id !== cardId);
+                    saveToLocalStorage('savedHealingCards', savedCards);
+                    renderSavedCards();
+                    showMessage('카드가 로컬에서 삭제되었습니다.', 'success');
+                }
+            }
+        }
+        
+        async function clearAllSavedCards() {
+            if (confirm('저장된 모든 카드를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                if (currentUser) {
+                    try {
+                        const snapshot = await db.collection('savedCards').where('userId', '==', currentUser.uid).get();
+                        if (snapshot.empty) {
+                            showMessage('삭제할 저장된 카드가 없습니다.', 'info');
+                            savedCards = []; // 로컬도 비움
+                            saveToLocalStorage('savedHealingCards', savedCards);
+                            renderSavedCards();
+                            return;
+                        }
+                        const batch = db.batch();
+                        snapshot.docs.forEach(doc => {
+                            batch.delete(doc.ref);
+                        });
+                        await batch.commit();
+                        showMessage('저장된 모든 카드가 삭제되었습니다.', 'success');
+                        // ★★★ 중요: Firebase에서 성공적으로 삭제 후, 데이터를 다시 로드 (빈 배열이 됨)
+                        await loadSavedCards(); 
+                        renderSavedCards();
+                    } catch (error) {
+                        console.error('Firebase 전체 카드 삭제 실패:', error);
+                        showMessage('전체 카드 삭제 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
+                    }
+                } else {
+                    // 비로그인 시 로컬에서만 삭제
+                    if (savedCards.length === 0) {
+                        showMessage('삭제할 카드가 없습니다.', 'info');
+                        return;
+                    }
+                    savedCards = []; 
+                    saveToLocalStorage('savedHealingCards', savedCards); 
+                    renderSavedCards(); 
+                    showMessage('저장된 모든 카드가 로컬에서 삭제되었습니다.', 'success');
+                }
             }
         }
     </script>

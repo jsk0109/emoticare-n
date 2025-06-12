@@ -16,7 +16,7 @@ body {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 1.5rem; /* 기본 좌우 패딩 약간 줄임 */
 }
 
 /* Header Styles */
@@ -101,7 +101,46 @@ body {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #333;
+  /* color: #333; */ /* span으로 대체되므로 제거 또는 주석 처리 */
+  /* display: flex; */ /* span으로 대체되므로 제거 또는 주석 처리 */
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  width: 40px; /* 버튼 크기 고정 */
+  height: 40px; /* 버튼 크기 고정 */
+  position: relative; /* span 위치 기준 */
+  padding: 0; /* 내부 패딩 제거 */
+}
+
+.mobile-menu-toggle span {
+  display: block;
+  width: 24px; /* 햄버거 줄 너비 */
+  height: 3px; /* 햄버거 줄 두께 */
+  background-color: #333;
+  border-radius: 3px;
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+}
+
+.mobile-menu-toggle span:nth-child(1) {
+  top: 10px; /* 첫 번째 줄 위치 */
+}
+
+.mobile-menu-toggle span:nth-child(2) {
+  top: 18px; /* 두 번째 줄 위치 (가운데) */
+}
+
+.mobile-menu-toggle span:nth-child(3) {
+  top: 26px; /* 세 번째 줄 위치 */
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg); /* X 모양으로 변환 */
+}
+.mobile-menu-toggle.active span:nth-child(2) {
+  opacity: 0; /* 가운데 줄 숨김 */
+}
+.mobile-menu-toggle.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg); /* X 모양으로 변환 */
 }
 
 .user-info { /* 추가: 로그인 시 사용자 정보 표시 스타일 */
@@ -118,8 +157,8 @@ body {
 
 /* Hero Section */
 .hero {
-  padding: 120px 0 80px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 100px 0 60px; /* 상하 패딩 줄임 */
   color: white;
   overflow: hidden;
   position: relative;
@@ -141,8 +180,8 @@ body {
   margin: 0 auto;
   padding: 0 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr 1fr; /* 모바일에서는 1fr로 변경됨 */
+  gap: 2.5rem; /* 간격 줄임 */
   align-items: center;
   position: relative;
   z-index: 1;
@@ -291,14 +330,14 @@ body {
 
 /* Daily Tip Section */
 .daily-tip {
-  padding: 4rem 0;
+  padding: 3rem 0; /* 상하 패딩 줄임 */
   background: white;
 }
 
 .tip-card {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  padding: 2rem;
+  padding: 1.5rem; /* 내부 패딩 줄임 */
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -367,7 +406,7 @@ body {
 
 /* Features Section */
 .features {
-  padding: 6rem 0;
+  padding: 4rem 0; /* 상하 패딩 줄임 */
   background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
 }
 
@@ -383,25 +422,26 @@ body {
   text-align: center;
   font-size: 1.1rem;
   color: #666;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem; /* 하단 마진 줄임 */
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
+  gap: 1.5rem; /* 간격 줄임 */
 }
 
 .feature-card {
   background: white;
-  padding: 2.5rem;
   border-radius: 20px;
+  padding: 1.75rem; /* 내부 패딩 줄임 */
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(102, 126, 234, 0.1);
+  text-decoration: none; /* 카드 링크 밑줄 제거 */
 }
 
 .feature-card::before {
@@ -466,7 +506,7 @@ body {
 
 /* CTA Section */
 .cta {
-  padding: 6rem 0;
+  padding: 4rem 0; /* 상하 패딩 줄임 */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   text-align: center;
@@ -495,7 +535,7 @@ body {
 .footer {
   background: #343a40; /* 변경: 푸터 배경색 약간 밝게 */
   color: white;
-  padding: 3rem 0 1rem;
+  padding: 2.5rem 0 1rem; /* 상하 패딩 약간 줄임 */
 }
 
 .footer-content {
@@ -547,6 +587,10 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .container {
+    padding: 0 1rem; /* 모바일에서 좌우 패딩 더 줄임 */
+  }
+
   .mobile-menu-toggle {
     display: flex; /* 아이콘 중앙 정렬 및 크기 고정을 위해 flex 사용 */
     align-items: center;
@@ -596,13 +640,26 @@ body {
   }
 
   .hero-content {
+    padding: 0 1rem; /* 모바일 히어로 컨텐츠 내부 패딩 */
     grid-template-columns: 1fr;
     text-align: center;
-    gap: 2rem;
+    gap: 1.5rem; /* 모바일 간격 더 줄임 */
+  }
+
+  .hero {
+    padding: 70px 0 30px; /* 모바일 히어로 섹션 패딩 */
   }
 
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2rem; /* 모바일 히어로 제목 크기 */
+  }
+  .hero-subtitle {
+    font-size: 1rem; /* 모바일 히어로 부제목 크기 */
+    margin-bottom: 1.5rem;
+  }
+
+  .daily-tip {
+    padding: 2rem 0; /* 모바일 데일리 팁 섹션 패딩 */
   }
 
   .features-grid {
@@ -610,14 +667,50 @@ body {
   }
 
   .tip-card {
+    padding: 1rem; /* 모바일 팁 카드 내부 패딩 */
     flex-direction: column;
     text-align: center;
+  }
+
+  .features {
+    padding: 2.5rem 0; /* 모바일 기능 섹션 패딩 */
+  }
+  .section-title {
+    font-size: 1.8rem; /* 모바일 섹션 제목 */
+    margin-bottom: 0.8rem;
+  }
+  .section-subtitle {
+    font-size: 0.9rem; /* 모바일 섹션 부제목 */
+    margin-bottom: 1.5rem;
+  }
+  .feature-card {
+    padding: 1.25rem; /* 모바일 기능 카드 내부 패딩 */
+  }
+   .feature-icon {
+    width: 50px; height: 50px; font-size: 1.5rem; margin-bottom: 1rem;
+  }
+  .feature-card h3 {
+    font-size: 1.1rem; margin-bottom: 0.5rem;
+  }
+  .feature-card p {
+    font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;
   }
 
   .hero-buttons,
   .cta-buttons {
     flex-direction: column;
     align-items: center;
+  }
+
+  .cta {
+    padding: 2.5rem 0; /* 모바일 CTA 섹션 패딩 */
+  }
+  .cta-content h2 {
+    font-size: 1.8rem;
+  }
+  .cta-content p {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
   }
 }
 
@@ -641,8 +734,8 @@ body {
 }
 
 .page-content {
-  padding: 4rem 0;
-  background: #f8f9fa; /* 변경: 페이지 콘텐츠 배경색 */
+  padding: 1.5rem 0; /* 모바일 화면에 맞게 상하 패딩 추가 축소 */
+  background: #f8f9fa; /* 일관된 페이지 콘텐츠 배경색 */
   min-height: 60vh;
 }
 
@@ -668,7 +761,7 @@ main {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /* 모달 패딩 줄임 */
   background: #fff;
   padding: 2rem;
   border-radius: 20px;
@@ -709,7 +802,7 @@ main {
 
 /* Form Styles */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem; /* 폼 그룹 마진 추가 축소 */
 }
 
 .form-group label {
@@ -722,7 +815,7 @@ main {
 .form-group input,
 .form-group textarea,
 .form-group select {
-  width: 100%;
+  width: 100%; /* 폼 요소 너비 */
   padding: 0.8rem;
   border: 2px solid #e1e8ed;
   border-radius: 10px;
@@ -730,13 +823,21 @@ main {
   transition: border-color 0.3s ease;
   font-family: inherit;
 }
+@media (max-width: 768px) {
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.7rem; /* 모바일에서 폼 요소 내부 패딩 축소 */
+    font-size: 0.9rem;
+  }
+}
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2); /* 포커스 시 그림자 약간 조정 */
 }
 
 .form-group textarea {
@@ -824,13 +925,88 @@ main {
   display: block;
 }
 
+/* Quick Guide Section for Color Journal */
+.quick-guide-section {
+  padding: 2rem 0 1rem; /* 상하 패딩 추가 축소 */
+  background: #f8f9ff; /* Consistent with other light background sections */
+}
+
+.quick-guide-main-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem; /* 마진 추가 축소 */
+  color: #333;
+}
+
+.quick-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Responsive grid */
+  gap: 1rem; /* 간격 추가 축소 */
+  max-width: 900px; /* Max width for two cards side-by-side */
+  margin: 0 auto; /* Center the grid */
+}
+
+.quick-guide-card {
+  background: linear-gradient(135deg, #667eea, #764ba2); /* 감정 편지 가이드라인 배경과 동일하게 */
+  color: white; /* 기본 텍스트 색상을 흰색으로 변경 */
+  padding: 1.5rem; /* 내부 패딩 추가 축소 */
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3); /* 그림자 약간 조정 */
+  border: none; /* 기존 테두리 제거 */
+  transition: all 0.3s ease;
+}
+
+.quick-guide-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4); /* 호버 시 그림자 조정 */
+}
+
+.quick-guide-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem; /* 마진 추가 축소 */
+  color: white; /* 제목 색상 흰색으로 명시 */
+}
+
+.quick-guide-card-title.guide-title-usage {
+  /* color: #667eea; */ /* 흰색으로 통일되므로 주석 처리 또는 삭제 */
+}
+
+.quick-guide-card-title.guide-title-effects {
+  /* color: #764ba2; */ /* 흰색으로 통일되므로 주석 처리 또는 삭제 */
+}
+
+.quick-guide-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9); /* 목록 텍스트 색상 밝게 조정 */
+}
+
+.quick-guide-list li {
+  margin-bottom: 0.75rem; /* 리스트 아이템 간격 축소 */
+  padding-left: 1.8rem;
+  position: relative;
+}
+.quick-guide-list li::before {
+  content: '✓'; 
+  position: absolute;
+  left: 0;
+  color: #ffeaa7; /* 아이콘 색상 변경 (그라데이션과 어울리게) */
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.quick-guide-list li strong {
+  font-weight: 600;
+  color: white; /* 강조 텍스트 색상 흰색으로 */
+}
+
 /* emotion-letters.html calendar styles (can reuse from mood-routine or define specific) */
 .letter-calendar-section {
-    background: white;
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-top: 3rem;
+    /* .content-block 또는 .calendar-block으로 대체 예정 */
+    margin-top: 2rem; /* 상단 마진 조정 */
 }
 
 /* mood-routine.html의 달력 스타일 재활용 */
@@ -838,14 +1014,14 @@ main {
      display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem; /* 간격 축소 */
 }
 
 .calendar-header-routine .date-nav button { 
     background: #667eea;
     color: white;
     border: none;
-    padding: 0.8rem;
+    padding: 0.6rem; /* 패딩 축소 */
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -855,43 +1031,23 @@ main {
     transform: scale(1.1);
 }
  .calendar-header-routine .current-date-display { 
-    font-size: 1.5rem;
+    font-size: 1.3rem; /* 폰트 크기 축소 */
     font-weight: 600;
     color: #333;
 }
 
 .calendar-routine { 
-    background: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    /* .calendar-block으로 대체 예정 */
     margin-bottom: 0; 
 }
 .calendar-day-header-routine { 
-    background: #667eea;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-    font-weight: 600;
+    /* .calendar-day-name-common으로 대체 예정 */
 }
 .calendar-grid-routine .calendar-day { 
-    background: white;
-    padding: 0.5rem; 
-    min-height: 80px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    /* .calendar-day-cell-common으로 대체 예정 */
 }
 .calendar-grid-routine { 
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
-    background: #e1e8ed;
-    border-radius: 10px;
-    overflow: hidden;
+    /* .calendar-grid-common으로 대체 예정 */
 }
 .calendar-day.other-month { 
     color: #ccc;
@@ -899,13 +1055,13 @@ main {
     pointer-events: none;
 }
 .calendar-day.today { 
-     background: linear-gradient(135deg, #667eea, #764ba2);
+     background: linear-gradient(135deg, #8392f0, #8e69b8); /* Lighter today */
     color: white;
 }
 .calendar-day .day-number { 
     font-weight: 600;
-    margin-bottom: 0.3rem; 
-    z-index: 2; 
+    margin-bottom: 0.15rem; /* 마진 축소 */
+    z-index: 1; 
     position: relative; 
 }
 .calendar-day.has-record { /* 편지 기록 있는 날짜 표시 */
@@ -915,7 +1071,7 @@ main {
     position: absolute;
     bottom: 5px;
     right: 5px;
-    font-size: 1.2em;
+    font-size: 1em; /* 아이콘 크기 조정 */
     z-index: 2;
 }
 
@@ -928,8 +1084,43 @@ main {
     margin-bottom: 1rem;
 }
 #lettersForDateModal .letter-card .btn-outline {
-    padding: 0.5rem 1rem; /* 버튼 패딩 조정 */
-    font-size: 0.9rem; /* 버튼 폰트 크기 조정 */
+    padding: 0.4rem 0.8rem; /* 버튼 패딩 축소 */
+    font-size: 0.85rem; /* 버튼 폰트 크기 축소 */
+}
+
+/* 모바일 화면에서 페이지별/퀵가이드 패딩 추가 조정 */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 70px 0 20px; /* 헤더 높이 고려 */
+  }
+  .page-title {
+    font-size: 1.8rem;
+  }
+  .page-subtitle {
+    font-size: 0.9rem;
+  }
+  .page-content {
+    padding: 1rem 0; /* 모바일 상하 패딩 추가 축소 */
+  }
+  .quick-guide-section {
+    padding: 2rem 0 1rem;
+  }
+  .quick-guide-main-title {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .quick-guide-card {
+    padding: 1rem; /* 모바일 퀵가이드 카드 패딩 축소 */
+  }
+  .quick-guide-card-title {
+    font-size: 1.1rem; /* 모바일 퀵가이드 카드 제목 축소 */
+    margin-bottom: 1rem;
+  }
+  .quick-guide-list li {
+    font-size: 0.85rem; /* 모바일 퀵가이드 리스트 폰트 축소 */
+    margin-bottom: 0.75rem;
+    padding-left: 1.6rem; /* 아이콘 공간 확보 */
+  }
 }
 
 
@@ -941,7 +1132,7 @@ main {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  padding: 1.5rem 2rem; /* 패딩 증가 */
+  padding: 1.25rem 1.75rem; /* 메시지 패딩 약간 축소 */
   border-radius: 15px; /* 더 둥글게 */
   font-weight: 500;
   z-index: 3000;
@@ -992,4 +1183,137 @@ main {
     background: linear-gradient(135deg, #3498db, #2980b9); /* 파란색 계열 그라데이션 */
     color: white;
     border: none;
+}
+
+/* 모바일에서 모달 및 폼 요소 패딩 추가 조정 */
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 1rem; /* 모바일 모달 내부 패딩 */
+  }
+  .form-group {
+    margin-bottom: 0.8rem;
+  }
+  .form-group label { font-size: 0.9rem; }
+  .form-group input, .form-group textarea, .form-group select {
+    padding: 0.7rem; font-size: 0.9rem;
+    /* 모바일에서 폼 요소 내부 패딩은 위에서 이미 .form-group input 등으로 정의됨 */
+  }
+}
+
+/* New General Classes */
+.page-inner-container {
+    max-width: 900px; 
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem; 
+    padding-right: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .page-inner-container {
+        padding-left: 1rem; 
+        padding-right: 1rem;
+    }
+}
+
+.content-block {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;     
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); 
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .content-block {
+        padding: 1rem; 
+    }
+    .content-block .section-title,
+    .content-block h2,
+    .content-block h3 {
+        font-size: 1.2rem; 
+        margin-bottom: 0.8rem;
+    }
+    .content-block p,
+    .content-block li,
+    .content-block .form-label { /* form-input 등은 위에서 이미 처리 */
+        font-size: 0.9rem; 
+    }
+     .content-block .btn-primary,
+    .content-block .btn-outline,
+    .content-block .btn-secondary {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+
+.item-card { /* 신규 클래스 추가 */
+    background: #f8f9ff;
+    border-radius: 10px;
+    padding: 1rem;
+    border-left: 4px solid #667eea; /* 강조 테두리 */
+    transition: all 0.3s ease;
+    margin-bottom: 1rem; /* 아이템 간 하단 마진 */
+}
+.item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 15px rgba(102, 126, 234, 0.15);
+}
+@media (max-width: 768px) {
+    .item-card {
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+.calendar-block {
+    background: white;
+    border-radius: 15px;
+    padding: 1rem; 
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+.calendar-block-header { display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; }
+.calendar-block-nav { display: flex; align-items: center; gap: 0.5rem; }
+.calendar-block-nav button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 0.6rem; /* mood-routine의 .date-nav button과 유사하게 패딩 조정 */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.calendar-block-nav button:hover {
+    background: #764ba2;
+    transform: scale(1.1);
+}
+.calendar-block-title { font-size: 1.3rem; font-weight: 600; }
+.calendar-grid-common { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: #e1e8ed; border-radius: 10px; overflow: hidden; }
+.calendar-day-name-common { background: #667eea; color: white; padding: 0.5rem; text-align: center; font-weight: 600; font-size: 0.85rem; }
+.calendar-day-cell-common { background: white; padding: 0.3rem; min-height: 75px; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: flex-start; font-size: 0.85rem; }
+.calendar-day-cell-common .day-number { font-weight: 600; font-size: 0.9em; margin-bottom: 0.15rem; }
+.calendar-day-cell-common.other-month { color: #ccc; background: #f8f9fa; pointer-events: none; }
+.calendar-day-cell-common.today { background: linear-gradient(135deg, #8392f0, #8e69b8); color: white; }
+.calendar-day-cell-common.has-record::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; background-color: #764ba2; border-radius: 50%; }
+
+@media (max-width: 768px) {
+    .calendar-block { padding: 0.75rem; }
+    .calendar-block-title { font-size: 1.1rem; }
+    .calendar-day-name-common { padding: 0.4rem; font-size: 0.75rem; }
+    .calendar-day-cell-common { min-height: 60px; padding: 0.2rem; }
+}
+
+/* styles.css 파일 */
+
+/* 구글 로그인 버튼 색상 */
+.btn-google {
+    background-color: #db4437 !important; /* Google 빨간색 배경 */
+    color: white !important; /* 흰색 글자 */
+    border-color: #db4437 !important; /* Google 빨간색 테두리 */
+}
+.btn-google:hover {
+    background-color: #c23321 !important; /* 호버 시 약간 어두운 빨간색 배경 */
+    border-color: #c23321 !important; /* 호버 시 약간 어두운 빨간색 테두리 */
+    color: white !important; /* 호버 시에도 흰색 글자 유지 */
 }

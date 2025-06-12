@@ -20,6 +20,15 @@ firebase.initializeApp(firebaseConfig); // compat 버전 사용 시
 const auth = firebase.auth(); // compat 버전 사용 시
 const db = firebase.firestore(); // compat 버전 사용 시
 
+// Firestore 컬렉션 이름 한글 매핑 (코드 가독성 향상용)
+const 컬렉션_이름_맵 = {
+  색상일기: 'emotions',
+  감정편지: 'emotionLetters',
+  하루기분기록: 'moodRoutines',
+  성찰기록: 'reflections',
+  저장된힐링카드: 'savedCards'
+};
+
 // 현재 사용자
 let currentUser = null;
 
@@ -117,12 +126,7 @@ function setupMobileMenu() {
   if (mobileMenuToggle && navMenu) {
     mobileMenuToggle.addEventListener("click", function () {
       navMenu.classList.toggle("active")
-      const icon = this.querySelector("i")
-      if (navMenu.classList.contains("active")) {
-        icon.classList.replace("fa-bars", "fa-times");
-      } else {
-        icon.classList.replace("fa-times", "fa-bars");
-      }
+      this.classList.toggle("active"); // 버튼 자체에 active 클래스 토글
     });
   } 
 }
@@ -193,9 +197,17 @@ function showLoginModal() {
                     <label for="password">비밀번호</label>
                     <input type="password" id="password" required>
                 </div>
-                <button type="submit" class="btn-primary">로그인</button>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem; margin-bottom: 0.75rem;">
+                    <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>이메일로 로그인
+                </button>
+                <button type="button" class="btn-secondary" style="width: 100%; justify-content: center; background-color: #db4437; color: white; border-color: #db4437; margin-bottom: 1.5rem;" onclick="handleGoogleLogin()">
+                    <i class="fab fa-google" style="margin-right: 0.5rem;"></i> 구글로 로그인
+                </button>
                 <p class="mt-2 text-center">
                     계정이 없으신가요? <a href="#" onclick="switchToSignupModal()">회원가입</a>
+                </p>
+                <p class="mt-1 text-center" style="font-size: 0.8em; color: #777;">
+                    로그인/회원가입 시 <a href="#" onclick="showTerms(); return false;">이용약관</a> 및 <a href="#" onclick="showPrivacyPolicy(); return false;">개인정보처리방침</a>에 동의하는 것으로 간주됩니다.
                 </p>
             </form>
         </div>
@@ -237,9 +249,17 @@ function showSignupModal() {
                     <label for="displayName">닉네임</label>
                     <input type="text" id="displayName" placeholder="사용하실 닉네임을 입력하세요" required>
                 </div>
-                <button type="submit" class="btn-primary">회원가입</button>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem; margin-bottom: 0.75rem;">
+                    <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>이메일로 회원가입
+                </button>
+                <button type="button" class="btn-secondary btn-google" style="width: 100%; justify-content: center; margin-bottom: 1.5rem;" onclick="handleGoogleLogin()">
+                    <i class="fab fa-google" style="margin-right: 0.5rem;"></i> 구글로 회원가입
+                </button>
                 <p class="mt-2 text-center">
                     이미 계정이 있으신가요? <a href="#" onclick="switchToLoginModal()">로그인</a>
+                </p>
+                <p class="mt-1 text-center" style="font-size: 0.8em; color: #777;">
+                    회원가입 시 <a href="#" onclick="showTerms(); return false;">이용약관</a> 및 <a href="#" onclick="showPrivacyPolicy(); return false;">개인정보처리방침</a>에 동의하는 것으로 간주됩니다.
                 </p>
             </form>
         </div>
@@ -334,10 +354,32 @@ async function handleSignup(e) {
   }
 }
 
+// 구글 로그인 처리
+async function handleGoogleLogin() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try {
+        await auth.signInWithPopup(provider);
+        closeAllModals();
+        showMessage("구글 계정으로 로그인되었습니다.", "success");
+    } catch (error) {
+        console.error("Google 로그인 실패:", error);
+        let errorMessage = "Google 로그인 실패: " + error.message;
+        if (error.code === 'auth/popup-closed-by-user') errorMessage = "Google 로그인 팝업이 닫혔습니다.";
+        if (error.code === 'auth/cancelled-popup-request') errorMessage = "Google 로그인 요청이 중복되었습니다.";
+        showMessage(errorMessage, "error");
+    }
+}
+
 // 로그아웃
 async function logout() {
   try {
     await auth.signOut();
+    // 로그아웃 시 로컬 스토리지 데이터 삭제
+    localStorage.removeItem('moodRoutineData');
+    localStorage.removeItem('emotionData'); // 색상 감정 일기 데이터
+    localStorage.removeItem('allEmotionLettersData'); // 감정 편지 데이터
+    localStorage.removeItem('savedHealingCards'); // 힐링 카드 데이터
+    localStorage.removeItem('savedReflections'); // 성찰 질문 데이터
     showMessage("로그아웃되었습니다.", "success");
   } catch (error) {
     showMessage("로그아웃 실패: " + error.message, "error");

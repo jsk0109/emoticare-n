@@ -8,21 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+        /* .dashboard-container 패딩은 .page-inner-container 로 대체 */
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 1.5rem; /* 간격 축소 */
         }
         .dashboard-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            /* .content-block 으로 대체 */
         }
         .dashboard-card-title {
             font-size: 1.2rem;
@@ -35,9 +29,9 @@
         .welcome-message {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 2rem;
+            padding: 1.5rem; /* 패딩 축소 */
             border-radius: 15px;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* 마진 축소 */
             text-align: center;
         }
         .quick-links a {
@@ -49,6 +43,13 @@
         }
         .quick-links a:hover {
             color: #764ba2;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-message { padding: 1rem; margin-bottom: 1rem; }
+            .welcome-message h2 { font-size: 1.3rem; }
+            .welcome-message p { font-size: 0.9rem; }
+            .dashboard-card-title { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -64,34 +65,37 @@
         </section>
 
         <section class="page-content">
-            <div class="dashboard-container">
+            <div class="page-inner-container dashboard-container">
                 <div class="welcome-message">
                     <h2 id="dashboardWelcomeText">OOO님, 안녕하세요!</h2>
                     <p>오늘도 마음챙김 여정을 함께 해주셔서 감사합니다.</p>
+                    <button class="btn-outline" style="margin-top: 1rem;" onclick="openProfileSettings()">
+                        <i class="fas fa-user-edit"></i> 프로필 변경
+                    </button>
                 </div>
 
                 <div class="dashboard-grid">
-                    <div class="dashboard-card" id="todayEmotionCard">
+                    <div class="content-block dashboard-card" id="todayEmotionCard">
                         <h3 class="dashboard-card-title"><i class="fas fa-palette"></i> 오늘의 감정</h3>
                         <!-- 감정일기 요약 내용 -->
                         <p>아직 기록된 감정이 없어요. <a href="color-journal.html">감정일기 쓰러가기</a></p>
                     </div>
 
-                    <div class="dashboard-card" id="recentActivityCard">
+                    <div class="content-block dashboard-card" id="recentActivityCard">
                         <h3 class="dashboard-card-title"><i class="fas fa-history"></i> 최근 활동</h3>
-                        <ul class="quick-links">
-                            <li><a href="emotion-letters.html">최근 감정 편지 보기</a></li>
-                            <li><a href="reflection-questions.html">최근 성찰 기록 보기</a></li>
+                        <ul class="quick-links" id="recentActivityList">
+                            <!-- JS가 최근 활동 목록을 여기에 채웁니다. -->
+                            <li><p>최근 활동을 불러오는 중...</p></li>
                         </ul>
                     </div>
 
-                    <div class="dashboard-card" id="recommendedContentCard">
+                    <div class="content-block dashboard-card" id="recommendedContentCard">
                         <h3 class="dashboard-card-title"><i class="fas fa-star"></i> 추천 콘텐츠</h3>
                         <!-- 추천 힐링카드, 명언 등 -->
                         <p>맞춤 추천 콘텐츠가 준비 중입니다.</p>
                     </div>
                     
-                    <div class="dashboard-card" id="quickAccessCard">
+                    <div class="content-block dashboard-card" id="quickAccessCard">
                         <h3 class="dashboard-card-title"><i class="fas fa-rocket"></i> 빠른 시작</h3>
                         <ul class="quick-links">
                             <li><a href="mood-routine.html">하루 기분 기록하기</a></li>
@@ -106,32 +110,201 @@
 
     <div id="footer-container"></div>
 
+    <!-- 프로필 변경 모달 시작 -->
+    <div id="profileSettingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>프로필 변경</h3>
+                <button class="modal-close" onclick="closeProfileSettingsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="profileSettingsForm">
+                    <div class="form-group">
+                        <label for="displayNameInput">닉네임</label>
+                        <input type="text" id="displayNameInput" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailDisplay" style="font-weight: normal; color: #666;">이메일 (변경 불가)</label>
+                        <input type="email" id="emailDisplay" class="form-input" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem; justify-content: center;">저장하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 프로필 변경 모달 끝 -->
+
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="common.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 사용자 이름으로 환영 메시지 업데이트 (로그인 시)
-            if (currentUser && currentUser.displayName) {
-                document.getElementById('dashboardWelcomeText').textContent = `${currentUser.displayName}님, 안녕하세요!`;
-            } else if (currentUser && currentUser.email) {
-                 document.getElementById('dashboardWelcomeText').textContent = `${currentUser.email}님, 안녕하세요!`;
+            document.addEventListener('authStateReady', function(e) {
+                currentUser = e.detail.user; 
+                updateWelcomeMessage();
+                loadDashboardContent(); // 대시보드 콘텐츠 로드 함수 호출
+            });
+        });
+
+        function updateWelcomeMessage() {
+            const welcomeTextElement = document.getElementById('dashboardWelcomeText');
+            if (currentUser) {
+                welcomeTextElement.textContent = `${currentUser.displayName || currentUser.email}님, 안녕하세요!`;
+            } else {
+                welcomeTextElement.textContent = '로그인이 필요합니다.';
+            }
+        }
+
+        // 대시보드 콘텐츠 로드 함수
+        async function loadDashboardContent() {
+            if (currentUser) {
+                await loadTodayEmotionSummary();
+                // 여기에 다른 카드(최근 활동 등) 로드 함수 호출 추가
+                // 예: await loadRecentActivities();
+            } else {
+                // 로그인되지 않았을 때 각 카드에 "로그인 필요" 메시지 표시
+                document.getElementById('todayEmotionCard').innerHTML = `<h3 class="dashboard-card-title"><i class="fas fa-palette"></i> 오늘의 감정</h3><p>로그인 후 이용해주세요. <a href="#" onclick="showLoginModal(); return false;">로그인</a></p>`;
+                document.getElementById('recentActivityCard').innerHTML = `<h3 class="dashboard-card-title"><i class="fas fa-history"></i> 최근 활동</h3><p>로그인 후 이용해주세요. <a href="#" onclick="showLoginModal(); return false;">로그인</a></p>`;
+                // 다른 카드들도 유사하게 처리
+            }
+        }
+
+        // 오늘의 감정 요약 로드 함수
+        async function loadTodayEmotionSummary() {
+            const cardElement = document.getElementById('todayEmotionCard');
+            if (!currentUser) return; // currentUser가 없으면 실행 중단 (loadDashboardContent에서 이미 처리)
+
+            const todayDateKey = formatDate(new Date()); // common.js의 formatDate 함수
+
+            try {
+                // 중요: Firestore의 'emotions' 컬렉션 문서 ID가 'YYYY-MM-DD' 형식이고,
+                // 해당 문서 내에 'userId' 필드가 있다고 가정합니다.
+                // 만약 문서 ID가 사용자별로 고유하다면 (예: `${currentUser.uid}_${todayDateKey}`)
+                // 또는 'userId'와 'date' 필드로 쿼리한다면 그에 맞게 수정해야 합니다.
+                // 현재 common.js의 saveToFirestore는 docId를 그대로 사용하므로,
+                // color-journal.html에서 dateKey를 docId로 사용했다면,
+                // 해당 문서에 userId 필드가 있는지 확인하고, 있다면 아래처럼 가져올 수 있습니다.
+                const docRef = db.collection(컬렉션_이름_맵.색상일기).doc(todayDateKey);
+                const docSnap = await docRef.get();
+
+                if (docSnap.exists && docSnap.data().userId === currentUser.uid) {
+                    const emotionRecord = docSnap.data();
+                    // color-journal.html의 emotions 객체 (감정 이름, 색상 정보)
+                    const emotionInfo = emotionsMapForDashboard[emotionRecord.type] || { name: emotionRecord.type, color: '#777' }; 
+
+                    cardElement.innerHTML = `
+                        <h3 class="dashboard-card-title"><i class="fas fa-palette"></i> 오늘의 감정</h3>
+                        <p>오늘 당신의 주된 감정은 <span style="color:${emotionInfo.color}; font-weight:bold;">${emotionInfo.name}</span> 입니다. (강도: ${emotionRecord.intensity || '미지정'})</p>
+                        ${emotionRecord.note ? `<p style="font-size:0.9em; color:#555; margin-top:0.3rem;"><em>"${emotionRecord.note.substring(0,50)}${emotionRecord.note.length > 50 ? '...' : ''}"</em></p>` : ''}
+                        <a href="color-journal.html" class="btn-outline btn-sm" style="margin-top:0.8rem; padding: 0.4rem 0.8rem; font-size:0.85rem;">일기 자세히 보기</a>
+                    `;
+                } else {
+                    cardElement.innerHTML = `
+                        <h3 class="dashboard-card-title"><i class="fas fa-palette"></i> 오늘의 감정</h3>
+                        <p>오늘의 감정이 아직 기록되지 않았어요. <a href="color-journal.html">기록하러 가기</a></p>
+                    `;
+                }
+            } catch (error) {
+                console.error("오늘의 감정 요약 로드 실패:", error);
+                cardElement.innerHTML = `
+                    <h3 class="dashboard-card-title"><i class="fas fa-palette"></i> 오늘의 감정</h3>
+                    <p>감정 정보를 불러오는 데 실패했습니다. <a href="color-journal.html">감정일기 페이지로 이동</a></p>
+                `;
+            }
+        }
+
+        function openProfileSettings() {
+            if (!currentUser) {
+                showMessage('로그인이 필요합니다.', 'error');
+                showLoginModal(); // common.js의 로그인 모달 함수 호출
+                return;
+            }
+            const modal = document.getElementById('profileSettingsModal');
+            
+            // ★★★ 추가: 모달 요소가 실제로 DOM에 있는지 확인
+            if (!modal) {
+                console.error("프로필 변경 모달 요소를 찾을 수 없습니다. (ID: profileSettingsModal)");
+                showMessage('프로필 변경 창을 여는 데 필요한 구성 요소를 찾을 수 없습니다. 페이지를 새로고침하거나 관리자에게 문의하세요.', 'error');
+                return;
             }
 
+            const displayNameInput = document.getElementById('displayNameInput');
+            const emailDisplay = document.getElementById('emailDisplay');
 
-            // 예시: 오늘의 감정 카드 내용 업데이트 (실제로는 데이터 로드 필요)
-            const todayEmotionCard = document.getElementById('todayEmotionCard');
-            // const emotionData = loadFromLocalStorage('emotionData'); // 실제 데이터 로드 로직
-            // if (emotionData && emotionData[formatDate(new Date())]) {
-            //    const todayEmotion = emotionData[formatDate(new Date())];
-            //    todayEmotionCard.innerHTML = `
-            //        <h3 class="dashboard-card-title"><i class="fas fa-palette"></i> 오늘의 감정</h3>
-            //        <p>오늘 당신의 주된 감정은 <span style="color:${emotions[todayEmotion.type]?.color || '#333'}; font-weight:bold;">${emotions[todayEmotion.type]?.name || '기록됨'}</span> 입니다.</p>
-            //        <a href="color-journal.html">자세히 보기</a>
-            //    `;
-            // }
+            // ★★★ 추가: 모달 내부 요소 확인
+            if (!displayNameInput || !emailDisplay) {
+                console.error("프로필 변경 모달 내부의 입력 필드를 찾을 수 없습니다. (ID: displayNameInput 또는 emailDisplay)");
+                showMessage('프로필 변경 창의 내부 구성 요소를 찾을 수 없습니다.', 'error');
+                return;
+            }
+
+            displayNameInput.value = currentUser.displayName || '';
+            emailDisplay.value = currentUser.email || '';
+            
+            console.log("Attempting to display profile settings modal:", modal); // 디버깅 로그 추가
+            modal.style.display = 'block';
+            console.log("Modal display style set to 'block'. Current display:", modal.style.display); // 디버깅 로그 추가
+
+            const form = document.getElementById('profileSettingsForm');
+            if (!form) { // ★★★ 추가: 폼 요소 확인
+                console.error("프로필 설정 폼 요소를 찾을 수 없습니다. (ID: profileSettingsForm)");
+                return; // 폼이 없으면 이벤트 리스너를 설정할 수 없음
+            }
+            // 기존 이벤트 리스너 제거 (중복 방지)
+            const newForm = form.cloneNode(true);
+            form.parentNode.replaceChild(newForm, form);
+            newForm.addEventListener('submit', handleProfileUpdate);
+        }
+
+        function closeProfileSettingsModal() {
+            const modal = document.getElementById('profileSettingsModal');
+            modal.style.display = 'none';
+        }
+
+        async function handleProfileUpdate(event) {
+            event.preventDefault();
+            if (!currentUser) return;
+
+            const newDisplayName = document.getElementById('displayNameInput').value.trim();
+            if (!newDisplayName) {
+                showMessage('닉네임을 입력해주세요.', 'error');
+                return;
+            }
+
+            try {
+                await currentUser.updateProfile({
+                    displayName: newDisplayName
+                });
+                // Firestore에 별도로 사용자 정보를 저장하고 있다면, 그곳의 displayName도 업데이트해야 합니다.
+                // 예: await db.collection('users').doc(currentUser.uid).update({ displayName: newDisplayName });
+                
+                showMessage('프로필이 성공적으로 변경되었습니다.', 'success');
+                updateWelcomeMessage(); // 환영 메시지 업데이트
+                updateAuthUI(currentUser); // 헤더의 사용자 이름도 업데이트 (common.js 함수)
+                closeProfileSettingsModal();
+            } catch (error) {
+                console.error("프로필 업데이트 실패:", error);
+                showMessage(`프로필 변경에 실패했습니다: ${error.message}`, 'error');
+            }
+        }
+
+        // 모달 외부 클릭 시 닫기
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('profileSettingsModal');
+            if (event.target === modal) {
+                closeProfileSettingsModal();
+            }
         });
+
+        // color-journal.html의 emotions 객체와 유사하게 정의 (대시보드용)
+        const emotionsMapForDashboard = {
+            happy: { name: '기쁨', color: '#f39c12' },
+            calm: { name: '평온', color: '#00a693' },
+            anxious: { name: '불안', color: '#8e44ad' },
+            sad: { name: '슬픔', color: '#2980b9' },
+            angry: { name: '화남', color: '#ee4801' }
+        };
     </script>
 </body>
 </html>
