@@ -3,799 +3,494 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>하루 기분 기록 - EmotiCare</title>
-    <link rel="stylesheet" href="styles.css?v=20240701a">
+    <title>하루 기록 - EmotiCare</title>
+    <link rel="stylesheet" href="styles.css?v=20240701b"> <!-- 스타일시트 버전 업데이트 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* .routine-container 패딩은 .page-inner-container 로 대체 */
-        
-        .calendar-header-routine {
-            /* .calendar-block-header 로 대체되거나 유사 스타일 적용 */
-            border-radius: 15px;
-            padding: 1rem; /* 패딩 축소 */
-            margin-bottom: 1.5rem; /* 마진 축소 */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* mood-routine.html 특정 스타일 */
+        .mood-input-section { margin-bottom: 2rem; }
+        .mood-options { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; justify-content: center; }
+        .mood-btn {
+            background-color: #f0f0f0; border: 2px solid transparent;
+            padding: 0.25rem 0.5rem; border-radius: 20px; cursor: pointer;
+            transition: all 0.3s ease; font-size: 1rem;
         }
-        
-        .date-nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
+        .mood-btn:hover { background-color: #e0e0e0; }
+        .mood-btn.selected {
+            border-color: #667eea; background-color: #e9e7ff;
+            font-weight: bold; color: #667eea;
         }
-        
-        .date-nav button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 0.6rem; /* 패딩 축소 */
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .date-nav button:hover {
-            background: #764ba2;
-            transform: scale(1.1);
-        }
-        
-        .current-date-display {
-            font-size: 1.3rem; /* 폰트 크기 축소 */
-            font-weight: 600;
-            color: #333;
-        }
+        .mood-btn i { margin-right: 0.5rem; }
 
-        .calendar-routine {
-            /* .calendar-block 으로 대체 */
-            margin-bottom: 1.5rem; /* 마진 축소 */
-        }
-        .calendar-day-header-routine {
-            /* .calendar-day-name-common 으로 대체 */
-        }
-        .calendar-grid-routine .calendar-day {
-            /* .calendar-day-cell-common 으로 대체 */
-        }
-        .calendar-grid-routine {
-            /* .calendar-grid-common 으로 대체 */
-        }
-        
-        .time-sections {
-            display: grid;
-            gap: 1.5rem; /* 간격 축소 */
-            margin-bottom: 2rem; /* 마진 축소 */
-        }
-        
-        .time-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .time-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-        }
-        
-        .time-icon.morning {
-            background: linear-gradient(135deg, #f9ca24, #f0932b);
-        }
-        
-        .time-icon.afternoon {
-            background: linear-gradient(135deg, #eb4d4b, #6c5ce7);
-        }
-        
-        .time-icon.evening {
-            background: linear-gradient(135deg, #6c5ce7, #2d3436);
-        }
-        
-        .time-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .mood-selector {
-            display: flex;
-            gap: 0.75rem; /* 간격 축소 */
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .mood-emoji {
-            font-size: 2.5rem;
-            padding: 0.6rem; /* 패딩 축소 */
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 3px solid transparent;
-            background: #f8f9ff;
-        }
-        
-        .mood-emoji:hover {
-            transform: scale(1.1);
-            background: #e8f0ff;
-        }
-        
-        .mood-emoji.selected {
-            border-color: #667eea;
-            background: #667eea;
-            transform: scale(1.1);
-        }
-        
-        .thought-input {
-            width: 100%;
-            padding: 0.8rem; /* 패딩 축소 */
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            resize: vertical;
-            min-height: 80px;
-            font-family: inherit;
-            transition: border-color 0.3s ease;
-        }
-        
-        .thought-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .gratitude-section {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-radius: 15px; /* .content-block 과 유사하게 */
-            padding: 1.5rem; /* 패딩 축소 */
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-        
-        .gratitude-header {
-            text-align: center;
-            margin-bottom: 1.5rem; /* 마진 축소 */
-        }
-        
-        .gratitude-header h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .gratitude-items {
-            display: grid;
-            gap: 0.75rem; /* 간격 축소 */
-            margin-bottom: 1.5rem; /* 마진 축소 */
-        }
-        
-        .gratitude-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .gratitude-number {
-            width: 30px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-        
-        .gratitude-input {
-            flex: 1;
-            padding: 0.7rem; /* 패딩 축소 */
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            backdrop-filter: blur(10px);
-        }
-        
-        .gratitude-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .gratitude-input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .gratitude-note {
-            width: 100%;
-            padding: 0.8rem; /* 패딩 축소 */
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            backdrop-filter: blur(10px);
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .gratitude-note::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .save-section {
-            text-align: center;
-            margin-top: 1.5rem; /* 마진 축소 */
-        }
-        
-        .save-btn {
-            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
-            color: #333;
-            border: none;
-            padding: 0.8rem 2.5rem; /* 패딩 축소 */
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(255, 234, 167, 0.4);
-        }
-        
-        .save-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 234, 167, 0.6);
-        }
-        
-        .summary-card {
-            /* .content-block 으로 대체 */
-            margin-top: 1.5rem; /* 마진 축소 */
-        }
-        
-        .summary-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #333;
-            text-align: center;
-        }
-        
-        .mood-summary {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 1.5rem;
-        }
-        
-        .mood-summary-item {
-            text-align: center;
-        }
-        
-        .mood-summary-emoji {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .mood-summary-label {
-            font-size: 0.9rem;
-            color: #666;
-        }
+        #moodRoutineDateModal .form-group { margin-bottom: 1rem; }
+        #moodRoutineDateModal textarea { min-height: 100px; }
 
-        .calendar-day.selected-day {
-            background-color: #e8f0ff !important;
-            border: 2px solid #667eea !important;
-            color: #333 !important;
-        }
-        .calendar-day.has-record {
-            position: relative;
-        }
-        .calendar-day.has-record::after {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background-color: #764ba2;
-            border-radius: 50%;
-        }
-        .calendar-header-routine .btn-secondary {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .calendar-header-routine { padding: 0.8rem; margin-bottom: 1rem; }
-            .date-nav { gap: 1rem; }
-            .date-nav button { padding: 0.5rem; }
-            .current-date-display { font-size: 1.1rem; }
-            .time-section { padding: 1.25rem; } /* .content-block 기본 패딩보다 조금 더 */
-            .time-icon { width: 40px; height: 40px; font-size: 1.2rem; }
-            .time-title { font-size: 1.1rem; }
-            .mood-emoji { font-size: 2rem; padding: 0.5rem; }
-            .thought-input { padding: 0.7rem; min-height: 60px; }
-            .gratitude-section { padding: 1.25rem; }
-            .gratitude-header h3 { font-size: 1.2rem; }
-            .gratitude-input, .gratitude-note { padding: 0.7rem; }
-        }
+        /* 기존 스타일 중 필요한 것만 남기거나, .content-block 등으로 대체된 것은 주석 처리/삭제 */
+        /* .calendar-header-routine, .date-nav, .current-date-display 등 기존 달력 관련 스타일은 새 달력 스타일로 대체 */
+        /* .time-sections, .time-header, .mood-selector, .mood-emoji, .thought-input 등 기존 시간대별 입력폼 스타일은 제거 또는 새 폼에 맞게 수정 */
+        /* .gratitude-section, .gratitude-items, .gratitude-input 등 기존 감사 섹션 스타일은 새 폼에 맞게 수정 */
+        /* .save-section, .summary-card 등 기존 저장/요약 스타일은 제거 또는 새 기능에 맞게 수정 */
     </style>
 </head>
 <body>
     <div id="header-container"></div>
-    
+
     <main>
         <section class="page-header">
             <div class="container">
-                <h1 class="page-title">하루 기분 기록</h1>
-                <p class="page-subtitle">시간대별 기분을 기록하고 감사한 일들을 되새겨보세요</p>
+                <h1 class="page-title">하루 기록</h1>
+                <p class="page-subtitle">오늘의 기분, 감사한 일, 실천한 루틴을 기록하며 하루를 돌아보세요.</p>
             </div>
         </section>
-        
+
         <section class="page-content">
-            <div class="page-inner-container routine-container">
-                <div class="content-block calendar-header-routine">
-                    <div class="date-nav">
-                        <button onclick="changeDate(-1)"><i class="fas fa-chevron-left"></i></button>
-                        <span class="current-date-display" id="currentDateDisplay"></span>
-                        <button onclick="changeDate(1)"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                    <div>
-                        <button class="btn-secondary" onclick="goToToday()">오늘</button>
-                    </div>
+            <div class="page-inner-container">
+                <!-- 오늘의 기록 입력 폼 -->
+                   <div class="content-block mood-input-section" id="todayEntryFormContainer" style="text-align: center;">
+                    <h2 style="font-size: 1.5em; margin-bottom: 1rem;"><i class="fas fa-sun"></i> 오늘의 기록</h2>
+                    <p style="font-size: 0.9em; color: #666; margin-bottom: 3rem;">
+                        매일의 기분, 감사한 일, 작은 성취를 기록하며 긍정적인 마음 습관을 만들고<br>자신을 더 깊이 이해하는 시간을 가져보세요.
+                    </p>
+                    <form id="todayMoodRoutineForm" onsubmit="saveTodayMoodRoutine(event)">
+                        <div class="form-group" style="margin-bottom: 3rem;">
+                            <label>오늘의 기분은 어떠셨나요?</label>
+                            <div class="mood-options" id="todayMoodOptions">
+                                <!-- JavaScript로 기분 버튼 생성 -->
+                            </div>
+                            <input type="hidden" id="todaySelectedMood" name="mood">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 3rem;">
+                            <label for="todayGratitude">오늘 감사했던 일 (3가지 이상 권장)</label>
+                            <textarea id="todayGratitude" class="form-control" placeholder="예: 맛있는 저녁, 친구의 전화, 따뜻한 햇살" rows="3"></textarea>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 3rem;">
+                            <label for="todayRoutine">오늘 실천한 루틴</label>
+                            <textarea id="todayRoutine" class="form-control" placeholder="예: 아침 스트레칭, 물 2L 마시기, 저녁 독서 30분" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary" style="margin-top: 1rem; margin-bottom: 2rem;"><i class="fas fa-save"></i> 오늘의 기록 저장</button>
+                    </form>
                 </div>
 
-                <div class="calendar-block" id="calendarView">
-                    <div class="calendar-grid-common">
-                        <!-- 요일 헤더 JS로 생성 -->
+                <!-- 하루 기록 달력 섹션 -->
+                <div class="content-block mood-routine-calendar-section" style="margin-bottom: 4.5rem;">
+                    <div class="letters-header"> <!-- emotion-letters.html의 클래스 재활용 -->
+                        <h3>기록 달력</h3>
                     </div>
-                    <div class="calendar-grid-common" id="calendarGridRoutine">
-                    </div>
-                </div>
-                
-                <div class="time-sections">
-                    <div class="content-block time-section">
-                        <div class="time-header">
-                            <div class="time-icon morning">
-                                <i class="fas fa-sun"></i>
-                            </div>
-                            <div>
-                                <div class="time-title">아침 (6:00 - 12:00)</div>
-                                <div style="color: #666; font-size: 0.9rem;">하루를 시작하는 마음</div>
-                            </div>
-                        </div>
-                        
-                        <div class="mood-selector" data-time="morning">
-                            <div class="mood-emoji" data-mood="very-happy" title="매우 기쁨">😄</div>
-                            <div class="mood-emoji" data-mood="happy" title="기쁨">😊</div>
-                            <div class="mood-emoji" data-mood="neutral" title="보통">😐</div>
-                            <div class="mood-emoji" data-mood="sad" title="슬픔">😔</div>
-                            <div class="mood-emoji" data-mood="very-sad" title="매우 슬픔">😢</div>
-                        </div>
-                        
-                        <textarea 
-                            class="thought-input" 
-                            data-time="morning"
-                            placeholder="아침에 어떤 생각이나 기분이 드셨나요?"
-                        ></textarea>
-                    </div>
-                    
-                    <div class="content-block time-section">
-                        <div class="time-header">
-                            <div class="time-icon afternoon">
-                                <i class="fas fa-cloud-sun"></i>
-                            </div>
-                            <div>
-                                <div class="time-title">점심 (12:00 - 18:00)</div>
-                                <div style="color: #666; font-size: 0.9rem;">하루 중반의 에너지</div>
-                            </div>
-                        </div>
-                        
-                        <div class="mood-selector" data-time="afternoon">
-                            <div class="mood-emoji" data-mood="very-happy" title="매우 기쁨">😄</div>
-                            <div class="mood-emoji" data-mood="happy" title="기쁨">😊</div>
-                            <div class="mood-emoji" data-mood="neutral" title="보통">😐</div>
-                            <div class="mood-emoji" data-mood="sad" title="슬픔">😔</div>
-                            <div class="mood-emoji" data-mood="very-sad" title="매우 슬픔">😢</div>
-                        </div>
-                        
-                        <textarea 
-                            class="thought-input" 
-                            data-time="afternoon"
-                            placeholder="점심 시간 이후 기분은 어떠셨나요?"
-                        ></textarea>
-                    </div>
-                    
-                    <div class="content-block time-section">
-                        <div class="time-header">
-                            <div class="time-icon evening">
-                                <i class="fas fa-moon"></i>
-                            </div>
-                            <div>
-                                <div class="time-title">저녁 (18:00 - 24:00)</div>
-                                <div style="color: #666; font-size: 0.9rem;">하루를 마무리하는 시간</div>
-                            </div>
-                        </div>
-                        
-                        <div class="mood-selector" data-time="evening">
-                            <div class="mood-emoji" data-mood="very-happy" title="매우 기쁨">😄</div>
-                            <div class="mood-emoji" data-mood="happy" title="기쁨">😊</div>
-                            <div class="mood-emoji" data-mood="neutral" title="보통">😐</div>
-                            <div class="mood-emoji" data-mood="sad" title="슬픔">😔</div>
-                            <div class="mood-emoji" data-mood="very-sad" title="매우 슬픔">😢</div>
-                        </div>
-                        
-                        <textarea 
-                            class="thought-input" 
-                            data-time="evening"
-                            placeholder="하루를 마무리하며 어떤 기분이신가요?"
-                        ></textarea>
-                    </div>
-                </div>
-                
-                <div class="gratitude-section">
-                    <div class="gratitude-header">
-                        <h3><i class="fas fa-heart"></i> 오늘의 감사한 일 3가지</h3>
-                        <p>작은 것이라도 괜찮습니다. 감사한 마음을 표현해보세요.</p>
-                    </div>
-                    
-                    <div class="gratitude-items">
-                        <div class="gratitude-item">
-                            <div class="gratitude-number">1</div>
-                            <input type="text" class="gratitude-input" data-index="0" placeholder="첫 번째 감사한 일">
-                        </div>
-                        <div class="gratitude-item">
-                            <div class="gratitude-number">2</div>
-                            <input type="text" class="gratitude-input" data-index="1" placeholder="두 번째 감사한 일">
-                        </div>
-                        <div class="gratitude-item">
-                            <div class="gratitude-number">3</div>
-                            <input type="text" class="gratitude-input" data-index="2" placeholder="세 번째 감사한 일">
+                    <div class="calendar-block-header" style="margin-bottom: 1rem;">
+                        <div class="calendar-block-nav">
+                            <button onclick="changeMoodRoutineCalendarMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <span class="calendar-block-title" id="moodRoutineCalendarMonth"></span>
+                            <button onclick="changeMoodRoutineCalendarMonth(1)"><i class="fas fa-chevron-right"></i></button>
                         </div>
                     </div>
-                    
-                    <textarea 
-                        class="gratitude-note" 
-                        placeholder="감사한 마음에 대해 더 자세히 적어보세요..."
-                    ></textarea>
-                </div>
-                
-                <div class="save-section">
-                    <button class="save-btn" onclick="saveMoodData()">
-                        <i class="fas fa-save"></i> 오늘의 기록 저장하기
-                    </button>
-                </div>
-                
-                <div class="content-block summary-card" id="summaryCard" style="display: none;">
-                    <h3 class="summary-title">오늘의 기분 요약</h3>
-                    <div class="mood-summary" id="moodSummary">
+                    <div class="calendar-block">
+                        <div class="calendar-grid-common">
+                            <!-- 요일 헤더가 여기에 생성됩니다 (JS) -->
+                        </div>
+                        <div class="calendar-grid-common" id="moodRoutineCalendarGrid">
+                            <!-- 날짜 셀이 여기에 생성됩니다 (JS) -->
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
-    
+
+    <!-- 날짜별 하루 기록 보기/입력 모달 -->
+    <div id="moodRoutineDateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="moodRoutineDateModalTitle"></h3>
+                <button class="modal-close" onclick="closeMoodRoutineDateModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="moodRoutineDateModalBody">
+                <!-- 내용이 여기에 동적으로 채워집니다 -->
+            </div>
+        </div>
+    </div>
+
     <div id="footer-container"></div>
-    
+
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="common.js"></script>
     <script>
-        let currentDate = new Date();
-        let moodData = {};
-        
-        const moodEmojis = {
-            'very-happy': '😄',
-            'happy': '😊',
-            'neutral': '😐',
-            'sad': '😔',
-            'very-sad': '😢'
-        };
-        
-        const moodLabels = {
-            'very-happy': '매우 기쁨',
-            'happy': '기쁨',
-            'neutral': '보통',
-            'sad': '슬픔',
-            'very-sad': '매우 슬픔'
-        };
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            setupMoodSelectors();
+        let allMoodRoutineData = {}; // 날짜별 하루 기록 데이터: { "YYYY-MM-DD": {mood, gratitude, routine, timestamp, id}, ... }
+        let currentMoodRoutineCalendarDate = new Date();
+        let selectedDateForMoodRoutine = null; // 달력에서 선택된 날짜 (YYYY-MM-DD 형식)
+        let editingMoodRoutineDateKey = null; // 수정 중인 기록의 날짜 키 (YYYY-MM-DD 형식)
 
+        const moodEmojis = { // 오늘 기록 폼 및 모달에서 사용할 기분 옵션
+            "행복": "😄", "기쁨": "😊", "설렘": "🤩", "평온": "😌", "감사": "🙏",
+            "보통": "😐", "피곤": "😩", "슬픔": "😢", "화남": "😠", "불안": "😟"
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('authStateReady', async function(e) {
                 currentUser = e.detail.user;
-                moodData = {}; // ★★★ 로그인 상태 변경 시 기분 데이터 초기화
-                if (e.detail.user) {
-                    await loadMoodData(); 
+                allMoodRoutineData = {}; 
+                editingMoodRoutineDateKey = null;
+
+                if (currentUser) {
+                    await loadAllMoodRoutineRecords();
                 } else {
-                    const localData = loadFromLocalStorage('moodRoutineData');
-                    if (localData) {
-                        moodData = localData;
-                    } else {
-                        moodData = {};
-                    }
-                     showMessage("로그인 후 이용하시면 데이터가 안전하게 보관됩니다.", "info");
+                    allMoodRoutineData = loadFromLocalStorage('allMoodRoutineData') || {};
+                    // 비로그인 시 로컬 데이터가 없으면 빈 객체로 시작
+                    showMessage("로그인 후 이용하시면 기록이 안전하게 보관됩니다.", "info");
                 }
-                renderCalendarRoutine();
-                loadTodayData();
+                renderMoodRoutineCalendar();
+                renderTodayMoodOptions(); 
+            });
+
+            // 오늘 기록 폼의 기분 버튼 클릭 처리
+            document.getElementById('todayMoodOptions')?.addEventListener('click', function(e) {
+                if (e.target.classList.contains('mood-btn')) {
+                    const moodValue = e.target.dataset.mood;
+                    document.getElementById('todaySelectedMood').value = moodValue;
+                    // 선택된 버튼 스타일 업데이트
+                    this.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                }
             });
         });
-        
-        function updateDateDisplay() {
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                weekday: 'long'
-            };
-            document.getElementById('currentDateDisplay').textContent = 
-                currentDate.toLocaleDateString('ko-KR', options);
+
+        function renderTodayMoodOptions() {
+            const container = document.getElementById('todayMoodOptions');
+            if (!container) return;
+            container.innerHTML = Object.entries(moodEmojis).map(([text, emoji]) =>
+                `<button type="button" class="mood-btn" data-mood="${text}">${emoji} ${text}</button>`
+            ).join('');
         }
 
-        function renderCalendarRoutine() {
-            updateDateDisplay();
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
+        async function saveTodayMoodRoutine(event) {
+            event.preventDefault();
+            const mood = document.getElementById('todaySelectedMood').value;
+            const gratitude = document.getElementById('todayGratitude').value.trim();
+            const routine = document.getElementById('todayRoutine').value.trim();
+
+            if (!mood) {
+                showMessage('오늘의 기분을 선택해주세요.', 'error');
+                return;
+            }
+            if (!gratitude && !routine) { // 둘 다 비어있으면 저장 의미 없음
+                showMessage('감사한 일 또는 실천한 루틴 중 하나 이상을 입력해주세요.', 'error');
+                return;
+            }
+
+            const today = new Date();
+            const dateKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
             
-            const calendarGrid = document.getElementById('calendarGridRoutine');
-            calendarGrid.innerHTML = '';
+            await saveMoodRoutineForDate(dateKey, { mood, gratitude, routine }, true); // isTodayForm = true
             
-            const dayHeaderGrid = calendarGrid.previousElementSibling;
-            const dayHeaders = ['일', '월', '화', '수', '목', '금', '토'];
-            // 요일 헤더가 비어있을 때만 생성
-            if (dayHeaderGrid.innerHTML.trim() === '') {
+            // 오늘 기록 폼 초기화
+            document.getElementById('todaySelectedMood').value = '';
+            document.getElementById('todayGratitude').value = '';
+            document.getElementById('todayRoutine').value = '';
+            document.querySelectorAll('#todayMoodOptions .mood-btn.selected').forEach(btn => btn.classList.remove('selected'));
+        }
+
+        async function loadAllMoodRoutineRecords() {
+            if (currentUser) {
+                try {
+                    const snapshot = await db.collection(컬렉션_이름_맵.하루기분기록) // common.js의 컬렉션 이름 사용
+                                           .where('userId', '==', currentUser.uid)
+                                           .get();
+                    const firebaseData = {};
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        // dateString 필드가 Firestore에 저장되어 있다고 가정
+                        firebaseData[data.dateString] = { id: doc.id, ...data }; 
+                    });
+                    allMoodRoutineData = firebaseData;
+                    saveToLocalStorage('allMoodRoutineData', allMoodRoutineData); // 로컬 스토리지에도 동기화
+                } catch (error) {
+                    console.error("Firebase 하루 기록 로드 실패:", error);
+                    showMessage("하루 기록을 불러오는 데 실패했습니다.", "error");
+                    // Firebase 로드 실패 시 로컬 데이터 사용 (선택적)
+                    allMoodRoutineData = loadFromLocalStorage('allMoodRoutineData') || {};
+                }
+            } else {
+                // 비로그인 시 로컬 스토리지에서 로드 (authStateReady에서 이미 처리됨)
+                allMoodRoutineData = loadFromLocalStorage('allMoodRoutineData') || {};
+            }
+        }
+
+        function renderMoodRoutineCalendar() {
+            const year = currentMoodRoutineCalendarDate.getFullYear();
+            const month = currentMoodRoutineCalendarDate.getMonth();
+            document.getElementById('moodRoutineCalendarMonth').textContent = `${year}년 ${month + 1}월`;
+
+            const calendarGrid = document.getElementById('moodRoutineCalendarGrid');
+            calendarGrid.innerHTML = ''; // 기존 셀 초기화
+
+            const dayHeaderGrid = calendarGrid.previousElementSibling; // 요일 헤더 컨테이너
+            if (dayHeaderGrid && dayHeaderGrid.innerHTML.trim() === '') { // 비어있을 때만 생성
+                const dayHeaders = ['일', '월', '화', '수', '목', '금', '토'];
                 dayHeaders.forEach(day => {
                     const dayHeaderCell = document.createElement('div');
-                    dayHeaderCell.className = 'calendar-day-name-common';
+                    dayHeaderCell.className = 'calendar-day-name-common'; // 공통 스타일 사용
                     dayHeaderCell.textContent = day;
                     dayHeaderGrid.appendChild(dayHeaderCell);
                 });
             }
-            
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const startDate = new Date(firstDay);
-            startDate.setDate(startDate.getDate() - firstDay.getDay());
-            
+
+            const firstDayOfMonth = new Date(year, month, 1);
+            const startDate = new Date(firstDayOfMonth);
+            startDate.setDate(startDate.getDate() - firstDayOfMonth.getDay()); // 달력 시작일 계산
             const today = new Date();
 
-            for (let i = 0; i < 42; i++) {
+            for (let i = 0; i < 42; i++) { // 6주 * 7일 = 42칸
                 const cellDate = new Date(startDate);
                 cellDate.setDate(startDate.getDate() + i);
-                
+                const dateKey = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, '0')}-${String(cellDate.getDate()).padStart(2, '0')}`;
+
                 const dayCell = document.createElement('div');
-                dayCell.className = 'calendar-day-cell-common calendar-day'; 
-                
+                dayCell.className = 'calendar-day-cell-common calendar-day'; // 공통 스타일 사용
+
                 if (cellDate.getMonth() !== month) {
                     dayCell.classList.add('other-month');
                 } else {
-                    dayCell.addEventListener('click', () => {                        
-                        currentDate = new Date(cellDate);
-                        renderCalendarRoutine();
-                        loadTodayData();
+                    // 해당 날짜에 기록이 있는지 확인
+                    if (allMoodRoutineData[dateKey]) {
+                        dayCell.classList.add('has-record'); // 기록 있음 표시 (styles.css의 ::after 사용)
+                        // 선택적으로 기분 이모지 표시
+                        const moodEmoji = moodEmojis[allMoodRoutineData[dateKey].mood];
+                        if (moodEmoji) {
+                            const moodIndicator = document.createElement('span');
+                            moodIndicator.textContent = moodEmoji;
+                            moodIndicator.style.fontSize = '1.2em'; // 아이콘 크기
+                            moodIndicator.style.position = 'absolute';
+                            moodIndicator.style.top = '5px'; // 위치 조정
+                            moodIndicator.style.right = '5px'; // 위치 조정
+                            dayCell.appendChild(moodIndicator);
+                        }
+                    }
+                    // 다른 달이 아닌 경우에만 클릭 이벤트 추가
+                    dayCell.addEventListener('click', () => {
+                        const todayForCompare = new Date();
+                        todayForCompare.setHours(0,0,0,0); // 시간 정보 제거
+                        const clickedDateForCompare = new Date(cellDate);
+                        clickedDateForCompare.setHours(0,0,0,0); // 시간 정보 제거
+
+                        if (clickedDateForCompare > todayForCompare) {
+                            showMessage('미래를 오늘 기록할 순 없어요 😊', 'info');
+                            return;
+                        }
+                        openMoodRoutineModalForDate(dateKey, cellDate)
                     });
                 }
 
-                if (cellDate.toDateString() === today.toDateString()) {
+                // 오늘 날짜 표시
+                if (cellDate.getFullYear() === today.getFullYear() &&
+                    cellDate.getMonth() === today.getMonth() &&
+                    cellDate.getDate() === today.getDate()) {
                     dayCell.classList.add('today');
-                }
-                if (cellDate.toDateString() === currentDate.toDateString()) {
-                    dayCell.classList.add('selected-day'); 
-                }
-
-                const dateKey = formatDate(cellDate);
-                const dayData = moodData[dateKey];
-                if (dayData && (Object.keys(dayData.moods || {}).length > 0 || (dayData.gratitude && dayData.gratitude.some(g => g)) || dayData.gratitudeNote)) {
-                    dayCell.classList.add('has-record');
                 }
 
                 const dayNumber = document.createElement('div');
                 dayNumber.className = 'day-number';
                 dayNumber.textContent = cellDate.getDate();
                 dayCell.appendChild(dayNumber);
-                
                 calendarGrid.appendChild(dayCell);
             }
         }
-        
-        function changeDate(direction) {
-            saveTodayData();
-            currentDate.setDate(currentDate.getDate() + direction);
-            renderCalendarRoutine();
-            loadTodayData();
-        }
-        
-        function setupMoodSelectors() {
-            document.querySelectorAll('.mood-emoji').forEach(emoji => {
-                emoji.addEventListener('click', function() {
-                    const timeSection = this.closest('.mood-selector');
-                    const time = timeSection.dataset.time;
-                    
-                    timeSection.querySelectorAll('.mood-emoji').forEach(e => 
-                        e.classList.remove('selected'));
-                    
-                    this.classList.add('selected');
-                    saveTodayData();
-                });
-            });
-            
-            document.querySelectorAll('.thought-input, .gratitude-input, .gratitude-note').forEach(input => {
-                input.addEventListener('input', () => {
-                    clearTimeout(input.saveTimer);
-                    input.saveTimer = setTimeout(saveTodayData, 1000);
-                });
-            });
-        }
-        
-        async function loadMoodData() {
-            // moodData는 authStateReady에서 이미 초기화됨
-            if (currentUser) {
-                try {
-                    const snapshot = await db.collection('moodRoutines')
-                                        .where('userId', '==', currentUser.uid)
-                                        .get();
-                    const firebaseData = {};
-                    snapshot.forEach(doc => {
-                        firebaseData[doc.id] = doc.data();
-                    });
-                    moodData = firebaseData; // 로컬 데이터와 병합하지 않고 Firebase 데이터만 사용
-                    saveToLocalStorage('moodRoutineData', moodData);
-                } catch (error) {
-                    console.error("Firebase moodRoutines 로드 실패:", error);
-                    moodData = {}; // 오류 발생 시 빈 데이터로 시작
-                }
-            } else {
-                // 비로그인 시 로컬 스토리지 사용
-                const localData = loadFromLocalStorage('moodRoutineData');
-                moodData = localData || {};
-            }
-        }
-        
-        function saveTodayData() {
-            const dateKey = formatDate(currentDate);
-            const todayData = {
-                date: dateKey,
-                moods: {},
-                thoughts: {},
-                gratitude: [],
-                gratitudeNote: ''
-            };
-            
-            ['morning', 'afternoon', 'evening'].forEach(time => {
-                const selectedMood = document.querySelector(`.mood-selector[data-time="${time}"] .mood-emoji.selected`);
-                if (selectedMood) {
-                    todayData.moods[time] = selectedMood.dataset.mood;
-                }
-                
-                const thoughtInput = document.querySelector(`.thought-input[data-time="${time}"]`);
-                if (thoughtInput && thoughtInput.value.trim()) {
-                    todayData.thoughts[time] = thoughtInput.value.trim();
-                }
-            });
-            
-            document.querySelectorAll('.gratitude-input').forEach((input, index) => {
-                if (input.value.trim()) {
-                    todayData.gratitude[index] = input.value.trim();
-                }
-            });
-            
-            const gratitudeNote = document.querySelector('.gratitude-note');
-            if (gratitudeNote && gratitudeNote.value.trim()) {
-                todayData.gratitudeNote = gratitudeNote.value.trim();
-            }
-            
-            moodData[dateKey] = todayData;
-            saveToLocalStorage('moodRoutineData', moodData);
-            if (currentUser && (Object.keys(todayData.moods).length > 0 || (Array.isArray(todayData.gratitude) && todayData.gratitude.some(g => g)) || todayData.gratitudeNote)) {
-                 saveToFirestore('moodRoutines', dateKey, todayData);
-            }
-        }
-        
-        function loadTodayData() {
-            const dateKey = formatDate(currentDate);
-            const todayData = moodData[dateKey];
-            
-            document.querySelectorAll('.mood-emoji').forEach(emoji => 
-                emoji.classList.remove('selected'));
-            document.querySelectorAll('.thought-input').forEach(input => input.value = '');
-            document.querySelectorAll('.gratitude-input').forEach(input => input.value = '');
-            document.querySelector('.gratitude-note').value = '';
-            
-            if (todayData) {
-                Object.entries(todayData.moods || {}).forEach(([time, mood]) => {
-                    const moodEmoji = document.querySelector(
-                        `.mood-selector[data-time="${time}"] .mood-emoji[data-mood="${mood}"]`
-                    );
-                    if (moodEmoji) {
-                        moodEmoji.classList.add('selected');
-                    }
-                });
-                
-                Object.entries(todayData.thoughts || {}).forEach(([time, thought]) => {
-                    const thoughtInput = document.querySelector(`.thought-input[data-time="${time}"]`);
-                    if (thoughtInput) {
-                        thoughtInput.value = thought;
-                    }
-                });
-                
-                (todayData.gratitude || []).forEach((gratitude, index) => {
-                    const gratitudeInput = document.querySelector(`.gratitude-input[data-index="${index}"]`);
-                    if (gratitudeInput) {
-                        gratitudeInput.value = gratitude;
-                    }
-                });
-                
-                if (todayData.gratitudeNote) {
-                    document.querySelector('.gratitude-note').value = todayData.gratitudeNote;
-                }
-                showMoodSummary(todayData);
-            } else {
-                document.getElementById('summaryCard').style.display = 'none';
-            }
-        }
-        
-        async function saveMoodData() {
-            saveTodayData();
-            
-            const dateKey = formatDate(currentDate);
-            const todayData = moodData[dateKey];
-            
-            if (!todayData || Object.keys(todayData.moods || {}).length === 0) {
-                showMessage('최소 하나의 시간대 기분을 선택해주세요.', 'error');
-                return;
-            }
-            
-            if (currentUser) {
-                await saveToFirestore('moodRoutines', dateKey, todayData);
-            }
-            showMoodSummary(todayData);
-            showMessage('오늘의 기분이 저장되었습니다.', 'success');
-            renderCalendarRoutine();
-        }
-        
-        function showMoodSummary(data) {
-            const summaryCard = document.getElementById('summaryCard');
-            const moodSummary = document.getElementById('moodSummary');
-            
-            moodSummary.innerHTML = '';
-            
-            ['morning', 'afternoon', 'evening'].forEach(time => {
-                const mood = data.moods[time];
-                if (mood) {
-                    const timeLabels = {
-                        morning: '아침',
-                        afternoon: '점심',
-                        evening: '저녁'
-                    };
-                    
-                    const summaryItem = document.createElement('div');
-                    summaryItem.className = 'mood-summary-item';
-                    summaryItem.innerHTML = `
-                        <div class="mood-summary-emoji">${moodEmojis[mood]}</div>
-                        <div class="mood-summary-label">${timeLabels[time]}<br>${moodLabels[mood]}</div>
-                    `;
-                    moodSummary.appendChild(summaryItem);
-                }
-            });
-            
-            summaryCard.style.display = 'block';
-        }
-        
-        function formatDate(date) {
-            return date.toISOString().split('T')[0];
+
+        function changeMoodRoutineCalendarMonth(offset) {
+            currentMoodRoutineCalendarDate.setMonth(currentMoodRoutineCalendarDate.getMonth() + offset);
+            renderMoodRoutineCalendar();
         }
 
-        function goToToday() {
-            saveTodayData();
-            currentDate = new Date();
-            renderCalendarRoutine();
-            loadTodayData();
+        function openMoodRoutineModalForDate(dateKey, cellDate) {
+            selectedDateForMoodRoutine = dateKey; // 모달에서 사용할 날짜 키 저장
+            editingMoodRoutineDateKey = null; // 새로 열 때 수정 상태 초기화
+
+            const modal = document.getElementById('moodRoutineDateModal');
+            const modalTitle = document.getElementById('moodRoutineDateModalTitle');
+            const modalBody = document.getElementById('moodRoutineDateModalBody');
+
+            if (!modal || !modalTitle || !modalBody) {
+                showMessage("기록 창을 여는 데 필요한 요소를 찾을 수 없습니다.", "error");
+                return;
+            }
+
+            modalTitle.textContent = `${cellDate.getFullYear()}년 ${cellDate.getMonth() + 1}월 ${cellDate.getDate()}일 기록`;
+            const record = allMoodRoutineData[dateKey];
+
+            if (record) { // 기록이 있는 경우 (수정 모드)
+                editingMoodRoutineDateKey = dateKey; // 수정 중인 날짜 키 설정
+                modalBody.innerHTML = `
+                    <div class="form-group">
+                        <label>기분</label>
+                        <div class="mood-options" id="modalMoodOptions">
+                            ${Object.entries(moodEmojis).map(([text, emoji]) =>
+                                `<button type="button" class="mood-btn ${record.mood === text ? 'selected' : ''}" data-mood="${text}">${emoji} ${text}</button>`
+                            ).join('')}
+                        </div>
+                        <input type="hidden" id="modalSelectedMood" value="${record.mood || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label for="modalGratitude">감사했던 일</label>
+                        <textarea id="modalGratitude" class="form-control" rows="3">${record.gratitude || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalRoutine">실천한 루틴</label>
+                        <textarea id="modalRoutine" class="form-control" rows="3">${record.routine || ''}</textarea>
+                    </div>
+                    <div class="mt-3" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                        <button class="btn-primary" onclick="handleSaveFromModal()"><i class="fas fa-save"></i> 수정 완료</button>
+                        <button class="btn-outline btn-danger" onclick="deleteMoodRoutineForDate('${dateKey}')"><i class="fas fa-trash"></i> 삭제</button>
+                    </div>
+                `;
+            } else { // 기록이 없는 경우 (새 입력 모드)
+                modalBody.innerHTML = `
+                    <div class="form-group">
+                        <label>기분</label>
+                        <div class="mood-options" id="modalMoodOptions">
+                             ${Object.entries(moodEmojis).map(([text, emoji]) =>
+                                `<button type="button" class="mood-btn" data-mood="${text}">${emoji} ${text}</button>`
+                            ).join('')}
+                        </div>
+                        <input type="hidden" id="modalSelectedMood">
+                    </div>
+                    <div class="form-group">
+                        <label for="modalGratitude">감사했던 일</label>
+                        <textarea id="modalGratitude" class="form-control" placeholder="오늘 감사했던 일을 적어보세요." rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalRoutine">실천한 루틴</label>
+                        <textarea id="modalRoutine" class="form-control" placeholder="오늘 실천한 루틴을 적어보세요." rows="3"></textarea>
+                    </div>
+                    <div class="mt-3" style="display: flex; justify-content: flex-end;">
+                        <button class="btn-primary" onclick="handleSaveFromModal()"><i class="fas fa-save"></i> 저장하기</button>
+                    </div>
+                `;
+            }
+            
+            // 모달 내 기분 버튼 클릭 처리
+            modalBody.querySelector('#modalMoodOptions')?.addEventListener('click', function(e) {
+                if (e.target.classList.contains('mood-btn')) {
+                    const moodValue = e.target.dataset.mood;
+                    modalBody.querySelector('#modalSelectedMood').value = moodValue;
+                    // 선택된 버튼 스타일 업데이트
+                    this.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                }
+            });
+
+            modal.style.display = 'block';
         }
+
+        function closeMoodRoutineDateModal() {
+            const modal = document.getElementById('moodRoutineDateModal');
+            if (modal) modal.style.display = 'none';
+            selectedDateForMoodRoutine = null; // 선택된 날짜 초기화
+            editingMoodRoutineDateKey = null; // 수정 상태 초기화
+        }
+
+        async function handleSaveFromModal() {
+            const mood = document.getElementById('modalSelectedMood').value;
+            const gratitude = document.getElementById('modalGratitude').value.trim();
+            const routine = document.getElementById('modalRoutine').value.trim();
+            // 저장할 날짜 키는 수정 모드일 경우 editingMoodRoutineDateKey, 새 입력일 경우 selectedDateForMoodRoutine
+            const dateKeyToSave = editingMoodRoutineDateKey || selectedDateForMoodRoutine;
+
+            if (!dateKeyToSave) {
+                showMessage('저장할 날짜 정보가 없습니다.', 'error');
+                return;
+            }
+            if (!mood) {
+                showMessage('기분을 선택해주세요.', 'error');
+                return;
+            }
+             if (!gratitude && !routine) { // 둘 다 비어있으면 저장 의미 없음
+                showMessage('감사한 일 또는 실천한 루틴 중 하나 이상을 입력해주세요.', 'error');
+                return;
+            }
+
+            await saveMoodRoutineForDate(dateKeyToSave, { mood, gratitude, routine });
+        }
+
+        async function saveMoodRoutineForDate(dateKey, data, isTodayForm = false) {
+            const recordToSave = {
+                ...data, // mood, gratitude, routine
+                dateString: dateKey, // YYYY-MM-DD 형식의 날짜 문자열
+                timestamp: new Date().toISOString() // 저장/수정 시점의 타임스탬프
+            };
+
+            // 메모리 내 데이터 업데이트 (기존 ID가 있다면 유지하며 업데이트)
+            allMoodRoutineData[dateKey] = { ...allMoodRoutineData[dateKey], ...recordToSave }; 
+            
+            let firestoreId = allMoodRoutineData[dateKey]?.id; // 기존 Firestore 문서 ID가 있다면 사용
+
+            if (currentUser) {
+                try {
+                    if (!firestoreId) { // 새 기록이거나 로컬 기록을 처음 Firestore에 저장하는 경우
+                        const docRef = db.collection(컬렉션_이름_맵.하루기분기록).doc(); // 새 문서 ID 생성
+                        firestoreId = docRef.id;
+                        allMoodRoutineData[dateKey].id = firestoreId; // 로컬 데이터에도 Firestore ID 저장
+                    }
+                    // Firestore에 저장 (문서 ID를 사용하여 set 또는 update)
+                    await db.collection(컬렉션_이름_맵.하루기분기록).doc(firestoreId).set({
+                        ...recordToSave,
+                        userId: currentUser.uid // 사용자 ID 추가
+                    }, { merge: true }); // merge: true 옵션으로 기존 필드 유지하며 업데이트
+                    showMessage('기록이 저장되었습니다.', 'success');
+                } catch (error) {
+                    console.error("Firebase 하루 기록 저장 실패:", error);
+                    showMessage('기록 저장에 실패했습니다. (서버 오류)', 'error');
+                    // 실패 시 로컬 데이터는 이미 업데이트된 상태이므로, 롤백은 고려하지 않음 (또는 필요시 구현)
+                }
+            } else {
+                // 비로그인 시 로컬 전용 ID 부여 (이미 있다면 유지)
+                if (!allMoodRoutineData[dateKey].id) { 
+                    allMoodRoutineData[dateKey].id = `local_${Date.now()}`;
+                }
+                showMessage('기록이 로컬에 저장되었습니다. 로그인하면 동기화됩니다.', 'info');
+            }
+            
+            saveToLocalStorage('allMoodRoutineData', allMoodRoutineData); // 로컬 스토리지에도 저장
+            renderMoodRoutineCalendar(); // 달력 다시 그리기
+            if (!isTodayForm) { // "오늘의 기록" 폼에서 저장한 게 아니면 모달 닫기
+                closeMoodRoutineDateModal();
+            }
+        }
+
+        async function deleteMoodRoutineForDate(dateKey) {
+            if (confirm(`${dateKey}의 기록을 삭제하시겠습니까?`)) {
+                const recordToDelete = allMoodRoutineData[dateKey];
+                delete allMoodRoutineData[dateKey]; // 메모리에서 삭제
+                saveToLocalStorage('allMoodRoutineData', allMoodRoutineData); // 로컬 스토리지 업데이트
+
+                if (currentUser && recordToDelete && recordToDelete.id && !recordToDelete.id.startsWith('local_')) {
+                    // 로그인 상태이고, Firestore ID가 있는 경우에만 Firestore에서 삭제
+                    try {
+                        await db.collection(컬렉션_이름_맵.하루기분기록).doc(recordToDelete.id).delete();
+                    } catch (error) {
+                        console.error('Firebase 하루 기록 삭제 실패:', error);
+                        // 실패 시 로컬 데이터 복구 (선택적)
+                        // allMoodRoutineData[dateKey] = recordToDelete;
+                        // saveToLocalStorage('allMoodRoutineData', allMoodRoutineData);
+                        // renderMoodRoutineCalendar(); // 복구 후 달력 다시 그리기
+                        showMessage('서버에서 기록 삭제 중 오류가 발생했습니다.', 'error');
+                        return; // 오류 발생 시 추가 진행 중단
+                    }
+                }
+                renderMoodRoutineCalendar(); // 달력 다시 그리기
+                closeMoodRoutineDateModal(); // 모달 닫기
+                showMessage('기록이 삭제되었습니다.', 'success');
+            }
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        window.addEventListener('click', function(event) {
+            const moodModal = document.getElementById('moodRoutineDateModal');
+            if (event.target === moodModal) {
+                closeMoodRoutineDateModal();
+            }
+        });
+
     </script>
 </body>
 </html>

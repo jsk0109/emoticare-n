@@ -565,59 +565,88 @@
             `).join('');
         }
 
-        function renderLetterCalendar() {
+                function renderLetterCalendar() {
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
             document.getElementById('letterCalendarMonth').textContent = `${year}년 ${month + 1}월`;
 
             const calendarGrid = document.getElementById('letterCalendarGrid');
-            calendarGrid.innerHTML = '';
+            calendarGrid.innerHTML = ''; // 기존 셀 초기화
 
-            const dayHeaderGrid = calendarGrid.previousElementSibling;
-            const dayHeaders = ['일', '월', '화', '수', '목', '금', '토'];
-            if (dayHeaderGrid.innerHTML.trim() === '') {
+            // 요일 헤더 생성 (한 번만 실행되도록 개선)
+            const dayHeaderGrid = calendarGrid.previousElementSibling; // .calendar-grid-common 바로 위에 있는 형제 요소
+            if (dayHeaderGrid && dayHeaderGrid.classList.contains('calendar-grid-common') && dayHeaderGrid.innerHTML.trim() === '') {
+                const dayHeaders = ['일', '월', '화', '수', '목', '금', '토'];
                 dayHeaders.forEach(day => {
                     const dayHeaderCell = document.createElement('div');
                     dayHeaderCell.className = 'calendar-day-name-common';
                     dayHeaderCell.textContent = day;
                     dayHeaderGrid.appendChild(dayHeaderCell);
                 });
+            } else if (!dayHeaderGrid || !dayHeaderGrid.classList.contains('calendar-grid-common')) {
+                // 만약 previousElementSibling이 예상한 요일 헤더 컨테이너가 아니라면,
+                // HTML 구조를 확인하거나, 요일 헤더를 letterCalendarGrid와는 별개의 ID로 관리하는 것을 고려해야 합니다.
+                // 임시로, 요일 헤더가 없는 경우를 대비해 calendarGrid 바로 위에 새로 만들거나,
+                // 혹은 HTML 구조상 요일 헤더를 담는 명시적인 컨테이너 ID를 사용해야 합니다.
+                // 여기서는 요일 헤더가 이미 HTML에 별도로 존재하고, calendarGrid.previousElementSibling으로 접근 가능하다고 가정합니다.
+                // 만약 그렇지 않다면, 이 부분은 HTML 구조에 맞게 수정 필요.
+                // 예를 들어, 요일 헤더를 위한 <div id="letterCalendarDayHeaders" class="calendar-grid-common"></div> 가 있다면,
+                // const dayHeaderGrid = document.getElementById('letterCalendarDayHeaders'); 로 접근.
+                // 현재 HTML 구조에서는 calendarGrid의 previousElementSibling이 요일 헤더를 담는 div가 아닐 수 있습니다.
+                // 이 부분은 HTML 구조를 다시 확인해야 합니다.
+                // 임시 방편: 요일 헤더를 위한 컨테이너가 없다면, calendarGrid 바로 위에 동적으로 생성 (권장하지 않음)
+                // 또는, HTML에 명시적으로 <div id="letterCalendarDayHeadersContainer" class="calendar-grid-common"></div> 와 같이 만들고 사용.
+                // 현재 코드에서는 calendarGrid.previousElementSibling이 요일 헤더를 담는 .calendar-grid-common 이라고 가정하고 진행합니다.
+                // 하지만 HTML을 보면, calendarGrid 위에 바로 요일 헤더를 위한 .calendar-grid-common이 없습니다.
+                // 따라서, 요일 헤더는 calendarGrid와는 별도로 관리되거나, HTML 구조 수정이 필요합니다.
+                // 여기서는 요일 헤더가 이미 styles.css의 .calendar-day-name-common 에 의해 스타일링되고,
+                // HTML에 <div class="calendar-grid-common"> (요일 헤더용) 와 <div id="letterCalendarGrid" class="calendar-grid-common"> (날짜용)
+                // 이렇게 두 개가 연달아 있다고 가정하고, 첫 번째 것을 previousElementSibling으로 찾으려 합니다.
+                // HTML 구조를 보니, <div class="calendar-grid-common"></div> (요일 헤더용 빈 div)가 있고,
+                // 그 다음에 <div class="calendar-grid-common" id="letterCalendarGrid"></div> (날짜용)가 있습니다.
+                // 따라서 previousElementSibling 접근은 올바릅니다.
             }
+
 
             const firstDayOfMonth = new Date(year, month, 1);
             const startDate = new Date(firstDayOfMonth);
-            startDate.setDate(startDate.getDate() - firstDayOfMonth.getDay()); 
+            startDate.setDate(startDate.getDate() - firstDayOfMonth.getDay());
 
             const today = new Date();
 
             for (let i = 0; i < 42; i++) {
                 const cellDate = new Date(startDate);
                 cellDate.setDate(startDate.getDate() + i);
-                
+
                 const dataAccessKey = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, '0')}-${String(cellDate.getDate()).padStart(2, '0')}`;
 
                 const dayCell = document.createElement('div');
-                dayCell.className = 'calendar-day-cell-common calendar-day'; 
+                dayCell.className = 'calendar-day-cell-common calendar-day';
 
                 if (cellDate.getMonth() !== month) {
                     dayCell.classList.add('other-month');
                 } else {
-                    // ★★★ 디버깅 로그 추가 (이벤트 리스너 추가 직전) ★★★
-                    console.log(`Attaching click listener to day: ${dataAccessKey}`);
                     if (allLettersData[dataAccessKey] && allLettersData[dataAccessKey].length > 0) {
                         dayCell.classList.add('has-record');
-                        dayCell.innerHTML += `<span style="position:absolute; bottom:5px; right:5px; font-size:1.2em;">💌</span>`;
+                        // 'has-record' 클래스에 대한 ::after 가상 요소 스타일이 styles.css에 정의되어 있으므로,
+                        // JavaScript로 직접 💌 아이콘을 추가할 필요가 없습니다.
+                        // 만약 JavaScript로 아이콘을 추가하고 싶다면 아래 코드를 사용합니다.
+    
+                        const recordIndicator = document.createElement('span');
+                        recordIndicator.style.position = 'absolute';
+                        recordIndicator.style.bottom = '5px';
+                        recordIndicator.style.right = '5px';
+                        recordIndicator.style.fontSize = '1.2em'; // styles.css의 .calendar-day.has-record span 과 일치시키거나 제거
+                        recordIndicator.textContent = '💌';
+                        dayCell.appendChild(recordIndicator);
+                        
                         dayCell.addEventListener('click', () => {
-                            // ★★★ 디버깅 로그 추가 (이벤트 발생 시) ★★★
-                            console.log(`Calendar day (WITH records) clicked: ${dataAccessKey}, cellDate: ${cellDate.toDateString()}`);
                             openLettersForDateModal(dataAccessKey, cellDate);
                         });
                     } else {
                          dayCell.addEventListener('click', () => {
-                            // ★★★ 디버깅 로그 추가 (이벤트 발생 시) ★★★
-                            console.log(`Calendar day (NO records) clicked: ${dataAccessKey}, cellDate: ${cellDate.toDateString()}`);
                             openLettersForDateModal(dataAccessKey, cellDate);
-                         }); 
+                         });
                     }
                 }
                  if (cellDate.getFullYear() === today.getFullYear() &&
@@ -634,10 +663,7 @@
             }
         }
 
-        function changeLetterCalendarMonth(direction) {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
-            renderLetterCalendar();
-        }
+
         
         function formatLetterDate(dateString) { 
             const date = new Date(dateString); 

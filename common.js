@@ -415,6 +415,7 @@ async function logout() {
     localStorage.removeItem('emotionData'); // 색상 감정 일기 데이터
     localStorage.removeItem('allEmotionLettersData'); // 감정 편지 데이터
     localStorage.removeItem('savedHealingCards'); // 힐링 카드 데이터
+    localStorage.removeItem('allMoodRoutineData'); // 하루 기록 데이터
     localStorage.removeItem('savedReflections'); // 성찰 질문 데이터
     showMessage("로그아웃되었습니다.", "success");
   } catch (error) {
@@ -432,8 +433,13 @@ function closeModal(element) {
 // 모든 모달 닫기
 function closeAllModals() {
   const modals = document.querySelectorAll(".modal")
-  modals.forEach((modal) => modal.remove())
-  // document.body.style.overflow = 'auto'; // 스크롤 복원
+  modals.forEach((modal) => {
+    if (modal.id === "lettersForDateModal" || modal.id === "letterModal") {
+      modal.style.display = "none"; // 페이지에 원래 있는 편지 관련 모달은 숨기기만 함
+    } else {
+      modal.remove(); // 동적으로 생성된 로그인/회원가입/약관 모달 등은 제거
+    }
+  });
 }
 
 // 메시지 표시

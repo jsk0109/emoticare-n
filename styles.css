@@ -714,8 +714,11 @@ body {
     font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;
   }
 
-  .hero-buttons,
-  .cta-buttons {
+  .hero-buttons {
+    flex-direction: row; /* 히어로 버튼은 가로로 배열 */
+    justify-content: center; /* 버튼들을 중앙 정렬 (선택 사항) */
+  }
+  .cta-buttons { /* CTA 버튼은 기존대로 세로 유지 (필요시 수정) */
     flex-direction: column;
     align-items: center;
   }
