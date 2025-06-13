@@ -31,14 +31,20 @@ const 컬렉션_이름_맵 = {
 
 // 현재 사용자
 let currentUser = null;
+let authStateResolved = false; // Flag to track if onAuthStateChanged has run at least once
 
 // DOM 로드 완료 시 실행
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM fully loaded and parsed. Initializing common scripts.");
   const mainElement = document.querySelector('main');
+  const headerContainer = document.getElementById("header-container");
 
   if (mainElement) {
     mainElement.style.opacity = '0'; // 메인 콘텐츠 초기에 숨기기
+    mainElement.style.transition = 'opacity 0.3s ease-in-out'; // 부드러운 전환 효과 추가
+  }
+  if (headerContainer) {
+    headerContainer.style.opacity = '0'; // 헤더 컨테이너 초기에 숨기기
   }
 
   // 헤더와 푸터를 병렬로 로드하고 모두 완료될 때까지 기다림
@@ -46,9 +52,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   const footerPromise = loadFooter();
 
   await Promise.all([headerPromise, footerPromise]);
+  console.log("Header and Footer HTML loaded.");
 
-  setupAuth(); // 인증 설정 (헤더/푸터 로드 후 또는 병행 가능)
+  setupAuth(); // 인증 설정, onAuthStateChanged 콜백 내에서 authStateResolved = true 설정
 
+  // authStateReady 이벤트 또는 authStateResolved 플래그를 기다림
+  const waitForAuth = new Promise(resolve => {
+    if (authStateResolved) {
+      console.log("Auth state was already resolved.");
+      resolve();
+    } else {
+      document.addEventListener('authStateReady', function onAuthReady() {
+        console.log("authStateReady event received in DOMContentLoaded listener.");
+        // document.removeEventListener('authStateReady', onAuthReady); // once: true로 대체 가능
+        resolve();
+      }, { once: true }); // 이벤트 리스너가 한 번만 실행되도록 설정
+    }
+  });
+
+  await waitForAuth;
+  console.log("Auth state confirmed resolved. Making main content visible.");
+
+  if (headerContainer) { // 헤더 컨테이너 부드럽게 표시
+    requestAnimationFrame(() => {
+        headerContainer.style.opacity = '1';
+    });
+  }
   if (mainElement) {
     requestAnimationFrame(() => { // 브라우저가 다음 프레임을 그릴 준비가 되면 실행
         mainElement.style.opacity = '1'; // 메인 콘텐츠 부드럽게 표시
@@ -78,7 +107,6 @@ async function loadHeader() {
     // Now that header HTML is in the DOM, setup its components
     setupMobileMenu();
     setActiveNavItem();
-    updateAuthUI(currentUser); // Update based on current auth state (might be null initially)
     console.log("Header loaded and initialized successfully.");
 
   } catch (error) {
@@ -149,10 +177,13 @@ function setActiveNavItem() {
 // 인증 설정
 function setupAuth() {
   auth.onAuthStateChanged((user) => {
-    currentUser = user
-    updateAuthUI(user)
+    currentUser = user;
+    console.log("onAuthStateChanged triggered. User:", currentUser ? currentUser.uid : "null");
+    updateAuthUI(user);
+    authStateResolved = true; // 인증 상태가 확인되었음을 표시
     // 로그인 상태 변경 시 커스텀 이벤트 발생
     const event = new CustomEvent('authStateReady', { detail: { user: currentUser } });
+    console.log("Dispatching authStateReady event.");
     document.dispatchEvent(event);
   });
 }
@@ -160,7 +191,12 @@ function setupAuth() {
 // 인증 UI 업데이트
 function updateAuthUI(user) {
   const loginButtonContainer = document.getElementById("loginButtonContainer")
-  if (!loginButtonContainer) return;
+  if (!loginButtonContainer) {
+    // 헤더가 아직 완전히 로드되지 않았을 수 있으므로, 이 경우 경고를 남기고 반환합니다.
+    // DOMContentLoaded 내에서 await Promise.all로 헤더 로드를 기다리므로, 이 경우는 거의 발생하지 않아야 합니다.
+    console.warn("updateAuthUI: loginButtonContainer not found. Header might not be fully initialized.");
+    return;
+  }
 
   if (user) {
     loginButtonContainer.innerHTML = `
