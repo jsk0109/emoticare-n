@@ -558,7 +558,10 @@ function showTerms() {
 
 // 유틸리티 함수들
 function formatDate(date) {
-  return date.toISOString().split("T")[0]
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function getCurrentDate() {

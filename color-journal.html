@@ -411,7 +411,7 @@
         <section class="page-content">
 
         
-        <section class="page-content">
+        <section class="page-content" style="padding-top: 3rem;">
             <div class="journal-container">
                 <div id="monthViewContainer">
                     <div class="calendar-header">
@@ -481,9 +481,9 @@
                     </div>
                 </div>
 
-                <div style="text-align: center; margin-top: 2rem;">
+                <div style="text-align: center; margin-top: 4rem; margin-bottom: 4.5rem;">
                     <button id="toggleViewButton" class="btn-outline" onclick="toggleCalendarView()">
-                        올해의 색깔들 보기
+                        월별 감정지도 픽셀뷰
                     </button>
                 </div>
             </div>
@@ -833,7 +833,7 @@
             intensitySlider.addEventListener('input', updateSliderBackground);
         }
         
-        async function saveEmotion() {
+                async function saveEmotion() {
             if (!currentUser) {
                 showMessage("로그인 후 이용하시면 데이터가 안전하게 보관됩니다.", "info");
                 showLoginModal();
@@ -856,25 +856,39 @@
             const emotionRecord = {
                 type: emotionType,
                 note: note,
-                date: dateKey,
+                date: dateKey, // Firestore에는 이 dateKey가 문서 ID로 사용됨
                 intensity: intensity, 
                 timestamp: new Date().toISOString()
+                // userId는 saveToFirestore 함수 내부에서 추가됨
             };
             
+            // 1. 로컬 메모리 및 로컬 스토리지 업데이트
             emotionData[dateKey] = emotionRecord;
             saveToLocalStorage('emotionData', emotionData);
             
-            saveToFirestore(컬렉션_이름_맵.색상일기, dateKey, emotionRecord); // saveToFirestore 내부에서 currentUser 체크함
+            // 2. Firestore에 저장 시도
+            // saveToFirestore는 common.js에 정의되어 있으며, 내부적으로 currentUser.uid를 사용하여 userId 필드를 추가하고 저장합니다.
+            // 또한, 성공/실패 메시지를 내부적으로 처리합니다.
+            const success = await saveToFirestore(컬렉션_이름_맵.색상일기, dateKey, emotionRecord); 
             
-            closeEmotionModal();
-            if (calendarViewMode === 'month') {
-                renderCalendar();
-                updateStats();
+            if (success) {
+                // 3. Firestore 저장 성공 시 UI 업데이트
+                closeEmotionModal();
+                if (calendarViewMode === 'month') {
+                    renderCalendar();
+                    updateStats();
+                } else {
+                    renderYearInPixels(currentPixelYear);
+                }
+                // 성공 메시지는 saveToFirestore에서 이미 표시하므로 여기서는 중복 호출 안 함
             } else {
-                renderYearInPixels(currentPixelYear);
+                // Firestore 저장 실패 시의 처리는 saveToFirestore 함수 내에서 이미 showMessage로 이루어집니다.
+                // 필요하다면 여기서 추가적인 UI 롤백 로직을 넣을 수 있으나,
+                // 현재는 로컬 데이터는 이미 업데이트된 상태로 둡니다.
+                // (사용자가 다시 시도하거나, 다음 번 앱 실행 시 동기화될 수 있도록)
             }
-            showMessage('감정이 기록되었습니다.', 'success');
         }
+
         
         async function deleteEmotion() {
             if (!selectedDate) return;
@@ -1124,7 +1138,10 @@
         }
         
         function formatDate(date) {
-            return date.toISOString().split('T')[0];
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
         
         function lightenHexColor(hex, factor) {
