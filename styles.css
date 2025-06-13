@@ -99,7 +99,7 @@ body {
   display: flex; /* 내부 버튼 정렬을 위해 */
   justify-content: flex-end; /* 버튼들을 오른쪽으로 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
-  gap: 1rem; /* 버튼 사이의 간격 */
+  gap: 0.5rem; /* 버튼 사이의 간격 */
   min-width: 200px; /* 중요: 실제 버튼들이 차지하는 최대 너비에 가깝게 설정합니다. "로그인", "회원가입" 두 버튼 또는 "사용자이름님", "로그아웃" 버튼이 모두 들어갈 수 있는 충분한 너비로 조정하세요. */
   height: 40px; /* 헤더 내 다른 버튼들과 높이를 맞추기 위한 값. 버튼 스타일에 따라 자동 조절될 수도 있습니다. */
 }
@@ -223,84 +223,178 @@ body {
   flex-wrap: wrap;
 }
 
+/* ==========================================================================
+   Button Styles
+   ========================================================================== */
+
+/* 1. 기본 버튼 스타일 (모든 버튼의 공통 속성) */
 .btn-primary,
 .btn-secondary,
-.btn-outline {
-  padding: 1rem 2rem;
+.btn-outline,
+.btn-danger,
+.btn-google { /* .btn-google도 공통 스타일 적용 대상에 포함 */
   border-radius: 50px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
   cursor: pointer;
-  border: none;
-  font-size: 1rem;
+  border: none; /* 기본적으로 테두리 없음 */
+  font-size: 1rem; /* 기본 폰트 크기 */
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center; /* 텍스트와 아이콘 중앙 정렬 */
+  line-height: 1; /* 아이콘과 텍스트 수직 정렬 개선 */
 }
 
+/* 2. 일반 버튼 크기 및 아이콘 간격 (가장 많이 사용되는 크기 - 중간 크기) */
+/* 이 스타일은 아래의 더 구체적인 컨텍스트별 스타일로 덮어쓰여질 수 있습니다. */
+.btn-primary,
+.btn-secondary,
+.btn-outline, /* 일반 .btn-outline */
+.btn-danger {
+  padding: 0.8rem 1.8rem; /* 중간 크기 패딩 */
+  gap: 0.4rem; /* 중간 크기 아이콘 간격 */
+}
+
+/* 3. 컨텍스트별 버튼 크기 및 스타일 */
+
+/* 3.1. 헤더 인증 버튼 (로그인, 로그아웃, 회원가입) - 작은 크기 */
+.auth-buttons .btn-primary,
+.auth-buttons .btn-outline,
+.auth-buttons .btn-google { /* 구글 버튼도 헤더에 있을 경우 동일 크기 적용 */
+  padding: 0.5rem 1rem; /* 작은 패딩 */
+  font-size: 1.2rem;   /* 약간 작은 폰트 */
+  gap: 0.25rem;        /* 작은 아이콘 간격 */
+}
+
+/* 3.2. 홈페이지 히어로 섹션 버튼 - 큰 크기 */
+.hero-buttons .btn-primary,
+.hero-buttons .btn-secondary {
+  padding: 1rem 2.2rem; /* 큰 패딩 */
+  font-size: 1.1rem;   /* 약간 큰 폰트 */
+  gap: 0.5rem;         /* 큰 아이콘 간격 */
+}
+
+/* 3.3. 홈페이지 CTA 섹션 버튼 - 큰 크기 */
+.cta-buttons .btn-primary,
+.cta-buttons .btn-outline {
+  padding: 1rem 2.2rem; /* 히어로와 동일하게 시작 */
+  font-size: 1.1rem;   /* 히어로와 동일하게 시작 */
+  gap: 0.5rem;         /* 히어로와 동일하게 시작 */
+}
+
+/* 4. 개별 버튼 타입별 모양 정의 (색상, 배경 등) */
+
+/* Primary 버튼 */
 .btn-primary {
   background: linear-gradient(135deg, #ffeaa7, #fab1a0);
   color: #333;
   box-shadow: 0 4px 15px rgba(255, 234, 167, 0.4);
 }
-
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255, 234, 167, 0.6);
 }
 
+/* Secondary 버튼 */
 .btn-secondary {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
 }
-
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
 
+/* Outline 버튼 (일반적인 외곽선 버튼) */
+/* 헤더의 .auth-buttons .btn-outline 은 아래에서 특별 처리됩니다. */
 .btn-outline {
-  background: #667eea !important; /* 배경색 강제 적용 */
-  color: white !important;       /* 글자색 강제 적용 */
-  border: none !important;       /* 테두리 없음 강제 적용 */
-  /* 회원가입 버튼(.btn-primary)과 크기를 맞추기 위해 패딩과 폰트 크기를 명시적으로 지정할 수 있습니다.
-     하지만, border:none !important; 만으로도 "뚱뚱해 보이는" 문제가 해결될 수 있습니다. */
-  /* 아래 !important 제거 */
-  padding: 1rem 2rem;
-  font-size: 1rem;
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
 }
-
 .btn-outline:hover {
-  background: #764ba2; /* 호버 시 배경색 변경 (테마 색상 활용) */
-  color: white; /* 글자색 유지 */
-  transform: translateY(-2px); /* 기존 호버 효과 유지 */
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
 }
 
+/* 헤더의 로그인/로그아웃 버튼 (.btn-outline) 특별 스타일 (배경색 있게) */
+.auth-buttons .btn-outline {
+  background: #667eea !important; /* 기존 스타일 유지 */
+  color: white !important;
+  border: none !important; /* 테두리 없음 */
+}
+.auth-buttons .btn-outline:hover {
+  background: #764ba2 !important; /* 기존 호버 스타일 유지 */
+}
+
+/* Danger 버튼 */
 .btn-danger {
   background: transparent;
-  color: #e74c3c; /* 에러 메시지와 일관된 빨간색 계열 */
+  color: #e74c3c;
   border: 2px solid #e74c3c;
-  /* .btn-outline과 공통된 스타일 속성 */
-  padding: 1rem 2rem; /* 기본 패딩, 특정 규칙에 의해 덮어쓰일 수 있음 */
-  border-radius: 50px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  font-size: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
 }
-
 .btn-danger:hover {
   background: #e74c3c;
   color: white;
-  transform: translateY(-2px); /* 일관된 호버 효과 */
+  transform: translateY(-2px);
 }
+
+/* 구글 로그인 버튼 */
+.btn-google {
+    background-color: #db4437 !important;
+    color: white !important;
+    border-color: #db4437 !important; /* 테두리가 필요하다면, 아니면 border: none; */
+}
+.btn-google:hover {
+    background-color: #c23321 !important;
+    border-color: #c23321 !important;
+}
+
+/* 5. 모바일 반응형 버튼 스타일 */
+@media (max-width: 768px) {
+  /* 모바일 헤더 인증 버튼 크기 조정 */
+  .auth-buttons .btn-primary,
+  .auth-buttons .btn-outline,
+  .auth-buttons .btn-google {
+    padding: 0.5rem 0.8rem; /* 모바일에서 헤더 버튼 패딩 */
+    font-size: 0.85rem;    /* 모바일에서 헤더 버튼 폰트 크기 */
+  }
+
+  /* 모바일 히어로 섹션 버튼 크기 조정 */
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary {
+    padding: 0.8rem 1.5rem; /* 모바일에서 히어로 버튼 패딩 */
+    font-size: 1rem;      /* 모바일에서 히어로 버튼 폰트 크기 */
+  }
+
+  /* 모바일 CTA 섹션 버튼 크기 조정 */
+  .cta-buttons .btn-primary,
+  .cta-buttons .btn-outline {
+    padding: 0.8rem 1.5rem; /* 모바일에서 CTA 버튼 패딩 */
+    font-size: 1rem;      /* 모바일에서 CTA 버튼 폰트 크기 */
+    width: 80%; /* CTA 버튼은 세로로 쌓이므로 너비 조정 */
+    max-width: 300px;
+  }
+
+  /* .content-block 내부 버튼들의 모바일 스타일 */
+  /* (예: 감정일기, 하루기록 페이지 등의 저장/삭제 버튼) */
+  .content-block .btn-primary,
+  .content-block .btn-outline,
+  .content-block .btn-secondary,
+  .content-block .btn-danger {
+    padding: 0.6rem 1.2rem; /* content-block 내 버튼들의 모바일 패딩 */
+    font-size: 0.9rem;    /* content-block 내 버튼들의 모바일 폰트 크기 */
+  }
+}
+
+/* ==========================================================================
+   End of Button Styles
+   ========================================================================== */
+
 
 .hero-image {
   display: flex;
@@ -602,6 +696,11 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  html {
+    font-size: 87.5%; /* 기본 폰트 크기를 14px로 줄입니다 (브라우저 기본 16px 기준). 
+                         이렇게 하면 rem 단위를 사용하는 모든 폰트 크기가 비례하여 작아집니다. 
+                         필요에 따라 90% 또는 다른 값으로 조절할 수 있습니다. */
+  }
   .container {
     padding: 0 1rem; /* 모바일에서 좌우 패딩 더 줄임 */
   }
@@ -828,7 +927,7 @@ main {
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   font-weight: 500;
   color: #333;
 }
@@ -1214,7 +1313,7 @@ main {
   .form-group {
     margin-bottom: 0.8rem;
   }
-  .form-group label { font-size: 0.9rem; }
+  .form-group label { font-size: 1.2rem; }
   .form-group input, .form-group textarea, .form-group select {
     padding: 0.7rem; font-size: 0.9rem;
     /* 모바일에서 폼 요소 내부 패딩은 위에서 이미 .form-group input 등으로 정의됨 */
@@ -1325,16 +1424,3 @@ main {
     .calendar-day-cell-common { min-height: 60px; padding: 0.2rem; }
 }
 
-/* styles.css 파일 */
-
-/* 구글 로그인 버튼 색상 */
-.btn-google {
-    background-color: #db4437 !important; /* Google 빨간색 배경 */
-    color: white !important; /* 흰색 글자 */
-    border-color: #db4437 !important; /* Google 빨간색 테두리 */
-}
-.btn-google:hover {
-    background-color: #c23321 !important; /* 호버 시 약간 어두운 빨간색 배경 */
-    border-color: #c23321 !important; /* 호버 시 약간 어두운 빨간색 테두리 */
-    color: white !important; /* 호버 시에도 흰색 글자 유지 */
-}
